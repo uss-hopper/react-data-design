@@ -212,193 +212,229 @@ class Tweet {
 	/**
 	 * inserts this Tweet into mySQL
 	 *
-	 * @param resource $mysqli pointer to mySQL connection, by reference
-	 * @throws mysqli_sql_exception when mySQL related errors occur
+	 * @param resource $pdo pointer to PDO connection, by reference
+	 * @throws PDOException when mySQL related errors occur
 	 **/
-	public function insert(&$mysqli) {
+	public function insert(&$pdo) {
 		// handle degenerate cases
-		if(gettype($mysqli) !== "object" || get_class($mysqli) !== "mysqli") {
-			throw(new mysqli_sql_exception("input is not a mysqli object"));
+		if(gettype($pdo) !== "object" || get_class($pdo) !== "PDO") {
+			throw(new PDOException("input is not a PDO object"));
 		}
 
 		// enforce the tweetId is null (i.e., don't insert a tweet that already exists)
 		if($this->tweetId !== null) {
-			throw(new mysqli_sql_exception("not a new tweet"));
+			throw(new PDOException("not a new tweet"));
 		}
 
 		// create query template
-		$query     = "INSERT INTO tweet(profileId, tweetContent, tweetDate) VALUES(?, ?, ?)";
-		$statement = $mysqli->prepare($query);
-		if($statement === false) {
-			throw(new mysqli_sql_exception("unable to prepare statement"));
-		}
+		$query     = "INSERT INTO tweet(profileId, tweetContent, tweetDate) VALUES(:profileId, :tweetContent, :tweetDate)";
+		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
 		$formattedDate = $this->tweetDate->format("Y-m-d H:i:s");
-		$wasClean      = $statement->bind_param("iss", $this->profileId, $this->tweetContent, $formattedDate);
-		if($wasClean === false) {
-			throw(new mysqli_sql_exception("unable to bind parameters"));
-		}
-
-		// execute the statement
-		if($statement->execute() === false) {
-			throw(new mysqli_sql_exception("unable to execute mySQL statement: " . $statement->error));
-		}
+		$parameters = array("profileId" => $this->profileId, "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate);
+		$statement->execute($parameters);
 
 		// update the null tweetId with what mySQL just gave us
-		$this->tweetId = $mysqli->insert_id;
-
-		// clean up the statement
-		$statement->close();
+		$this->tweetId = intval($pdo->lastInsertId());
 	}
 
 
 	/**
 	 * deletes this Tweet from mySQL
 	 *
-	 * @param resource $mysqli pointer to mySQL connection, by reference
-	 * @throws mysqli_sql_exception when mySQL related errors occur
+	 * @param resource $pdo pointer to PDO connection, by reference
+	 * @throws PDOException when mySQL related errors occur
 	 **/
-	public function delete(&$mysqli) {
+	public function delete(&$pdo) {
 		// handle degenerate cases
-		if(gettype($mysqli) !== "object" || get_class($mysqli) !== "mysqli") {
-			throw(new mysqli_sql_exception("input is not a mysqli object"));
+		if(gettype($pdo) !== "object" || get_class($pdo) !== "PDO") {
+			throw(new PDOException("input is not a PDO object"));
 		}
 
 		// enforce the tweetId is not null (i.e., don't delete a tweet that hasn't been inserted)
 		if($this->tweetId === null) {
-			throw(new mysqli_sql_exception("unable to delete a tweet that does not exist"));
+			throw(new PDOException("unable to delete a tweet that does not exist"));
 		}
 
 		// create query template
-		$query     = "DELETE FROM tweet WHERE tweetId = ?";
-		$statement = $mysqli->prepare($query);
-		if($statement === false) {
-			throw(new mysqli_sql_exception("unable to prepare statement"));
-		}
+		$query     = "DELETE FROM tweet WHERE tweetId = :tweetId";
+		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holder in the template
-		$wasClean = $statement->bind_param("i", $this->tweetId);
-		if($wasClean === false) {
-			throw(new mysqli_sql_exception("unable to bind parameters"));
-		}
-
-		// execute the statement
-		if($statement->execute() === false) {
-			throw(new mysqli_sql_exception("unable to execute mySQL statement: " . $statement->error));
-		}
-
-		// clean up the statement
-		$statement->close();
+		$parameters = array("tweetId" => $this->tweetId);
+		$statement->execute($parameters);
 	}
 
 	/**
 	 * updates this Tweet in mySQL
 	 *
-	 * @param resource $mysqli pointer to mySQL connection, by reference
-	 * @throws mysqli_sql_exception when mySQL related errors occur
+	 * @param resource $pdo pointer to PDO connection, by reference
+	 * @throws PDOException when mySQL related errors occur
 	 **/
-	public function update(&$mysqli) {
+	public function update(&$pdo) {
 		// handle degenerate cases
-		if(gettype($mysqli) !== "object" || get_class($mysqli) !== "mysqli") {
-			throw(new mysqli_sql_exception("input is not a mysqli object"));
+		if(gettype($pdo) !== "object" || get_class($pdo) !== "PDO") {
+			throw(new PDOException("input is not a mysqli object"));
 		}
 
 		// enforce the tweetId is not null (i.e., don't update a tweet that hasn't been inserted)
 		if($this->tweetId === null) {
-			throw(new mysqli_sql_exception("unable to update a tweet that does not exist"));
+			throw(new PDOException("unable to update a tweet that does not exist"));
 		}
 
 		// create query template
-		$query     = "UPDATE tweet SET profileId = ?, tweetContent = ?, tweetDate = ? WHERE tweetId = ?";
-		$statement = $mysqli->prepare($query);
+		$query     = "UPDATE tweet SET profileId = :profileId, tweetContent = :tweetContent, tweetDate = :tweetDate WHERE tweetId = :tweetId";
+		$statement = $pdo->prepare($query);
 		if($statement === false) {
 			throw(new mysqli_sql_exception("unable to prepare statement"));
 		}
 
 		// bind the member variables to the place holders in the template
 		$formattedDate = $this->tweetDate->format("Y-m-d H:i:s");
-		$wasClean = $statement->bind_param("issi",  $this->profileId, $this->tweetContent, $formattedDate, $this->tweetId);
-		if($wasClean === false) {
-			throw(new mysqli_sql_exception("unable to bind parameters"));
-		}
-
-		// execute the statement
-		if($statement->execute() === false) {
-			throw(new mysqli_sql_exception("unable to execute mySQL statement: " . $statement->error));
-		}
-
-		// clean up the statement
-		$statement->close();
+		$parameters = array("profileId" => $this->profileId, "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate, "tweetId" => $this->tweetId);
+		$statement->execute($parameters);
 	}
 
 	/**
 	 * gets the Tweet by content
 	 *
-	 * @param resource $mysqli pointer to mySQL connection, by reference
+	 * @param resource $pdo pointer to PDO connection, by reference
 	 * @param string $tweetContent tweet content to search for
-	 * @return mixed array of Tweets found, Tweets found, or null if not found
+	 * @return mixed array of Tweets found or null if not found
 	 * @throws mysqli_sql_exception when mySQL related errors occur
 	 **/
-	public static function getTweetByTweetContent(&$mysqli, $tweetContent) {
+	public static function getTweetByTweetContent(&$pdo, $tweetContent) {
 		// handle degenerate cases
-		if(gettype($mysqli) !== "object" || get_class($mysqli) !== "mysqli") {
-			throw(new mysqli_sql_exception("input is not a mysqli object"));
+		if(gettype($pdo) !== "object" || get_class($pdo) !== "PDO") {
+			throw(new PDOException("input is not a PDO object"));
 		}
 
 		// sanitize the description before searching
 		$tweetContent = trim($tweetContent);
 		$tweetContent = filter_var($tweetContent, FILTER_SANITIZE_STRING);
+		if(empty($tweetContent) === true) {
+			throw(new PDOException("tweet content is invalid"));
+		}
 
 		// create query template
-		$query     = "SELECT tweetId, profileId, tweetContent, tweetDate FROM tweet WHERE tweetContent LIKE ?";
-		$statement = $mysqli->prepare($query);
-		if($statement === false) {
-			throw(new mysqli_sql_exception("unable to prepare statement"));
-		}
+		$query     = "SELECT tweetId, profileId, tweetContent, tweetDate FROM tweet WHERE tweetContent LIKE :tweetContent";
+		$statement = $pdo->prepare($query);
 
 		// bind the tweet content to the place holder in the template
 		$tweetContent = "%$tweetContent%";
-		$wasClean = $statement->bind_param("s", $tweetContent);
-		if($wasClean === false) {
-			throw(new mysqli_sql_exception("unable to bind parameters"));
-		}
+		$parameters = array("tweetContent" => $tweetContent);
+		$statement->execute($parameters);
 
-		// execute the statement
-		if($statement->execute() === false) {
-			throw(new mysqli_sql_exception("unable to execute mySQL statement: " . $statement->error));
-		}
-
-		// get result from the SELECT query
-		$result = $statement->get_result();
-		if($result === false) {
-			throw(new mysqli_sql_exception("unable to get result set"));
-		}
-
-		// build an array of tweet
+		// build an array of tweets
 		$tweets = array();
-		while(($row = $result->fetch_assoc()) !== null) {
+		$statement->setFetchMode(PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
 			try {
 				$tweet    = new Tweet($row["tweetId"], $row["profileId"], $row["tweetContent"], $row["tweetDate"]);
 				$tweets[] = $tweet;
-			}
-			catch(Exception $exception) {
+			} catch(Exception $exception) {
 				// if the row couldn't be converted, rethrow it
-				throw(new mysqli_sql_exception($exception->getMessage(), 0, $exception));
+				throw(new PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
 
 		// count the results in the array and return:
 		// 1) null if 0 results
-		// 2) a single object if 1 result
-		// 3) the entire array if > 1 result
+		// 2) the entire array if >= 1 result
 		$numberOfTweets = count($tweets);
 		if($numberOfTweets === 0) {
 			return(null);
-		} else if($numberOfTweets === 1) {
-			return($tweets[0]);
 		} else {
 			return($tweets);
+		}
+	}
+
+	/**
+	 * gets the Tweet by tweetId
+	 *
+	 * @param resource $pdo pointer to PDO connection, by reference
+	 * @param int $tweetId tweet content to search for
+	 * @return mixed Tweet found or null if not found
+	 * @throws PDOException when mySQL related errors occur
+	 **/
+	public static function getTweetByTweetId(&$pdo, $tweetId) {
+		// handle degenerate cases
+		if(gettype($pdo) !== "object" || get_class($pdo) !== "PDO") {
+			throw(new PDOException("input is not a PDO object"));
+		}
+
+		// sanitize the tweetId before searching
+		$tweetId = filter_var($tweetId, FILTER_VALIDATE_INT);
+		if($tweetId === false) {
+			throw(new PDOException("tweet id is not an integer"));
+		}
+		if($tweetId <= 0) {
+			throw(new PDOException("tweet id is not positive"));
+		}
+
+		// create query template
+		$query     = "SELECT tweetId, profileId, tweetContent, tweetDate FROM tweet WHERE tweetId = :tweetId";
+		$statement = $pdo->prepare($query);
+
+		// bind the tweet content to the place holder in the template
+		$parameters = array("tweetId" => $tweetId);
+		$statement->execute($parameters);
+
+		// grab the tweet from mySQL
+		try {
+			$tweet = null;
+			$statement->setFetchMode(PDO::FETCH_ASSOC);
+			$row   = $statement->fetch();
+			if($row !== false) {
+				$tweet = new Tweet($row["tweetId"], $row["profileId"], $row["tweetContent"], $row["tweetDate"]);
+			}
+		} catch(Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($tweet);
+	}
+
+	/**
+	 * gets all Tweets
+	 *
+	 * @param resource $pdo pointer to PDO connection, by reference
+	 * @return mixed array of Tweets found or null if not found
+	 * @throws PDOException when mySQL related errors occur
+	 **/
+	public static function getAllTweets(&$pdo) {
+		// handle degenerate cases
+		if(gettype($pdo) !== "object" || get_class($pdo) !== "PDO") {
+			throw(new PDOException("input is not a PDO object"));
+		}
+
+		// create query template
+		$query = "SELECT tweetId, profileId, tweetContent, tweetDate FROM tweet";
+		$statement = $pdo->prepare($query);
+		$statement->execute();
+
+		// build an array of tweets
+		$tweets = array();
+		$statement->setFetchMode(PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$tweet = new Tweet($row["tweetId"], $row["profileId"], $row["tweetContent"], $row["tweetDate"]);
+				$tweets[] = $tweet;
+			} catch(Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+
+		// count the results in the array and return:
+		// 1) null if 0 results
+		// 2) the entire array if >= 1 result
+		$numberOfTweets = count($tweets);
+		if($numberOfTweets === 0) {
+			return (null);
+		} else {
+			return ($tweets);
 		}
 	}
 }
