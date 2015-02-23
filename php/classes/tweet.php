@@ -438,4 +438,28 @@ class Tweet {
 		}
 	}
 }
+
+/**
+ * full shakedown code
+try {
+	$dsn = "mysql:host=--HOSTNAME--;dbname=--DATABASE--";
+	$username = "--USERNAME--";
+	$password = "--PASSWORD--";
+	$options = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8");
+	$pdo = new PDO($dsn, $username, $password, $options);
+	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+	$tweet = new Tweet(null, 1, "Tweets are DBO enabled");
+	$tweet->insert($pdo);
+	var_dump($tweet);
+	$tweet->setTweetContent("Tweets are fully DBO enabled");
+	$tweet->update($pdo);
+	$pdoTweet = Tweet::getTweetByTweetId($pdo, $tweet->getTweetId());
+	var_dump($pdoTweet);
+	$tweet->delete($pdo);
+	$pdoTweet = Tweet::getTweetByTweetId($pdo, $tweet->getTweetId());
+	var_dump($pdoTweet);
+} catch(PDOException $pdoException) {
+	echo "Exception: " . $pdoException->getMessage();
+}
+ **/
 ?>
