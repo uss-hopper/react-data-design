@@ -275,7 +275,7 @@ class Tweet {
 	public function update(&$pdo) {
 		// handle degenerate cases
 		if(gettype($pdo) !== "object" || get_class($pdo) !== "PDO") {
-			throw(new PDOException("input is not a mysqli object"));
+			throw(new PDOException("input is not a PDO object"));
 		}
 
 		// enforce the tweetId is not null (i.e., don't update a tweet that hasn't been inserted)
@@ -286,9 +286,6 @@ class Tweet {
 		// create query template
 		$query     = "UPDATE tweet SET profileId = :profileId, tweetContent = :tweetContent, tweetDate = :tweetDate WHERE tweetId = :tweetId";
 		$statement = $pdo->prepare($query);
-		if($statement === false) {
-			throw(new mysqli_sql_exception("unable to prepare statement"));
-		}
 
 		// bind the member variables to the place holders in the template
 		$formattedDate = $this->tweetDate->format("Y-m-d H:i:s");
@@ -302,7 +299,7 @@ class Tweet {
 	 * @param resource $pdo pointer to PDO connection, by reference
 	 * @param string $tweetContent tweet content to search for
 	 * @return mixed array of Tweets found or null if not found
-	 * @throws mysqli_sql_exception when mySQL related errors occur
+	 * @throws PDOException when mySQL related errors occur
 	 **/
 	public static function getTweetByTweetContent(&$pdo, $tweetContent) {
 		// handle degenerate cases
