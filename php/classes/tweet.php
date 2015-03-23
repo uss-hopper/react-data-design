@@ -1,4 +1,6 @@
 <?php
+require_once("../lib/date-utils.php");
+
 /**
  * Small Cross Section of a Twitter like Message
  *
@@ -176,36 +178,11 @@ class Tweet {
 			return;
 		}
 
-		// base case: if the date is a DateTime object, there's no work to be done
-		if(is_object($newTweetDate) === true && get_class($newTweetDate) === "DateTime") {
-			$this->tweetDate = $newTweetDate;
-			return;
-		}
-
-		// treat the date as a mySQL date string: Y-m-d H:i:s
-		$newTweetDate = trim($newTweetDate);
-		if((preg_match("/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/", $newTweetDate, $matches)) !== 1) {
+		// store the tweet date
+		$newTweetDate = filter_var($newTweetDate, FILTER_CALLBACK, array("options" => "validateDate"));
+		if($newTweetDate === false) {
 			throw(new InvalidArgumentException("tweet date is not a valid date"));
 		}
-
-		// verify the date is really a valid calendar date
-		$year   = intval($matches[1]);
-		$month  = intval($matches[2]);
-		$day    = intval($matches[3]);
-		$hour   = intval($matches[4]);
-		$minute = intval($matches[5]);
-		$second = intval($matches[6]);
-		if(checkdate($month, $day, $year) === false) {
-			throw(new RangeException("tweet date $newTweetDate is not a Gregorian date"));
-		}
-
-		// verify the time is really a valid wall clock time
-		if($hour < 0 || $hour >= 24 || $minute < 0 || $minute >= 60 || $second < 0  || $second >= 60) {
-			throw(new RangeException("tweet date $newTweetDate is not a valid time"));
-		}
-
-		// store the tweet date
-		$newTweetDate = DateTime::createFromFormat("Y-m-d H:i:s", $newTweetDate);
 		$this->tweetDate = $newTweetDate;
 	}
 
