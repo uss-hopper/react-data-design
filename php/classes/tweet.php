@@ -189,15 +189,10 @@ class Tweet {
 	/**
 	 * inserts this Tweet into mySQL
 	 *
-	 * @param resource $pdo pointer to PDO connection, by reference
+	 * @param PDO $pdo pointer to PDO connection, by reference
 	 * @throws PDOException when mySQL related errors occur
 	 **/
-	public function insert(&$pdo) {
-		// handle degenerate cases
-		if(gettype($pdo) !== "object" || get_class($pdo) !== "PDO") {
-			throw(new PDOException("input is not a PDO object"));
-		}
-
+	public function insert(PDO &$pdo) {
 		// enforce the tweetId is null (i.e., don't insert a tweet that already exists)
 		if($this->tweetId !== null) {
 			throw(new PDOException("not a new tweet"));
@@ -220,15 +215,10 @@ class Tweet {
 	/**
 	 * deletes this Tweet from mySQL
 	 *
-	 * @param resource $pdo pointer to PDO connection, by reference
+	 * @param PDO $pdo pointer to PDO connection, by reference
 	 * @throws PDOException when mySQL related errors occur
 	 **/
-	public function delete(&$pdo) {
-		// handle degenerate cases
-		if(gettype($pdo) !== "object" || get_class($pdo) !== "PDO") {
-			throw(new PDOException("input is not a PDO object"));
-		}
-
+	public function delete(PDO &$pdo) {
 		// enforce the tweetId is not null (i.e., don't delete a tweet that hasn't been inserted)
 		if($this->tweetId === null) {
 			throw(new PDOException("unable to delete a tweet that does not exist"));
@@ -246,15 +236,10 @@ class Tweet {
 	/**
 	 * updates this Tweet in mySQL
 	 *
-	 * @param resource $pdo pointer to PDO connection, by reference
+	 * @param PDO $pdo pointer to PDO connection, by reference
 	 * @throws PDOException when mySQL related errors occur
 	 **/
-	public function update(&$pdo) {
-		// handle degenerate cases
-		if(gettype($pdo) !== "object" || get_class($pdo) !== "PDO") {
-			throw(new PDOException("input is not a PDO object"));
-		}
-
+	public function update(PDO &$pdo) {
 		// enforce the tweetId is not null (i.e., don't update a tweet that hasn't been inserted)
 		if($this->tweetId === null) {
 			throw(new PDOException("unable to update a tweet that does not exist"));
@@ -273,17 +258,12 @@ class Tweet {
 	/**
 	 * gets the Tweet by content
 	 *
-	 * @param resource $pdo pointer to PDO connection, by reference
+	 * @param PDO $pdo pointer to PDO connection, by reference
 	 * @param string $tweetContent tweet content to search for
 	 * @return mixed array of Tweets found or null if not found
 	 * @throws PDOException when mySQL related errors occur
 	 **/
-	public static function getTweetByTweetContent(&$pdo, $tweetContent) {
-		// handle degenerate cases
-		if(gettype($pdo) !== "object" || get_class($pdo) !== "PDO") {
-			throw(new PDOException("input is not a PDO object"));
-		}
-
+	public static function getTweetByTweetContent(PDO &$pdo, $tweetContent) {
 		// sanitize the description before searching
 		$tweetContent = trim($tweetContent);
 		$tweetContent = filter_var($tweetContent, FILTER_SANITIZE_STRING);
@@ -327,17 +307,12 @@ class Tweet {
 	/**
 	 * gets the Tweet by tweetId
 	 *
-	 * @param resource $pdo pointer to PDO connection, by reference
+	 * @param PDO $pdo pointer to PDO connection, by reference
 	 * @param int $tweetId tweet content to search for
 	 * @return mixed Tweet found or null if not found
 	 * @throws PDOException when mySQL related errors occur
 	 **/
-	public static function getTweetByTweetId(&$pdo, $tweetId) {
-		// handle degenerate cases
-		if(gettype($pdo) !== "object" || get_class($pdo) !== "PDO") {
-			throw(new PDOException("input is not a PDO object"));
-		}
-
+	public static function getTweetByTweetId(PDO &$pdo, $tweetId) {
 		// sanitize the tweetId before searching
 		$tweetId = filter_var($tweetId, FILTER_VALIDATE_INT);
 		if($tweetId === false) {
@@ -373,16 +348,11 @@ class Tweet {
 	/**
 	 * gets all Tweets
 	 *
-	 * @param resource $pdo pointer to PDO connection, by reference
+	 * @param PDO $pdo pointer to PDO connection, by reference
 	 * @return mixed array of Tweets found or null if not found
 	 * @throws PDOException when mySQL related errors occur
 	 **/
-	public static function getAllTweets(&$pdo) {
-		// handle degenerate cases
-		if(gettype($pdo) !== "object" || get_class($pdo) !== "PDO") {
-			throw(new PDOException("input is not a PDO object"));
-		}
-
+	public static function getAllTweets(PDO &$pdo) {
 		// create query template
 		$query = "SELECT tweetId, profileId, tweetContent, tweetDate FROM tweet";
 		$statement = $pdo->prepare($query);
