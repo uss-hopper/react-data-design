@@ -1,4 +1,6 @@
 <?php
+require_once("../lib/date-utils.php");
+
 /**
  * Cross Section of a Twitter Favorite
  *
@@ -51,7 +53,7 @@ class Favorite {
 	 * @return int value of tweet id
 	 **/
 	public function getTweetId() {
-		return($this->tweetId);
+		return ($this->tweetId);
 	}
 
 	/**
@@ -83,7 +85,7 @@ class Favorite {
 	 * @return int value of profile id
 	 **/
 	public function getProfileId() {
-		return($this->profileId);
+		return ($this->profileId);
 	}
 
 	public function setProfileId($newProfileId) {
@@ -108,7 +110,7 @@ class Favorite {
 	 * @return DateTime value of favorite date
 	 **/
 	public function getFavoriteDate() {
-		return($this->favoriteDate);
+		return ($this->favoriteDate);
 	}
 
 	/**
@@ -125,37 +127,149 @@ class Favorite {
 			return;
 		}
 
-		// base case: if the date is a DateTime object, there's no work to be done
-		if(is_object($newFavoriteDate) === true && get_class($newFavoriteDate) === "DateTime") {
-			$this->favoriteDate = $newFavoriteDate;
-			return;
-		}
-
-		// treat the date as a mySQL date string: Y-m-d H:i:s
-		$newFavoriteDate = trim($newFavoriteDate);
-		if((preg_match("/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/", $newFavoriteDate, $matches)) !== 1) {
-			throw(new InvalidArgumentException("tweet date is not a valid date"));
-		}
-
-		// verify the date is really a valid calendar date
-		$year   = intval($matches[1]);
-		$month  = intval($matches[2]);
-		$day    = intval($matches[3]);
-		$hour   = intval($matches[4]);
-		$minute = intval($matches[5]);
-		$second = intval($matches[6]);
-		if(checkdate($month, $day, $year) === false) {
-			throw(new RangeException("favorite date $newFavoriteDate is not a Gregorian date"));
-		}
-
-		// verify the time is really a valid wall clock time
-		if($hour < 0 || $hour >= 24 || $minute < 0 || $minute >= 60 || $second < 0  || $second > 60) {
-			throw(new RangeException("favorite date $newFavoriteDate is not a valid time"));
-		}
-
 		// store the favorite date
-		$newFavoriteDate = DateTime::createFromFormat("Y-m-d H:i:s", $newFavoriteDate);
+		$newFavoriteDate = filter_var($newFavoriteDate, FILTER_CALLBACK, array("options" => "validateDate"));
+		if($newFavoriteDate === false) {
+			throw(new InvalidArgumentException("favorite date is not a valid date"));
+		}
 		$this->favoriteDate = $newFavoriteDate;
+	}
+
+	/**
+	 * inserts this Favorite into mySQL
+	 *
+	 * @param PDO $pdo pointer to PDO connection, by reference
+	 * @throws PDOException when mySQL related errors occur
+	 **/
+	public function insert(PDO &$pdo) {
+		// ensure the object exists before inserting
+		if($this->profileId === null || $this->tweetId === null) {
+			throw(new PDOException("not a valid favorite"));
+		}
+
+		// create query template
+		$query = "INSERT INTO favorite(profileId, tweetId, favoriteDate) VALUES(:profileId, :tweetId, :favoriteDate)";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in the template
+		$formattedDate = $this->favoriteDate->format("Y-m-d H:i:s");
+		$parameters = array("profileId" => $this->profileId, "tweetId" => $this->tweetId, "favoriteDate" => $formattedDate);
+		$statement->execute($parameters);
+	}
+
+	/**
+	 * deletes this Favorite from mySQL
+	 *
+	 * @param PDO $pdo pointer to PDO connection, by reference
+	 * @throws PDOException when mySQL related errors occur
+	 **/
+	public function delete(PDO $pdo) {
+		// ensure the object exists before deleting
+		if($this->profileId === null || $this->tweetId === null) {
+			throw(new PDOException("not a valid favorite"));
+		}
+
+		// create query template
+		$query = "DELETE FROM favorite WHERE profileId = :profileId AND tweetId = :tweetId";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in the template
+		$parameters = array("profileId" => $this->profileId, "tweetId" => $this->tweetId);
+		$statement->execute($parameters);
+	}
+
+	/**
+	 * gets the Favorite by profile id
+	 *
+	 * @param PDO $pdo pointer to PDO connection, by reference
+	 * @param int $profileId profile id to search for
+	 * @return mixed array of Favorites found or null if not found
+	 * @throws PDOException when mySQL related errors occur
+	 **/
+	public function getFavoriteByProfileId(PDO $pdo, $profileId) {
+		// sanitize the profile id
+		$profileId = filter_var($profileId, FILTER_VALIDATE_INT);
+		if(empty($profileId) === true) {
+			throw(new PDOException("invalid profile id"));
+		}
+
+		// create query template
+		$query = "SELECT profileId, tweetId, favoriteDate FROM favorite WHERE profileId = :profileId";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in the template
+		$parameters = array("profileId" => $this->profileId);
+		$statement->execute($parameters);
+
+		// build an array of favorites
+		$favorites = array();
+		$statement->setFetchMode(PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$favorite = new Favorite($row["profileId"], $row["tweetId"], $row["favoriteDate"]);
+				$favorites[] = $favorite;
+			} catch(Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+
+		// count the results in the array and return:
+		// 1) null if 0 results
+		// 2) the entire array if >= 1 result
+		$numberOfFavorites = count($favorites);
+		if($numberOfFavorites === 0) {
+			return(null);
+		} else {
+			return($favorites);
+		}
+	}
+
+	/**
+	 * gets the Favorite by tweet it id
+	 *
+	 * @param PDO $pdo pointer to PDO connection, by reference
+	 * @param int $tweetId tweet id to search for
+	 * @return mixed array of Favorites found or null if not found
+	 * @throws PDOException when mySQL related errors occur
+	 **/
+	public function getFavoriteByTweetId(PDO $pdo, $tweetId) {
+		// sanitize the tweet id
+		$tweetId = filter_var($tweetId, FILTER_VALIDATE_INT);
+		if(empty($tweetId) === false) {
+			throw(new PDOException("invalid tweet id"));
+		}
+
+		// create query template
+		$query = "SELECT profileId, tweetId, favoriteDate FROM favorite WHERE tweetId = :tweetId";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in the template
+		$parameters = array("tweetId" => $this->tweetId);
+		$statement->execute($parameters);
+
+		// build an array of favorites
+		$favorites = array();
+		$statement->setFetchMode(PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$favorite = new Favorite($row["profileId"], $row["tweetId"], $row["favoriteDate"]);
+				$favorites[] = $favorite;
+			} catch(Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+
+		// count the results in the array and return:
+		// 1) null if 0 results
+		// 2) the entire array if >= 1 result
+		$numberOfFavorites = count($favorites);
+		if($numberOfFavorites === 0) {
+			return(null);
+		} else {
+			return($favorites);
+		}
 	}
 }
 ?>
