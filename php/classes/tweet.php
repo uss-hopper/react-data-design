@@ -12,18 +12,22 @@ require_once("../lib/date-utils.php");
 class Tweet {
 	/**
 	 * id for this Tweet; this is the primary key
+	 * @var int $tweetId
 	 **/
 	private $tweetId;
 	/**
 	 * id of the Profile that sent this Tweet; this is a foreign key
+	 * @var int $profileId
 	 **/
 	private $profileId;
 	/**
 	 * actual textual content of this Tweet
+	 * @var string $tweetContent
 	 **/
 	private $tweetContent;
 	/**
 	 * date and time this Tweet was sent, in a PHP DateTime object
+	 * @var DateTime $tweetDate
 	 **/
 	private $tweetDate;
 
@@ -75,18 +79,18 @@ class Tweet {
 			return;
 		}
 
-		// verify the profile id is valid
+		// verify the tweet id is valid
 		$newTweetId = filter_var($newTweetId, FILTER_VALIDATE_INT);
 		if($newTweetId === false) {
 			throw(new InvalidArgumentException("tweet id is not a valid integer"));
 		}
 
-		// verify the profile id is positive
+		// verify the tweet id is positive
 		if($newTweetId <= 0) {
 			throw(new RangeException("tweet id is not positive"));
 		}
 
-		// convert and store the profile id
+		// convert and store the tweet id
 		$this->tweetId = intval($newTweetId);
 	}
 

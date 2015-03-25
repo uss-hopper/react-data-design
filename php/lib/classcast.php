@@ -18,7 +18,7 @@ class ClassCastException extends ErrorException {}
  * @param string $file file the error was triggered in
  * @param int $line line number the error was triggered on
  * @return bool false when a ClassCastException isn't needed (and we revert to PHP's default error handling)
- * @throws ClassCastException when a ClassCastException is neeed
+ * @throws ClassCastException when a ClassCastException is needed
  **/
 function registerClassCastException($errorNumber, $message, $file, $line) {
 	// type hinting is always an E_RECOVERABLE_ERROR

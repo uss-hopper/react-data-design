@@ -12,14 +12,17 @@ require_once("../lib/date-utils.php");
 class Favorite {
 	/**
 	 * id of the Tweet being favorited; this is a component of a composite primary key (and a foreign key)
+	 * @var int $tweetId
 	 **/
 	private $tweetId;
 	/**
 	 * id of the Profile who favorited; this is a component of a composite primary key (and a foreign key)
+	 * @var int $profileId
 	 **/
 	private $profileId;
 	/**
 	 * date and time the tweet was favorited
+	 * @var DateTime $favoriteDate
 	 **/
 	private $favoriteDate;
 
