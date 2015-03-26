@@ -330,7 +330,7 @@ class Tweet {
 		$query     = "SELECT tweetId, profileId, tweetContent, tweetDate FROM tweet WHERE tweetId = :tweetId";
 		$statement = $pdo->prepare($query);
 
-		// bind the tweet content to the place holder in the template
+		// bind the tweet id to the place holder in the template
 		$parameters = array("tweetId" => $tweetId);
 		$statement->execute($parameters);
 

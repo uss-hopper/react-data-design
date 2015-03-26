@@ -191,4 +191,189 @@ class Profile {
 		// store the phone
 		$this->phone = $newPhone;
 	}
+
+	/**
+	 * inserts this Profile into mySQL
+	 *
+	 * @param PDO $pdo pointer to PDO connection, by reference
+	 * @throws PDOException when mySQL related errors occur
+	 **/
+	public function insert(PDO &$pdo) {
+		// enforce the profileId is null (i.e., don't insert a profile that already exists)
+		if($this->profileId !== null) {
+			throw(new PDOException("not a new profile"));
+		}
+
+		// create query template
+		$query = "INSERT INTO profile(email, phone, atHandle) VALUES(:email, :phone, :atHandle)";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in the template
+		$parameters = array("email" => $this->email, "phone" => $this->phone, "atHandle" => $this->atHandle);
+		$statement->execute($parameters);
+
+		// update the null profileId with what mySQL just gave us
+		$this->profileId = intval($pdo->lastInsertId());
+	}
+
+	/**
+	 * deletes this Profile from mySQL
+	 *
+	 * @param PDO $pdo pointer to PDO connection, by reference
+	 * @throws PDOException when mySQL related errors occur
+	 **/
+	public function delete(PDO &$pdo) {
+		// enforce the profileId is not null (i.e., don't delete a profile that does not exist)
+		if($this->profileId === null) {
+			throw(new PDOException("unable to delete a profile that does not exist"));
+		}
+
+		// create query template
+		$query = "DELETE FROM profile WHERE profileId = :profileId";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in the template
+		$parameters = array("profileId" => $this->profileId);
+		$statement->execute($parameters);
+	}
+
+	/**
+	 * updates this Profile from mySQL
+	 *
+	 * @param PDO $pdo pointer to PDO connection, by reference
+	 * @throws PDOException when mySQL related errors occur
+	 **/
+	public function update(PDO &$pdo) {
+		// enforce the profileId is not null (i.e., don't update a profile that does not exist)
+		if($this->profileId === null) {
+			throw(new PDOException("unable to delete a profile that does not exist"));
+		}
+
+		// create query template
+		$query = "UPDATE profile SET email = :email, phone = :phone, atHandle = :atHandle WHERE profileId = :profileId";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in the template
+		$parameters = array("email" => $this->email, "phone" => $this->phone, "atHandle" => $this->atHandle, "profileId" => $this->profileId);
+		$statement->execute($parameters);
+	}
+
+	/**
+	 * gets the Profile by profile id
+	 *
+	 * @param PDO $pdo $pdo pointer to PDO connection, by reference
+	 * @param int $profileId profile id to search for
+	 * @return mixed Profile or null if not found
+	 * @throws PDOException when mySQL related errors occur
+	 **/
+	public function getProfileByProfileId(PDO &$pdo, $profileId) {
+		// sanitize the profile id before searching
+		$profileId = filter_var($profileId, FILTER_VALIDATE_INT);
+		if(empty($profileId) === true) {
+			throw(new PDOException("profile id is not an integer"));
+		}
+		if($profileId <= 0) {
+			throw(new PDOException("profile id is not postive"));
+		}
+
+		// create query template
+		$query = "SELECT profileId, email, phone, atHandle FROM profile WHERE profileId = :profileId";
+		$statement = $pdo->prepare($query);
+
+		// bind the profile id to the place holder in the template
+		$parameters = array("profileId" => $profileId);
+		$statement->execute($parameters);
+
+		// grab the Profile from mySQL
+		try {
+			$profile = null;
+			$statement->setFetchMode(PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$profile = new Profile($row["profileId"], $row["atHandle"], $row["email"], $row["phone"]);
+			}
+		} catch(Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($profile);
+	}
+
+	/**
+	 * gets the Profile by email
+	 *
+	 * @param PDO $pdo $pdo pointer to PDO connection, by reference
+	 * @param string $email email to search for
+	 * @return mixed Profile or null if not found
+	 * @throws PDOException when mySQL related errors occur
+	 **/
+	public function getProfileByEmail(PDO &$pdo, $email) {
+		// sanitize the email before searching
+		$email = trim($email);
+		$email = filter_var($email, FILTER_VALIDATE_EMAIL);
+		if(empty($email) === true) {
+			throw(new PDOException("not a valid email"));
+		}
+
+		// create query template
+		$query = "SELECT profileId, email, phone, atHandle FROM profile WHERE email = :email";
+		$statement = $pdo->prepare($query);
+
+		// bind the profile id to the place holder in the template
+		$parameters = array("email" => $email);
+		$statement->execute($parameters);
+
+		// grab the Profile from mySQL
+		try {
+			$profile = null;
+			$statement->setFetchMode(PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$profile = new Profile($row["profileId"], $row["atHandle"], $row["email"], $row["phone"]);
+			}
+		} catch(Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($profile);
+	}
+
+	/**
+	 * gets the Profile by at handle
+	 *
+	 * @param PDO $pdo $pdo pointer to PDO connection, by reference
+	 * @param string $atHandle at handle to search for
+	 * @return mixed Profile or null if not found
+	 * @throws PDOException when mySQL related errors occur
+	 **/
+	public function getProfileByAtHandle(PDO &$pdo, $atHandle) {
+		// sanitize the at handle before searching
+		$atHandle = trim($atHandle);
+		$atHandle = filter_var($atHandle, FILTER_SANITIZE_STRING);
+		if(empty($atHandle) === true) {
+			throw(new PDOException("not a valid at handle"));
+		}
+
+		// create query template
+		$query = "SELECT profileId, email, phone, atHandle FROM profile WHERE atHandle = :atHandle";
+		$statement = $pdo->prepare($query);
+
+		// bind the profile id to the place holder in the template
+		$parameters = array("atHandle" => $atHandle);
+		$statement->execute($parameters);
+
+		// grab the Profile from mySQL
+		try {
+			$profile = null;
+			$statement->setFetchMode(PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$profile = new Profile($row["profileId"], $row["atHandle"], $row["email"], $row["phone"]);
+			}
+		} catch(Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($profile);
+	}
 }
