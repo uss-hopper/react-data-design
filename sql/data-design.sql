@@ -17,6 +17,9 @@ CREATE TABLE profile (
 -- to make something optional, exclude the not null
 	phone VARCHAR(32),
 	atHandle VARCHAR(32) NOT NULL,
+-- to make sure duplicate data cannot exist, create a unique index
+	UNIQUE(email),
+	UNIQUE(atHandle),
 -- this officiates the primary key for the entity
 	PRIMARY KEY(profileId)
 );

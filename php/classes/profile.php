@@ -145,7 +145,7 @@ class Profile {
 	public function setEmail($newEmail) {
 		// verify the email is secure
 		$newEmail = trim($newEmail);
-		$newEmail = filter_input($newEmail, FILTER_VALIDATE_EMAIL);
+		$newEmail = filter_var($newEmail, FILTER_VALIDATE_EMAIL);
 		if(empty($newEmail) === true) {
 			throw(new InvalidArgumentException("email is empty or insecure"));
 		}
