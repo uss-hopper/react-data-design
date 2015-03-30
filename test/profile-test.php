@@ -17,12 +17,6 @@ require_once("../php/classes/profile.php");
  **/
 class ProfileTest extends DataDesignTest {
 	/**
-	 * invalid profile id to use (maximum allowed INT in mySQL) + 1
-	 * @see <https://dev.mysql.com/doc/refman/5.6/en/integer-types.html>
-	 * @var int $INVALID_PROFILEID
-	 **/
-	protected $INVALID_PROFILEID = 4294967296;
-	/**
 	 * valid at handle to use
 	 * @var string $VALID_ATHANDLE
 	 **/
@@ -69,7 +63,7 @@ class ProfileTest extends DataDesignTest {
 	 **/
 	public function testInsertInvalidProfile() {
 		// create a profile with a non null profileId and watch it fail
-		$profile = new Profile($this->INVALID_PROFILEID, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_PHONE);
+		$profile = new Profile(DataDesignTest::INVALID_KEY, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_PHONE);
 		$profile->insert($this->getPDO());
 	}
 
@@ -163,7 +157,7 @@ class ProfileTest extends DataDesignTest {
 	 **/
 	public function testGetInvalidProfileByProfileId() {
 		// grab a profile id that exceeds the maximum allowable profile id
-		$profile = Profile::getProfileByProfileId($this->getPDO(), $this->INVALID_PROFILEID);
+		$profile = Profile::getProfileByProfileId($this->getPDO(), DataDesignTest::INVALID_KEY);
 		$this->assertNull($profile);
 	}
 
