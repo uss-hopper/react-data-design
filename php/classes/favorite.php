@@ -131,9 +131,12 @@ class Favorite {
 		}
 
 		// store the favorite date
-		$newFavoriteDate = filter_var($newFavoriteDate, FILTER_CALLBACK, array("options" => "validateDate"));
-		if($newFavoriteDate === false) {
-			throw(new InvalidArgumentException("favorite date is not a valid date"));
+		try {
+			$newFavoriteDate = validateDate($newFavoriteDate);
+		} catch(InvalidArgumentException $invalidArgument) {
+			throw(new InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
+		} catch(RangeException $range) {
+			throw(new RangeException($range->getMessage(), 0, $range));
 		}
 		$this->favoriteDate = $newFavoriteDate;
 	}

@@ -1,5 +1,5 @@
 <?php
-require_once("../lib/date-utils.php");
+require_once(dirname(__DIR__) . "/lib/date-utils.php");
 
 /**
  * Small Cross Section of a Twitter like Message
@@ -183,9 +183,12 @@ class Tweet {
 		}
 
 		// store the tweet date
-		$newTweetDate = filter_var($newTweetDate, FILTER_CALLBACK, array("options" => "validateDate"));
-		if($newTweetDate === false) {
-			throw(new InvalidArgumentException("tweet date is not a valid date"));
+		try {
+			$newTweetDate = validateDate($newTweetDate);
+		} catch(InvalidArgumentException $invalidArgument) {
+			throw(new InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
+		} catch(RangeException $range) {
+			throw(new RangeException($range->getMessage(), 0, $range));
 		}
 		$this->tweetDate = $newTweetDate;
 	}
@@ -386,28 +389,4 @@ class Tweet {
 		}
 	}
 }
-
-/**
- * full shakedown code
-try {
-	$dsn = "mysql:host=--HOSTNAME--;dbname=--DATABASE--";
-	$username = "--USERNAME--";
-	$password = "--PASSWORD--";
-	$options = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8");
-	$pdo = new PDO($dsn, $username, $password, $options);
-	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-	$tweet = new Tweet(null, 1, "Tweets are DBO enabled");
-	$tweet->insert($pdo);
-	var_dump($tweet);
-	$tweet->setTweetContent("Tweets are fully DBO enabled");
-	$tweet->update($pdo);
-	$pdoTweet = Tweet::getTweetByTweetId($pdo, $tweet->getTweetId());
-	var_dump($pdoTweet);
-	$tweet->delete($pdo);
-	$pdoTweet = Tweet::getTweetByTweetId($pdo, $tweet->getTweetId());
-	var_dump($pdoTweet);
-} catch(PDOException $pdoException) {
-	echo "Exception: " . $pdoException->getMessage();
-}
- **/
 ?>
