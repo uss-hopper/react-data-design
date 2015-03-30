@@ -18,9 +18,10 @@ require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
 abstract class DataDesignTest extends PHPUnit_Extensions_Database_TestCase {
 	/**
 	 * shared PDO connection object
+	 * This is private and not protected to prevent subclasses from accidentally clobbering it
 	 * @var PDO $pdo
 	 **/
-	static protected $pdo = null;
+	// static private $pdo = null;
 
 	/**
 	 * PHPUnit database connection interface
@@ -80,16 +81,21 @@ abstract class DataDesignTest extends PHPUnit_Extensions_Database_TestCase {
 			$dsn = "mysql:host=" . $config["hostname"] . ";dbname=" . $config["database"];
 			$options = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8");
 
-			// if the PDO connection hasn't been established, create it
-			if(self::$pdo === null) {
-				self::$pdo = new PDO($dsn, $config["username"], $config["password"], $options);
-				self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			}
-
 			// provide the interface to PHPUnit
-			$this->connection = $this->createDefaultDBConnection(self::$pdo, $config["database"]);
+			$pdo = new PDO($dsn, $config["username"], $config["password"], $options);
+			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$this->connection = $this->createDefaultDBConnection($pdo, $config["database"]);
 		}
 		return($this->connection);
+	}
+
+	/**
+	 * returns the actual PDO object; this is a convenience method
+	 *
+	 * @return PDO active PDO object
+	 **/
+	public final function getPDO() {
+		return($this->getConnection()->getConnection());
 	}
 }
 ?>
