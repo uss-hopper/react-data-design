@@ -1,5 +1,5 @@
 <?php
-require_once("../lib/date-utils.php");
+require_once(dirname(__DIR__) . "/lib/date-utils.php");
 
 /**
  * Cross Section of a Twitter Favorite
