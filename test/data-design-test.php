@@ -13,6 +13,8 @@ require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
  * 3. Modify DataDesignTest::getConnection() to include the correct mySQL properties file.
  * 4. Have all table specific tests include this class.
  *
+ * *NOTE*: Tables must be added in the order they were created in step (2).
+ *
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  **/
 abstract class DataDesignTest extends PHPUnit_Extensions_Database_TestCase {
@@ -38,9 +40,10 @@ abstract class DataDesignTest extends PHPUnit_Extensions_Database_TestCase {
 		$dataset = new PHPUnit_Extensions_Database_DataSet_QueryDataSet($this->getConnection());
 
 		// add all the tables for the project here
-		$dataset->addTable("favorite");
-		$dataset->addTable("tweet");
+		// THESE TABLES *MUST* BE LISTED IN THE SAME ORDER THEY WERE CREATED!!!!
 		$dataset->addTable("profile");
+		$dataset->addTable("tweet");
+		$dataset->addTable("favorite");
 		return($dataset);
 	}
 
