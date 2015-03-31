@@ -243,7 +243,7 @@ class Favorite {
 	 * @return mixed array of Favorites found or null if not found
 	 * @throws PDOException when mySQL related errors occur
 	 **/
-	public function getFavoriteByProfileId(PDO $pdo, $profileId) {
+	public static function getFavoriteByProfileId(PDO $pdo, $profileId) {
 		// sanitize the profile id
 		$profileId = filter_var($profileId, FILTER_VALIDATE_INT);
 		if(empty($profileId) === true) {
@@ -255,7 +255,7 @@ class Favorite {
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$parameters = array("profileId" => $this->profileId);
+		$parameters = array("profileId" => $profileId);
 		$statement->execute($parameters);
 
 		// build an array of favorites
@@ -263,7 +263,7 @@ class Favorite {
 		$statement->setFetchMode(PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$favorite = new Favorite($row["profileId"], $row["tweetId"], $row["favoriteDate"]);
+				$favorite = new Favorite($row["tweetId"], $row["profileId"], $row["favoriteDate"]);
 				$favorites[] = $favorite;
 			} catch(Exception $exception) {
 				// if the row couldn't be converted, rethrow it
@@ -290,10 +290,10 @@ class Favorite {
 	 * @return mixed array of Favorites found or null if not found
 	 * @throws PDOException when mySQL related errors occur
 	 **/
-	public function getFavoriteByTweetId(PDO $pdo, $tweetId) {
+	public static function getFavoriteByTweetId(PDO $pdo, $tweetId) {
 		// sanitize the tweet id
 		$tweetId = filter_var($tweetId, FILTER_VALIDATE_INT);
-		if(empty($tweetId) === false) {
+		if(empty($tweetId) === true) {
 			throw(new PDOException("invalid tweet id"));
 		}
 
@@ -302,7 +302,7 @@ class Favorite {
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$parameters = array("tweetId" => $this->tweetId);
+		$parameters = array("tweetId" => $tweetId);
 		$statement->execute($parameters);
 
 		// build an array of favorites
@@ -310,7 +310,7 @@ class Favorite {
 		$statement->setFetchMode(PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$favorite = new Favorite($row["profileId"], $row["tweetId"], $row["favoriteDate"]);
+				$favorite = new Favorite($row["tweetId"], $row["profileId"], $row["favoriteDate"]);
 				$favorites[] = $favorite;
 			} catch(Exception $exception) {
 				// if the row couldn't be converted, rethrow it

@@ -3,6 +3,7 @@
 		<testsuite name="Twitter Data Design">
 			<file>profile-test.php</file>
 			<file>tweet-test.php</file>
+			<file>favorite-test.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>
