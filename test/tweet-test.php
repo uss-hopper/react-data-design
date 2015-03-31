@@ -1,10 +1,10 @@
 <?php
 // grab the project test parameters
-require_once("data-design-test.php");
+require_once("data-design.php");
 
 // grab the class under scrutiny
-require_once("../php/classes/profile.php");
-require_once("../php/classes/tweet.php");
+require_once(dirname(__DIR__) . "/php/classes/profile.php");
+require_once(dirname(__DIR__) . "/php/classes/tweet.php");
 
 /**
  * Full PHPUnit test for the Tweet class

@@ -1,0 +1,8 @@
+<phpunit>
+	<testsuites>
+		<testsuite name="Twitter Data Design">
+			<file>profile-test.php</file>
+			<file>tweet-test.php</file>
+		</testsuite>
+	</testsuites>
+</phpunit>
