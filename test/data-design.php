@@ -20,7 +20,7 @@ require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
 abstract class DataDesignTest extends PHPUnit_Extensions_Database_TestCase {
 	/**
 	 * invalid id to use for an INT UNSIGNED field (maximum allowed INT UNSIGTNED in mySQL) + 1
-	 * @see <https://dev.mysql.com/doc/refman/5.6/en/integer-types.html>
+	 * @see https://dev.mysql.com/doc/refman/5.6/en/integer-types.html mySQL Integer Types
 	 * @var int INVALID_KEY
 	 **/
 	const INVALID_KEY = 4294967296;
@@ -50,8 +50,8 @@ abstract class DataDesignTest extends PHPUnit_Extensions_Database_TestCase {
 	/**
 	 * templates the setUp method that runs before each test; this method expunges the database before each run
 	 *
-	 * @see <https://phpunit.de/manual/current/en/fixtures.html#fixtures.more-setup-than-teardown>
-	 * @see <https://github.com/sebastianbergmann/dbunit/issues/37>
+	 * @see https://phpunit.de/manual/current/en/fixtures.html#fixtures.more-setup-than-teardown PHPUnit Fixtures: setUp and tearDown
+	 * @see https://github.com/sebastianbergmann/dbunit/issues/37 TRUNCATE fails on tables which have foreign key constraints
 	 * @return PHPUnit_Extensions_Database_Operation_Composite array containing delete and insert commands
 	 **/
 	public final function getSetUpOperation() {

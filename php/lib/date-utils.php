@@ -6,7 +6,7 @@
  *
  * @param mixed $newDate date to validate
  * @return mixed DateTime object containing the validated date or false if invalid
- * @see <http://php.net/manual/en/class.datetime.php>
+ * @see http://php.net/manual/en/class.datetime.php PHP's DateTime class
  * @throws InvalidArgumentException if the date is in an invalid format
  * @throws RangeException if the date is not a Gregorian date
  **/

@@ -5,8 +5,8 @@
  * Named after Java's venerable ClassCastException, this exception will be thrown when a type hint is invalid
  *
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
- * @see <http://docs.oracle.com/javase/8/docs/api/java/lang/ClassCastException.html>
- * @see <http://php.net/manual/en/language.oop5.typehinting.php>
+ * @see http://docs.oracle.com/javase/8/docs/api/java/lang/ClassCastException.html Java's ClassCastException
+ * @see http://php.net/manual/en/language.oop5.typehinting.php PHP Type Hinting
  **/
 class ClassCastException extends ErrorException {}
 

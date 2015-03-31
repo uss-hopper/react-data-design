@@ -91,6 +91,13 @@ class Favorite {
 		return ($this->profileId);
 	}
 
+	/**
+	 * mutator method for profile id
+	 *
+	 * @param int $newProfileId new value of profile id
+	 * @throws InvalidArgumentException if $newProfileId is not an integer
+	 * @throws RangeException if $newProfileId is not positive
+	 **/
 	public function setProfileId($newProfileId) {
 		// verify the profile id is valid
 		$newProfileId = filter_var($newProfileId, FILTER_VALIDATE_INT);
@@ -169,7 +176,7 @@ class Favorite {
 	 * @param PDO $pdo pointer to PDO connection, by reference
 	 * @throws PDOException when mySQL related errors occur
 	 **/
-	public function delete(PDO $pdo) {
+	public function delete(PDO &$pdo) {
 		// ensure the object exists before deleting
 		if($this->profileId === null || $this->tweetId === null) {
 			throw(new PDOException("not a valid favorite"));
@@ -243,7 +250,7 @@ class Favorite {
 	 * @return mixed array of Favorites found or null if not found
 	 * @throws PDOException when mySQL related errors occur
 	 **/
-	public static function getFavoriteByProfileId(PDO $pdo, $profileId) {
+	public static function getFavoriteByProfileId(PDO &$pdo, $profileId) {
 		// sanitize the profile id
 		$profileId = filter_var($profileId, FILTER_VALIDATE_INT);
 		if(empty($profileId) === true) {
@@ -290,7 +297,7 @@ class Favorite {
 	 * @return mixed array of Favorites found or null if not found
 	 * @throws PDOException when mySQL related errors occur
 	 **/
-	public static function getFavoriteByTweetId(PDO $pdo, $tweetId) {
+	public static function getFavoriteByTweetId(PDO &$pdo, $tweetId) {
 		// sanitize the tweet id
 		$tweetId = filter_var($tweetId, FILTER_VALIDATE_INT);
 		if(empty($tweetId) === true) {
