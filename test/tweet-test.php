@@ -190,7 +190,8 @@ class TweetTest extends DataDesignTest {
 		// grab the data from mySQL and enforce the fields match our expectations
 		$results = Tweet::getTweetByTweetContent($this->getPDO(), $tweet->getTweetContent());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
-		$this->assertEquals(count($results), 1);
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("Tweet", $results);
 
 		// grab the result from the array and validate it
 		$pdoTweet = $results[0];
@@ -222,7 +223,8 @@ class TweetTest extends DataDesignTest {
 		// grab the data from mySQL and enforce the fields match our expectations
 		$results = Tweet::getAllTweets($this->getPDO());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
-		$this->assertEquals(count($results), 1);
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("Tweet", $results);
 
 		// grab the result from the array and validate it
 		$pdoTweet = $results[0];
