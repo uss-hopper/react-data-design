@@ -315,7 +315,7 @@ class Tweet {
 	 * gets the Tweet by tweetId
 	 *
 	 * @param PDO $pdo pointer to PDO connection, by reference
-	 * @param int $tweetId tweet content to search for
+	 * @param int $tweetId tweet id to search for
 	 * @return mixed Tweet found or null if not found
 	 * @throws PDOException when mySQL related errors occur
 	 **/

@@ -185,6 +185,57 @@ class Favorite {
 	}
 
 	/**
+	 * gets the Favorite by tweet id and profile id
+	 *
+	 * @param PDO $pdo pointer to PDO connection, by reference
+	 * @param int $tweetId tweet id to search for
+	 * @param int $profileId profile id to search for
+	 * @return mixed Favorite found or null if not found
+	 * @throws PDOException when mySQL related errors occur
+	 **/
+	public static function getFavoriteByTweetIdAndProfileId(PDO &$pdo, $tweetId, $profileId) {
+		// sanitize the tweet id before searching
+		$tweetId = filter_var($tweetId, FILTER_VALIDATE_INT);
+		if($tweetId === false) {
+			throw(new PDOException("tweet id is not an integer"));
+		}
+		if($tweetId <= 0) {
+			throw(new PDOException("tweet id is not positive"));
+		}
+
+		// sanitize the profile id before searching
+		$profileId = filter_var($profileId, FILTER_VALIDATE_INT);
+		if($profileId === false) {
+			throw(new PDOException("profile id is not an integer"));
+		}
+		if($profileId < 0) {
+			throw(new PDOException("profile id is not positive"));
+		}
+
+		// create query template
+		$query     = "SELECT tweetId, profileId, favoriteDate FROM favorite WHERE tweetId = :tweetId AND profileId = :profileId";
+		$statement = $pdo->prepare($query);
+
+		// bind the tweet id and profile id to the place holder in the template
+		$parameters = array("tweetId" => $tweetId, "profileId" => $profileId);
+		$statement->execute($parameters);
+
+		// grab the favorite from mySQL
+		try {
+			$favorite = null;
+			$statement->setFetchMode(PDO::FETCH_ASSOC);
+			$row   = $statement->fetch();
+			if($row !== false) {
+				$favorite = new Favorite($row["tweetId"], $row["profileId"], $row["favoriteDate"]);
+			}
+		} catch(Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($favorite);
+	}
+
+	/**
 	 * gets the Favorite by profile id
 	 *
 	 * @param PDO $pdo pointer to PDO connection, by reference
