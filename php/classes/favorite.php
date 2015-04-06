@@ -247,7 +247,7 @@ class Favorite {
 	 *
 	 * @param PDO $pdo pointer to PDO connection, by reference
 	 * @param int $profileId profile id to search for
-	 * @return mixed array of Favorites found or null if not found
+	 * @return mixed SplFixedArray of Favorites found or null if not found
 	 * @throws PDOException when mySQL related errors occur
 	 **/
 	public static function getFavoriteByProfileId(PDO &$pdo, $profileId) {
@@ -266,12 +266,13 @@ class Favorite {
 		$statement->execute($parameters);
 
 		// build an array of favorites
-		$favorites = array();
+		$favorites = new SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
 				$favorite = new Favorite($row["tweetId"], $row["profileId"], $row["favoriteDate"]);
-				$favorites[] = $favorite;
+				$favorites[$favorites->key()] = $favorite;
+				$favorites->next();
 			} catch(Exception $exception) {
 				// if the row couldn't be converted, rethrow it
 				throw(new PDOException($exception->getMessage(), 0, $exception));
@@ -313,12 +314,13 @@ class Favorite {
 		$statement->execute($parameters);
 
 		// build an array of favorites
-		$favorites = array();
+		$favorites = new SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
 				$favorite = new Favorite($row["tweetId"], $row["profileId"], $row["favoriteDate"]);
-				$favorites[] = $favorite;
+				$favorites[$favorites->key()] = $favorite;
+				$favorites->next();
 			} catch(Exception $exception) {
 				// if the row couldn't be converted, rethrow it
 				throw(new PDOException($exception->getMessage(), 0, $exception));

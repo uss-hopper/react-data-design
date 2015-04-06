@@ -267,7 +267,7 @@ class Tweet {
 	 *
 	 * @param PDO $pdo pointer to PDO connection, by reference
 	 * @param string $tweetContent tweet content to search for
-	 * @return mixed array of Tweets found or null if not found
+	 * @return mixed SplFixedArray of Tweets found or null if not found
 	 * @throws PDOException when mySQL related errors occur
 	 **/
 	public static function getTweetByTweetContent(PDO &$pdo, $tweetContent) {
@@ -288,12 +288,13 @@ class Tweet {
 		$statement->execute($parameters);
 
 		// build an array of tweets
-		$tweets = array();
+		$tweets = new SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$tweet    = new Tweet($row["tweetId"], $row["profileId"], $row["tweetContent"], $row["tweetDate"]);
-				$tweets[] = $tweet;
+				$tweet = new Tweet($row["tweetId"], $row["profileId"], $row["tweetContent"], $row["tweetDate"]);
+				$tweets[$tweets->key()] = $tweet;
+				$tweets->next();
 			} catch(Exception $exception) {
 				// if the row couldn't be converted, rethrow it
 				throw(new PDOException($exception->getMessage(), 0, $exception));
@@ -356,7 +357,7 @@ class Tweet {
 	 * gets all Tweets
 	 *
 	 * @param PDO $pdo pointer to PDO connection, by reference
-	 * @return mixed array of Tweets found or null if not found
+	 * @return mixed SplFixedArray of Tweets found or null if not found
 	 * @throws PDOException when mySQL related errors occur
 	 **/
 	public static function getAllTweets(PDO &$pdo) {
@@ -366,12 +367,13 @@ class Tweet {
 		$statement->execute();
 
 		// build an array of tweets
-		$tweets = array();
+		$tweets = new SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
 				$tweet = new Tweet($row["tweetId"], $row["profileId"], $row["tweetContent"], $row["tweetDate"]);
-				$tweets[] = $tweet;
+				$tweets[$tweets->key()] = $tweet;
+				$tweets->next();
 			} catch(Exception $exception) {
 				// if the row couldn't be converted, rethrow it
 				throw(new PDOException($exception->getMessage(), 0, $exception));
