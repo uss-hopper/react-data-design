@@ -10,6 +10,7 @@ require_once(dirname(__DIR__) . "/lib/date-utils.php");
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  * @deprecated deprecated in favor of the PHP 7.0 versions
  * @version 1.0.0
+ * @see \Edu\Cnm\Dmcdonald21\DataDesign\Favorite PHP 7 version of favorite
  **/
 class Favorite {
 	/**
