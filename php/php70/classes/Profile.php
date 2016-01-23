@@ -1,5 +1,5 @@
 <?php
-namespace Edu\Cnm\Dmcondald21\DataDesign;
+namespace Edu\Cnm\Dmcdonald21\DataDesign;
 
 /**
  * Cross Section of a Twitter Profile
