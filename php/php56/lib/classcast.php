@@ -5,8 +5,11 @@
  * Named after Java's venerable ClassCastException, this exception will be thrown when a type hint is invalid
  *
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
+ * @deprecated deprecated in favor of PHP 7's native \TypeError
  * @see http://docs.oracle.com/javase/8/docs/api/java/lang/ClassCastException.html Java's ClassCastException
  * @see http://php.net/manual/en/language.oop5.typehinting.php PHP Type Hinting
+ * @see http://php.net/manual/en/class.typeerror.php PHP 7's TypeError
+ * @version 1.0.0
  **/
 class ClassCastException extends ErrorException {}
 
