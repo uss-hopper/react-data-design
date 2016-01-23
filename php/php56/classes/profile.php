@@ -9,6 +9,7 @@
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  * @deprecated deprecated in favor of the PHP 7.0 versions
  * @version 1.0.0
+ * @see \Edu\Cnm\Dmcdonald21\DataDesign\Profile PHP 7 version of profile
  **/
 class Profile {
 	/**
