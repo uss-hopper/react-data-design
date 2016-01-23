@@ -8,6 +8,8 @@ require_once(dirname(__DIR__) . "/lib/date-utils.php");
  * received using Twitter. This can easily be extended to emulate more features of Twitter.
  *
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
+ * @deprecated deprecated in favor of the PHP 7.0 versions
+ * @version 1.0.0
  **/
 class Tweet {
 	/**

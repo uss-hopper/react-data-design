@@ -7,6 +7,8 @@
  * holds the keys to the other entities in this example (i.e., Favorite and Profile).
  *
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
+ * @deprecated deprecated in favor of the PHP 7.0 versions
+ * @version 1.0.0
  **/
 class Profile {
 	/**

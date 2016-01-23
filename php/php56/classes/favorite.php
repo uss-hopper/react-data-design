@@ -8,6 +8,8 @@ require_once(dirname(__DIR__) . "/lib/date-utils.php");
  * entity) from an m-to-n relationship between Profile and Tweet.
  *
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
+ * @deprecated deprecated in favor of the PHP 7.0 versions
+ * @version 1.0.0
  **/
 class Favorite {
 	/**
