@@ -6,6 +6,8 @@ namespace Edu\Cnm\Dmcondald21\DataDesign;
  *
  * This trait will inject a private method to validate a mySQL style date (e.g., 2016-01-15 15:32:48). It will
  * convert a string representation to a DateTime object or throw an exception.
+ *
+ * @author Dylan McDonald <dmcdonald21@cnm.edu>
  **/
 trait ValidateDate {
 	/**
@@ -14,10 +16,10 @@ trait ValidateDate {
 	 * Converts a string to a DateTime object or false if invalid. This is designed to be used within a mutator method.
 	 *
 	 * @param mixed $newDate date to validate
-	 * @return mixed DateTime object containing the validated date or false if invalid
+	 * @return \DateTime|bool DateTime object containing the validated date or false if invalid
 	 * @see http://php.net/manual/en/class.datetime.php PHP's DateTime class
-	 * @throws InvalidArgumentException if the date is in an invalid format
-	 * @throws RangeException if the date is not a Gregorian date
+	 * @throws \InvalidArgumentException if the date is in an invalid format
+	 * @throws \RangeException if the date is not a Gregorian date
 	 **/
 	private static function validateDate($newDate) {
 		// base case: if the date is a DateTime object, there's no work to be done
@@ -28,7 +30,7 @@ trait ValidateDate {
 		// treat the date as a mySQL date string: Y-m-d H:i:s
 		$newDate = trim($newDate);
 		if((preg_match("/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/", $newDate, $matches)) !== 1) {
-			throw(new InvalidArgumentException("date is not a valid date"));
+			throw(new \InvalidArgumentException("date is not a valid date"));
 		}
 
 		// verify the date is really a valid calendar date
@@ -39,16 +41,16 @@ trait ValidateDate {
 		$minute = intval($matches[5]);
 		$second = intval($matches[6]);
 		if(checkdate($month, $day, $year) === false) {
-			throw(new RangeException("date $newDate is not a Gregorian date"));
+			throw(new \RangeException("date $newDate is not a Gregorian date"));
 		}
 
 		// verify the time is really a valid wall clock time
 		if($hour < 0 || $hour >= 24 || $minute < 0 || $minute >= 60 || $second < 0  || $second >= 60) {
-			throw(new RangeException("date $newDate is not a valid time"));
+			throw(new \RangeException("date $newDate is not a valid time"));
 		}
 
 		// if we got here, the date is clean
-		$newDate = DateTime::createFromFormat("Y-m-d H:i:s", $newDate);
+		$newDate = \DateTime::createFromFormat("Y-m-d H:i:s", $newDate);
 		return($newDate);
 	}
 }
