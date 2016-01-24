@@ -137,7 +137,7 @@ class Profile {
 	 * @throws \InvalidArgumentException if $newEmail is not a valid email or insecure
 	 * @throws \RangeException if $newEmail is > 128 characters
 	 **/
-	public function setEmail($newEmail) {
+	public function setEmail(string $newEmail) {
 		// verify the email is secure
 		$newEmail = trim($newEmail);
 		$newEmail = filter_var($newEmail, FILTER_VALIDATE_EMAIL);
@@ -170,7 +170,7 @@ class Profile {
 	 * @throws \InvalidArgumentException if $newPhone is not a string or insecure
 	 * @throws \RangeException if $newPhone is > 32 characters
 	 **/
-	public function setPhone($newPhone) {
+	public function setPhone(string $newPhone) {
 		// verify the phone is secure
 		$newPhone = trim($newPhone);
 		$newPhone = filter_var($newPhone, FILTER_SANITIZE_STRING);
@@ -193,7 +193,7 @@ class Profile {
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
 	 **/
-	public function insert(\PDO &$pdo) {
+	public function insert(\PDO $pdo) {
 		// enforce the profileId is null (i.e., don't insert a profile that already exists)
 		if($this->profileId !== null) {
 			throw(new \PDOException("not a new profile"));
@@ -217,7 +217,7 @@ class Profile {
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
 	 **/
-	public function delete(\PDO &$pdo) {
+	public function delete(\PDO $pdo) {
 		// enforce the profileId is not null (i.e., don't delete a profile that does not exist)
 		if($this->profileId === null) {
 			throw(new \PDOException("unable to delete a profile that does not exist"));
@@ -238,7 +238,7 @@ class Profile {
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
 	 **/
-	public function update(\PDO &$pdo) {
+	public function update(\PDO $pdo) {
 		// enforce the profileId is not null (i.e., don't update a profile that does not exist)
 		if($this->profileId === null) {
 			throw(new \PDOException("unable to delete a profile that does not exist"));
@@ -298,7 +298,7 @@ class Profile {
 	 * @return Profile|null Profile or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 **/
-	public function getProfileByEmail(\PDO &$pdo, string $email) {
+	public function getProfileByEmail(\PDO $pdo, string $email) {
 		// sanitize the email before searching
 		$email = trim($email);
 		$email = filter_var($email, FILTER_VALIDATE_EMAIL);
