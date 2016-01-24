@@ -36,7 +36,7 @@ class Favorite {
 	 *
 	 * @param int $newTweetId id of the parent Tweet
 	 * @param int $newProfileId id of the parent Profile
-	 * @param mixed $newFavoriteDate date the tweet was favorited (or null for current time)
+	 * @param \DateTime|null $newFavoriteDate date the tweet was favorited (or null for current time)
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., negative integers)
 	 **/
@@ -117,7 +117,7 @@ class Favorite {
 	/**
 	 * mutator method for favorite date
 	 *
-	 * @param mixed $newFavoriteDate favorite date as a DateTime object or string (or null to load the current time)
+	 * @param \DateTime|string|null $newFavoriteDate favorite date as a DateTime object or string (or null to load the current time)
 	 * @throws \InvalidArgumentException if $newFavoriteDate is not a valid object or string
 	 * @throws \RangeException if $newFavoriteDate is a date that does not exist
 	 **/
@@ -266,7 +266,7 @@ class Favorite {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @param int $tweetId tweet id to search for
-	 * @return mixed array of Favorites found or null if not found
+	 * @return \SplFixedArray array of Favorites found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 **/
 	public static function getFavoriteByTweetId(\PDO $pdo, int $tweetId) {

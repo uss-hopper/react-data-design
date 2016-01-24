@@ -63,7 +63,7 @@ class Tweet {
 	/**
 	 * accessor method for tweet id
 	 *
-	 * @return mixed value of tweet id
+	 * @return int|null value of tweet id
 	 **/
 	public function getTweetId() {
 		return($this->tweetId);
@@ -72,7 +72,7 @@ class Tweet {
 	/**
 	 * mutator method for tweet id
 	 *
-	 * @param mixed $newTweetId new value of tweet id
+	 * @param int|null $newTweetId new value of tweet id
 	 * @throws \InvalidArgumentException if $newTweetId is not an integer
 	 * @throws \RangeException if $newTweetId is not positive
 	 **/
@@ -298,7 +298,7 @@ class Tweet {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @param int $tweetId tweet id to search for
-	 * @return mixed Tweet found or null if not found
+	 * @return Tweet|null Tweet found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 **/
 	public static function getTweetByTweetId(\PDO $pdo, int $tweetId) {
