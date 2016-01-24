@@ -12,7 +12,7 @@ require_once("autoload.php");
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  * @version 2.0.0
  **/
-class Tweet {
+class Tweet implements \JsonSerializable {
 	use ValidateDate;
 	/**
 	 * id for this Tweet; this is the primary key
@@ -44,6 +44,7 @@ class Tweet {
 	 * @param \DateTime|string|null $newTweetDate date and time Tweet was sent or null if set to current date and time
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
+	 * @throws \TypeError if data types violate type hints
 	 **/
 	public function __construct(int $newTweetId = null, int $newProfileId, string $newTweetContent, $newTweetDate = null) {
 		try {
@@ -57,6 +58,12 @@ class Tweet {
 		} catch(\RangeException $range) {
 			// rethrow the exception to the caller
 			throw(new \RangeException($range->getMessage(), 0, $range));
+		} catch(\TypeError $typeError) {
+			// rethrow the exception to the caller
+			throw(new \TypeError($typeError->getMessage(), 0, $typeError));
+		} catch(\Exception $exception) {
+			// rethrow the exception to the caller
+			throw(new \Exception($exception->getMessage(), 0, $exception));
 		}
 	}
 
@@ -73,8 +80,8 @@ class Tweet {
 	 * mutator method for tweet id
 	 *
 	 * @param int|null $newTweetId new value of tweet id
-	 * @throws \TypeError if $newTweetId is not an integer
 	 * @throws \RangeException if $newTweetId is not positive
+	 * @throws \TypeError if $newTweetId is not an integer
 	 **/
 	public function setTweetId(int $newTweetId = null) {
 		// base case: if the tweet id is null, this a new tweet without a mySQL assigned id (yet)
@@ -106,8 +113,10 @@ class Tweet {
 	 *
 	 * @param int $newProfileId new value of profile id
 	 * @throws \RangeException if $newProfileId is not positive
+	 * @throws \TypeError if $newProfileId is not an integer
 	 **/
-	public function setProfileId(int $newProfileId) {// verify the profile id is positive
+	public function setProfileId(int $newProfileId) {
+		// verify the profile id is positive
 		if($newProfileId <= 0) {
 			throw(new \RangeException("profile id is not positive"));
 		}
@@ -131,6 +140,7 @@ class Tweet {
 	 * @param string $newTweetContent new value of tweet content
 	 * @throws \InvalidArgumentException if $newTweetContent is not a string or insecure
 	 * @throws \RangeException if $newTweetContent is > 140 characters
+	 * @throws \TypeError if $newTweetContent is not a string
 	 **/
 	public function setTweetContent(string $newTweetContent) {
 		// verify the tweet content is secure
@@ -188,6 +198,7 @@ class Tweet {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function insert(\PDO $pdo) {
 		// enforce the tweetId is null (i.e., don't insert a tweet that already exists)
@@ -196,7 +207,7 @@ class Tweet {
 		}
 
 		// create query template
-		$query     = "INSERT INTO tweet(profileId, tweetContent, tweetDate) VALUES(:profileId, :tweetContent, :tweetDate)";
+		$query = "INSERT INTO tweet(profileId, tweetContent, tweetDate) VALUES(:profileId, :tweetContent, :tweetDate)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
@@ -214,6 +225,7 @@ class Tweet {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function delete(\PDO $pdo) {
 		// enforce the tweetId is not null (i.e., don't delete a tweet that hasn't been inserted)
@@ -222,7 +234,7 @@ class Tweet {
 		}
 
 		// create query template
-		$query     = "DELETE FROM tweet WHERE tweetId = :tweetId";
+		$query = "DELETE FROM tweet WHERE tweetId = :tweetId";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holder in the template
@@ -235,6 +247,7 @@ class Tweet {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function update(\PDO $pdo) {
 		// enforce the tweetId is not null (i.e., don't update a tweet that hasn't been inserted)
@@ -259,6 +272,7 @@ class Tweet {
 	 * @param string $tweetContent tweet content to search for
 	 * @return \SplFixedArray SplFixedArray of Tweets found
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
 	 **/
 	public static function getTweetByTweetContent(\PDO $pdo, string $tweetContent) {
 		// sanitize the description before searching
@@ -269,7 +283,7 @@ class Tweet {
 		}
 
 		// create query template
-		$query     = "SELECT tweetId, profileId, tweetContent, tweetDate FROM tweet WHERE tweetContent LIKE :tweetContent";
+		$query = "SELECT tweetId, profileId, tweetContent, tweetDate FROM tweet WHERE tweetContent LIKE :tweetContent";
 		$statement = $pdo->prepare($query);
 
 		// bind the tweet content to the place holder in the template
@@ -300,6 +314,7 @@ class Tweet {
 	 * @param int $tweetId tweet id to search for
 	 * @return Tweet|null Tweet found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
 	 **/
 	public static function getTweetByTweetId(\PDO $pdo, int $tweetId) {
 		// sanitize the tweetId before searching
@@ -308,7 +323,7 @@ class Tweet {
 		}
 
 		// create query template
-		$query     = "SELECT tweetId, profileId, tweetContent, tweetDate FROM tweet WHERE tweetId = :tweetId";
+		$query = "SELECT tweetId, profileId, tweetContent, tweetDate FROM tweet WHERE tweetId = :tweetId";
 		$statement = $pdo->prepare($query);
 
 		// bind the tweet id to the place holder in the template
@@ -319,7 +334,7 @@ class Tweet {
 		try {
 			$tweet = null;
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
-			$row   = $statement->fetch();
+			$row = $statement->fetch();
 			if($row !== false) {
 				$tweet = new Tweet($row["tweetId"], $row["profileId"], $row["tweetContent"], $row["tweetDate"]);
 			}
@@ -336,6 +351,7 @@ class Tweet {
 	 * @param \PDO $pdo PDO connection object
 	 * @return \SplFixedArray SplFixedArray of Tweets found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
 	 **/
 	public static function getAllTweets(\PDO $pdo) {
 		// create query template
@@ -357,5 +373,16 @@ class Tweet {
 			}
 		}
 		return ($tweets);
+	}
+
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize() {
+		$fields = get_object_vars($this);
+		$fields["tweetDate"] = intval($this->tweetDate->format("U")) * 1000;
+		return($fields);
 	}
 }
