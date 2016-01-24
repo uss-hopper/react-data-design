@@ -10,7 +10,7 @@ namespace Edu\Cnm\Dmcdonald21\DataDesign;
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  * @version 2.0.0
  **/
-class Profile {
+class Profile implements \JsonSerializable {
 	/**
 	 * id for this Profile; this is the primary key
 	 * @var int $profileId
@@ -41,6 +41,8 @@ class Profile {
 	 * @param string $newPhone string containing phone number
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
+	 * @throws \TypeError if data types violate type hints
+	 * @throws \Exception if some other exception occurs
 	 **/
 	public function __construct(int $newProfileId = null, string $newAtHandle, string $newEmail, string $newPhone) {
 		try {
@@ -54,6 +56,12 @@ class Profile {
 		} catch(\RangeException $range) {
 			// rethrow the exception to the caller
 			throw(new \RangeException($range->getMessage(), 0, $range));
+		} catch(\TypeError $typeError) {
+			// rethrow the exception to the caller
+			throw(new \TypeError($typeError->getMessage(), 0, $typeError));
+		} catch(\Exception $exception) {
+			// rethrow the exception to the caller
+			throw(new \Exception($exception->getMessage(), 0, $exception));
 		}
 	}
 
@@ -71,6 +79,7 @@ class Profile {
 	 *
 	 * @param int|null $newProfileId value of new profile id
 	 * @throws \RangeException if $newProfileId is not positive
+	 * @throws \TypeError if $newProfileId is not an integer
 	 **/
 	public function setProfileId(int $newProfileId = null) {
 		// base case: if the tweet id is null, this a new tweet without a mySQL assigned id (yet)
@@ -103,6 +112,7 @@ class Profile {
 	 * @param string $newAtHandle new value of at handle
 	 * @throws \InvalidArgumentException if $newAtHandle is not a string or insecure
 	 * @throws \RangeException if $newAtHandle is > 32 characters
+	 * @throws \TypeError if $newAtHandle is not a string
 	 **/
 	public function setAtHandle(string $newAtHandle) {
 		// verify the at handle is secure
@@ -136,6 +146,7 @@ class Profile {
 	 * @param string $newEmail new value of email
 	 * @throws \InvalidArgumentException if $newEmail is not a valid email or insecure
 	 * @throws \RangeException if $newEmail is > 128 characters
+	 * @throws \TypeError if $newEmail is not a string
 	 **/
 	public function setEmail(string $newEmail) {
 		// verify the email is secure
@@ -169,6 +180,7 @@ class Profile {
 	 * @param string $newPhone new value of phone
 	 * @throws \InvalidArgumentException if $newPhone is not a string or insecure
 	 * @throws \RangeException if $newPhone is > 32 characters
+	 * @throws \TypeError if $newPhone is not a string
 	 **/
 	public function setPhone(string $newPhone) {
 		// verify the phone is secure
@@ -192,6 +204,7 @@ class Profile {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function insert(\PDO $pdo) {
 		// enforce the profileId is null (i.e., don't insert a profile that already exists)
@@ -216,6 +229,7 @@ class Profile {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function delete(\PDO $pdo) {
 		// enforce the profileId is not null (i.e., don't delete a profile that does not exist)
@@ -237,6 +251,7 @@ class Profile {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function update(\PDO $pdo) {
 		// enforce the profileId is not null (i.e., don't update a profile that does not exist)
@@ -260,6 +275,7 @@ class Profile {
 	 * @param int $profileId profile id to search for
 	 * @return Profile|null Profile or null if not found
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
 	 **/
 	public static function getProfileByProfileId(\PDO $pdo, int $profileId) {
 		// sanitize the profile id before searching
@@ -297,6 +313,7 @@ class Profile {
 	 * @param string $email email to search for
 	 * @return Profile|null Profile or null if not found
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
 	 **/
 	public static function getProfileByEmail(\PDO $pdo, string $email) {
 		// sanitize the email before searching
@@ -336,6 +353,7 @@ class Profile {
 	 * @param string $atHandle at handle to search for
 	 * @return Profile|null Profile or null if not found
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
 	 **/
 	public static function getProfileByAtHandle(\PDO $pdo, string $atHandle) {
 		// sanitize the at handle before searching
@@ -366,5 +384,14 @@ class Profile {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		return($profile);
+	}
+
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize() {
+		return(get_object_vars($this));
 	}
 }

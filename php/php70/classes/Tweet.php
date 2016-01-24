@@ -45,6 +45,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
 	 * @throws \TypeError if data types violate type hints
+	 * @throws \Exception if some other exception occurs
 	 **/
 	public function __construct(int $newTweetId = null, int $newProfileId, string $newTweetContent, $newTweetDate = null) {
 		try {
