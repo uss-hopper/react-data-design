@@ -40,7 +40,7 @@ class Favorite {
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., negative integers)
 	 **/
-	public function __construct(int $newTweetId = null, int $newProfileId, \DateTime $newFavoriteDate = null) {
+	public function __construct(int $newTweetId = null, int $newProfileId, $newFavoriteDate = null) {
 		// use the mutators to do the work for us!
 		try {
 			$this->setTweetId($newTweetId);
@@ -167,7 +167,7 @@ class Favorite {
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
 	 **/
-	public function delete(\PDO &$pdo) {
+	public function delete(\PDO $pdo) {
 		// ensure the object exists before deleting
 		if($this->profileId === null || $this->tweetId === null) {
 			throw(new \PDOException("not a valid favorite"));

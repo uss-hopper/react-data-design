@@ -41,11 +41,11 @@ class Tweet {
 	 * @param int|null $newTweetId id of this Tweet or null if a new Tweet
 	 * @param int $newProfileId id of the Profile that sent this Tweet
 	 * @param string $newTweetContent string containing actual tweet data
-	 * @param \DateTime|null $newTweetDate date and time Tweet was sent or null if set to current date and time
+	 * @param \DateTime|string|null $newTweetDate date and time Tweet was sent or null if set to current date and time
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
 	 **/
-	public function __construct(int $newTweetId = null, int $newProfileId, string $newTweetContent, \DateTime $newTweetDate = null) {
+	public function __construct(int $newTweetId = null, int $newProfileId, string $newTweetContent, $newTweetDate = null) {
 		try {
 			$this->setTweetId($newTweetId);
 			$this->setProfileId($newProfileId);
@@ -73,14 +73,14 @@ class Tweet {
 	 * mutator method for tweet id
 	 *
 	 * @param int|null $newTweetId new value of tweet id
-	 * @throws \InvalidArgumentException if $newTweetId is not an integer
+	 * @throws \TypeError if $newTweetId is not an integer
 	 * @throws \RangeException if $newTweetId is not positive
 	 **/
 	public function setTweetId(int $newTweetId = null) {
-		// verify the tweet id is valid
-		$newTweetId = filter_var($newTweetId, FILTER_VALIDATE_INT);
-		if($newTweetId === false) {
-			throw(new \InvalidArgumentException("tweet id is not a valid integer"));
+		// base case: if the tweet id is null, this a new tweet without a mySQL assigned id (yet)
+		if($newTweetId === null) {
+			$this->tweetId = null;
+			return;
 		}
 
 		// verify the tweet id is positive
@@ -161,11 +161,11 @@ class Tweet {
 	/**
 	 * mutator method for tweet date
 	 *
-	 * @param \DateTime|null $newTweetDate tweet date as a DateTime object or string (or null to load the current time)
+	 * @param \DateTime|string|null $newTweetDate tweet date as a DateTime object or string (or null to load the current time)
 	 * @throws \InvalidArgumentException if $newTweetDate is not a valid object or string
 	 * @throws \RangeException if $newTweetDate is a date that does not exist
 	 **/
-	public function setTweetDate(\DateTime $newTweetDate = null) {
+	public function setTweetDate($newTweetDate = null) {
 		// base case: if the date is null, use the current date and time
 		if($newTweetDate === null) {
 			$this->tweetDate = new \DateTime();
@@ -215,7 +215,7 @@ class Tweet {
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
 	 **/
-	public function delete(\PDO &$pdo) {
+	public function delete(\PDO $pdo) {
 		// enforce the tweetId is not null (i.e., don't delete a tweet that hasn't been inserted)
 		if($this->tweetId === null) {
 			throw(new \PDOException("unable to delete a tweet that does not exist"));

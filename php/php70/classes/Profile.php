@@ -261,7 +261,7 @@ class Profile {
 	 * @return Profile|null Profile or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 **/
-	public function getProfileByProfileId(\PDO $pdo, int $profileId) {
+	public static function getProfileByProfileId(\PDO $pdo, int $profileId) {
 		// sanitize the profile id before searching
 		if($profileId <= 0) {
 			throw(new \PDOException("profile id is not postive"));
@@ -298,7 +298,7 @@ class Profile {
 	 * @return Profile|null Profile or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 **/
-	public function getProfileByEmail(\PDO $pdo, string $email) {
+	public static function getProfileByEmail(\PDO $pdo, string $email) {
 		// sanitize the email before searching
 		$email = trim($email);
 		$email = filter_var($email, FILTER_VALIDATE_EMAIL);
@@ -337,7 +337,7 @@ class Profile {
 	 * @return Profile|null Profile or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 **/
-	public function getProfileByAtHandle(\PDO $pdo, string $atHandle) {
+	public static function getProfileByAtHandle(\PDO $pdo, string $atHandle) {
 		// sanitize the at handle before searching
 		$atHandle = trim($atHandle);
 		$atHandle = filter_var($atHandle, FILTER_SANITIZE_STRING);
