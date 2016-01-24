@@ -12,7 +12,7 @@ require_once("autoload.php");
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  * @version 2.0.0
  **/
-class Favorite {
+class Favorite implements \JsonSerializable {
 	use ValidateDate;
 
 	/**
@@ -39,6 +39,8 @@ class Favorite {
 	 * @param \DateTime|null $newFavoriteDate date the tweet was favorited (or null for current time)
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., negative integers)
+	 * @throws \TypeError if data types violate type hints
+	 * @throws \Exception if some other exception occurs
 	 **/
 	public function __construct(int $newTweetId = null, int $newProfileId, $newFavoriteDate = null) {
 		// use the mutators to do the work for us!
@@ -52,6 +54,12 @@ class Favorite {
 		} catch(\RangeException $range) {
 			// rethrow the exception to the caller
 			throw(new \RangeException($range->getMessage(), 0, $range));
+		} catch(\TypeError $typeError) {
+			// rethrow the exception to the caller
+			throw(new \TypeError($typeError->getMessage(), 0, $typeError));
+		} catch(\Exception $exception) {
+			// rethrow the exception to the caller
+			throw(new \Exception($exception->getMessage(), 0, $exception));
 		}
 	}
 
@@ -69,6 +77,7 @@ class Favorite {
 	 *
 	 * @param int $newTweetId new value of tweet id
 	 * @throws \RangeException if $newTweetId is not positive
+	 * @throws \TypeError if $newTweetId is not an integer
 	 **/
 	public function setTweetId(int $newTweetId) {
 		// verify the tweet id is positive
@@ -94,6 +103,7 @@ class Favorite {
 	 *
 	 * @param int $newProfileId new value of profile id
 	 * @throws \RangeException if $newProfileId is not positive
+	 * @throws \TypeError if $newProfileId is not an integer
 	 **/
 	public function setProfileId(int $newProfileId) {
 		// verify the profile id is positive
@@ -144,6 +154,7 @@ class Favorite {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function insert(\PDO $pdo) {
 		// ensure the object exists before inserting
@@ -166,6 +177,7 @@ class Favorite {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function delete(\PDO $pdo) {
 		// ensure the object exists before deleting
@@ -190,6 +202,7 @@ class Favorite {
 	 * @param int $profileId profile id to search for
 	 * @return Favorite|null Favorite found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
 	 **/
 	public static function getFavoriteByTweetIdAndProfileId(\PDO $pdo, int $tweetId, int $profileId) {
 		// sanitize the tweet id and profile id before searching
@@ -230,6 +243,7 @@ class Favorite {
 	 * @param int $profileId profile id to search for
 	 * @return \SplFixedArray SplFixedArray of Favorites found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
 	 **/
 	public static function getFavoriteByProfileId(\PDO $pdo, int $profileId) {
 		// sanitize the profile id
@@ -268,6 +282,7 @@ class Favorite {
 	 * @param int $tweetId tweet id to search for
 	 * @return \SplFixedArray array of Favorites found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
 	 **/
 	public static function getFavoriteByTweetId(\PDO $pdo, int $tweetId) {
 		// sanitize the tweet id
@@ -298,5 +313,16 @@ class Favorite {
 			}
 		}
 		return($favorites);
+	}
+
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize() {
+		$fields = get_object_vars($this);
+		$fields["favoriteDate"] = intval($this->favoriteDate->format("U")) * 1000;
+		return($fields);
 	}
 }
