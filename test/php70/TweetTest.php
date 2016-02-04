@@ -148,7 +148,7 @@ class TweetTest extends DataDesignTest {
 	public function testDeleteInvalidTweet() {
 		// create a Tweet and try to delete it without actually inserting it
 		$tweet = new Tweet(null, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
-		$tweet->update($this->getPDO());
+		$tweet->delete($this->getPDO());
 	}
 
 	/**
