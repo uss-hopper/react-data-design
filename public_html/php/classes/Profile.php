@@ -18,19 +18,19 @@ class Profile implements \JsonSerializable {
 	private $profileId;
 	/**
 	 * at handle for this Profile; this is a unique index
-	 * @var string $atHandle
+	 * @var string $profileAtHandle
 	 **/
-	private $atHandle;
+	private $profileAtHandle;
 	/**
 	 * email for this Profile; this is a unique index
-	 * @var string $email
+	 * @var string $profileEmail
 	 **/
-	private $email;
+	private $profileEmail;
 	/**
 	 * phone number for this Profile
-	 * @var string $phone
+	 * @var string $profilePhone
 	 **/
-	private $phone;
+	private $profilePhone;
 
 	/**
 	 * constructor for this Profile
@@ -47,9 +47,9 @@ class Profile implements \JsonSerializable {
 	public function __construct(int $newProfileId = null, string $newAtHandle, string $newEmail, string $newPhone) {
 		try {
 			$this->setProfileId($newProfileId);
-			$this->setAtHandle($newAtHandle);
-			$this->setEmail($newEmail);
-			$this->setPhone($newPhone);
+			$this->setProfileAtHandle($newAtHandle);
+			$this->setProfileEmail($newEmail);
+			$this->setProfilePhone($newPhone);
 		} catch(\InvalidArgumentException $invalidArgument) {
 			// rethrow the exception to the caller
 			throw(new \InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
@@ -102,8 +102,8 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @return string value of at handle
 	 **/
-	public function getAtHandle() {
-		return($this->atHandle);
+	public function getProfileAtHandle() {
+		return($this->profileAtHandle);
 	}
 
 	/**
@@ -114,7 +114,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \RangeException if $newAtHandle is > 32 characters
 	 * @throws \TypeError if $newAtHandle is not a string
 	 **/
-	public function setAtHandle(string $newAtHandle) {
+	public function setProfileAtHandle(string $newAtHandle) {
 		// verify the at handle is secure
 		$newAtHandle = trim($newAtHandle);
 		$newAtHandle = filter_var($newAtHandle, FILTER_SANITIZE_STRING);
@@ -128,7 +128,7 @@ class Profile implements \JsonSerializable {
 		}
 
 		// store the at handle
-		$this->atHandle = $newAtHandle;
+		$this->profileAtHandle = $newAtHandle;
 	}
 
 	/**
@@ -136,8 +136,8 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @return string value of email
 	 **/
-	public function getEmail() {
-		return $this->email;
+	public function getProfileEmail() {
+		return $this->profileEmail;
 	}
 
 	/**
@@ -148,7 +148,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \RangeException if $newEmail is > 128 characters
 	 * @throws \TypeError if $newEmail is not a string
 	 **/
-	public function setEmail(string $newEmail) {
+	public function setProfileEmail(string $newEmail) {
 		// verify the email is secure
 		$newEmail = trim($newEmail);
 		$newEmail = filter_var($newEmail, FILTER_VALIDATE_EMAIL);
@@ -162,7 +162,7 @@ class Profile implements \JsonSerializable {
 		}
 
 		// store the email
-		$this->email = $newEmail;
+		$this->profileEmail = $newEmail;
 	}
 
 	/**
@@ -170,8 +170,8 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @return string value of phone
 	 **/
-	public function getPhone() {
-		return($this->phone);
+	public function getProfilePhone() {
+		return($this->profilePhone);
 	}
 
 	/**
@@ -182,7 +182,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \RangeException if $newPhone is > 32 characters
 	 * @throws \TypeError if $newPhone is not a string
 	 **/
-	public function setPhone(string $newPhone) {
+	public function setProfilePhone(string $newPhone) {
 		// verify the phone is secure
 		$newPhone = trim($newPhone);
 		$newPhone = filter_var($newPhone, FILTER_SANITIZE_STRING);
@@ -196,7 +196,7 @@ class Profile implements \JsonSerializable {
 		}
 
 		// store the phone
-		$this->phone = $newPhone;
+		$this->profilePhone = $newPhone;
 	}
 
 	/**
@@ -213,11 +213,11 @@ class Profile implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "INSERT INTO profile(email, phone, atHandle) VALUES(:email, :phone, :atHandle)";
+		$query = "INSERT INTO profile(profileEmail, profilePhone, profileAtHandle) VALUES(:profileEmail, :profilePhone, :profileAtHandle)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$parameters = ["email" => $this->email, "phone" => $this->phone, "atHandle" => $this->atHandle];
+		$parameters = ["profileEmail" => $this->profileEmail, "profilePhone" => $this->profilePhone, "profileAtHandle" => $this->profileAtHandle];
 		$statement->execute($parameters);
 
 		// update the null profileId with what mySQL just gave us
@@ -260,11 +260,11 @@ class Profile implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "UPDATE profile SET email = :email, phone = :phone, atHandle = :atHandle WHERE profileId = :profileId";
+		$query = "UPDATE profile SET profileEmail = :email, profilePhone = :phone, profileAtHandle = :atHandle WHERE profileId = :profileId";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$parameters = ["email" => $this->email, "phone" => $this->phone, "atHandle" => $this->atHandle, "profileId" => $this->profileId];
+		$parameters = ["profileEmail" => $this->profileEmail, "profilePhone" => $this->profilePhone, "profileAtHandle" => $this->profileAtHandle, "profileId" => $this->profileId];
 		$statement->execute($parameters);
 	}
 
@@ -284,7 +284,7 @@ class Profile implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "SELECT profileId, email, phone, atHandle FROM profile WHERE profileId = :profileId";
+		$query = "SELECT profileId, profileAtHandle, profileEmail, profilePhone FROM profile WHERE profileId = :profileId";
 		$statement = $pdo->prepare($query);
 
 		// bind the profile id to the place holder in the template
@@ -297,7 +297,7 @@ class Profile implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$profile = new Profile($row["profileId"], $row["atHandle"], $row["email"], $row["phone"]);
+				$profile = new Profile($row["profileId"], $row["profileAtHandle"], $row["profileEmail"], $row["profilePhone"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
@@ -310,25 +310,25 @@ class Profile implements \JsonSerializable {
 	 * gets the Profile by email
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param string $email email to search for
+	 * @param string $profileEmail email to search for
 	 * @return Profile|null Profile or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getProfileByEmail(\PDO $pdo, string $email) {
+	public static function getProfileByProfileEmail(\PDO $pdo, string $profileEmail) {
 		// sanitize the email before searching
-		$email = trim($email);
-		$email = filter_var($email, FILTER_VALIDATE_EMAIL);
-		if(empty($email) === true) {
+		$profileEmail = trim($profileEmail);
+		$profileEmail = filter_var($profileEmail, FILTER_VALIDATE_EMAIL);
+		if(empty($profileEmail) === true) {
 			throw(new \PDOException("not a valid email"));
 		}
 
 		// create query template
-		$query = "SELECT profileId, email, phone, atHandle FROM profile WHERE email = :email";
+		$query = "SELECT profileId, profileAtHandle, profileEmail, profilePhone FROM profile WHERE profileEmail = :profileEmail";
 		$statement = $pdo->prepare($query);
 
 		// bind the profile id to the place holder in the template
-		$parameters = ["email" => $email];
+		$parameters = ["profileEmail" => $profileEmail];
 		$statement->execute($parameters);
 
 		// grab the Profile from mySQL
@@ -350,25 +350,25 @@ class Profile implements \JsonSerializable {
 	 * gets the Profile by at handle
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param string $atHandle at handle to search for
+	 * @param string $profileAtHandle at handle to search for
 	 * @return Profile|null Profile or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getProfileByAtHandle(\PDO $pdo, string $atHandle) {
+	public static function getProfileByProfileAtHandle(\PDO $pdo, string $profileAtHandle) {
 		// sanitize the at handle before searching
-		$atHandle = trim($atHandle);
-		$atHandle = filter_var($atHandle, FILTER_SANITIZE_STRING);
-		if(empty($atHandle) === true) {
+		$profileAtHandle = trim($profileAtHandle);
+		$profileAtHandle = filter_var($profileAtHandle, FILTER_SANITIZE_STRING);
+		if(empty($profileAtHandle) === true) {
 			throw(new \PDOException("not a valid at handle"));
 		}
 
 		// create query template
-		$query = "SELECT profileId, email, phone, atHandle FROM profile WHERE atHandle = :atHandle";
+		$query = "SELECT profileId, profileAtHandle, profileEmail, profilePhone FROM profile WHERE profileAtHandle = :profileAtHandle";
 		$statement = $pdo->prepare($query);
 
 		// bind the profile id to the place holder in the template
-		$parameters = ["atHandle" => $atHandle];
+		$parameters = ["profileAtHandle" => $profileAtHandle];
 		$statement->execute($parameters);
 
 		// grab the Profile from mySQL

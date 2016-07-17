@@ -55,9 +55,9 @@ class ProfileTest extends DataDesignTest {
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId());
 		$this->assertSame($numRows + 1, $this->getConnection()->getRowCount("profile"));
-		$this->assertSame($pdoProfile->getAtHandle(), $this->VALID_ATHANDLE);
-		$this->assertSame($pdoProfile->getEmail(), $this->VALID_EMAIL);
-		$this->assertSame($pdoProfile->getPhone(), $this->VALID_PHONE);
+		$this->assertSame($pdoProfile->getProfileAtHandle(), $this->VALID_ATHANDLE);
+		$this->assertSame($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
+		$this->assertSame($pdoProfile->getProfilePhone(), $this->VALID_PHONE);
 	}
 
 	/**
@@ -83,15 +83,15 @@ class ProfileTest extends DataDesignTest {
 		$profile->insert($this->getPDO());
 
 		// edit the Profile and update it in mySQL
-		$profile->setAtHandle($this->VALID_ATHANDLE2);
+		$profile->setProfileAtHandle($this->VALID_ATHANDLE2);
 		$profile->update($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId());
 		$this->assertSame($numRows + 1, $this->getConnection()->getRowCount("profile"));
-		$this->assertSame($pdoProfile->getAtHandle(), $this->VALID_ATHANDLE2);
-		$this->assertSame($pdoProfile->getEmail(), $this->VALID_EMAIL);
-		$this->assertSame($pdoProfile->getPhone(), $this->VALID_PHONE);
+		$this->assertSame($pdoProfile->getProfileAtHandle(), $this->VALID_ATHANDLE2);
+		$this->assertSame($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
+		$this->assertSame($pdoProfile->getProfilePhone(), $this->VALID_PHONE);
 	}
 
 	/**
@@ -151,9 +151,9 @@ class ProfileTest extends DataDesignTest {
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId());
 		$this->assertSame($numRows + 1, $this->getConnection()->getRowCount("profile"));
-		$this->assertSame($pdoProfile->getAtHandle(), $this->VALID_ATHANDLE);
-		$this->assertSame($pdoProfile->getEmail(), $this->VALID_EMAIL);
-		$this->assertSame($pdoProfile->getPhone(), $this->VALID_PHONE);
+		$this->assertSame($pdoProfile->getProfileAtHandle(), $this->VALID_ATHANDLE);
+		$this->assertSame($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
+		$this->assertSame($pdoProfile->getProfilePhone(), $this->VALID_PHONE);
 	}
 
 	/**
@@ -174,11 +174,11 @@ class ProfileTest extends DataDesignTest {
 		$profile->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoProfile = Profile::getProfileByAtHandle($this->getPDO(), $this->VALID_ATHANDLE);
+		$pdoProfile = Profile::getProfileByProfileAtHandle($this->getPDO(), $this->VALID_ATHANDLE);
 		$this->assertSame($numRows + 1, $this->getConnection()->getRowCount("profile"));
-		$this->assertSame($pdoProfile->getAtHandle(), $this->VALID_ATHANDLE);
-		$this->assertSame($pdoProfile->getEmail(), $this->VALID_EMAIL);
-		$this->assertSame($pdoProfile->getPhone(), $this->VALID_PHONE);
+		$this->assertSame($pdoProfile->getProfileAtHandle(), $this->VALID_ATHANDLE);
+		$this->assertSame($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
+		$this->assertSame($pdoProfile->getProfilePhone(), $this->VALID_PHONE);
 	}
 
 	/**
@@ -186,7 +186,7 @@ class ProfileTest extends DataDesignTest {
 	 **/
 	public function testGetInvalidProfileByAtHandle() {
 		// grab an at handle that does not exist
-		$profile = Profile::getProfileByAtHandle($this->getPDO(), "@doesnotexist");
+		$profile = Profile::getProfileByProfileAtHandle($this->getPDO(), "@doesnotexist");
 		$this->assertNull($profile);
 	}
 
@@ -202,11 +202,11 @@ class ProfileTest extends DataDesignTest {
 		$profile->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoProfile = Profile::getProfileByEmail($this->getPDO(), $profile->getEmail());
+		$pdoProfile = Profile::getProfileByProfileEmail($this->getPDO(), $profile->getProfileEmail());
 		$this->assertSame($numRows + 1, $this->getConnection()->getRowCount("profile"));
-		$this->assertSame($pdoProfile->getAtHandle(), $this->VALID_ATHANDLE);
-		$this->assertSame($pdoProfile->getEmail(), $this->VALID_EMAIL);
-		$this->assertSame($pdoProfile->getPhone(), $this->VALID_PHONE);
+		$this->assertSame($pdoProfile->getProfileAtHandle(), $this->VALID_ATHANDLE);
+		$this->assertSame($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
+		$this->assertSame($pdoProfile->getProfilePhone(), $this->VALID_PHONE);
 	}
 
 	/**
@@ -214,7 +214,7 @@ class ProfileTest extends DataDesignTest {
 	 **/
 	public function testGetInvalidProfileByEmail() {
 		// grab an email that does not exist
-		$profile = Profile::getProfileByEmail($this->getPDO(), "does@not.exist");
+		$profile = Profile::getProfileByProfileEmail($this->getPDO(), "does@not.exist");
 		$this->assertNull($profile);
 	}
 }
