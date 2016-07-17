@@ -223,10 +223,11 @@ class Like implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$like = new Like($row["likeProfileId"], $row["likeTweetId"], $row["likeTweetId"]);
+				$like = new Like($row["likeProfileId"], $row["likeTweetId"], $row["likeDate"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
+			var_dump($exception->getTrace());
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		return($like);
