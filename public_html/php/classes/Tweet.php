@@ -10,7 +10,7 @@ require_once("autoload.php");
  * received using Twitter. This can easily be extended to emulate more features of Twitter.
  *
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
- * @version 2.0.0
+ * @version 3.0.0
  **/
 class Tweet implements \JsonSerializable {
 	use ValidateDate;
@@ -39,7 +39,7 @@ class Tweet implements \JsonSerializable {
 	 * constructor for this Tweet
 	 *
 	 * @param int|null $newTweetId id of this Tweet or null if a new Tweet
-	 * @param int $newProfileId id of the Profile that sent this Tweet
+	 * @param int $newTweetProfileId id of the Profile that sent this Tweet
 	 * @param string $newTweetContent string containing actual tweet data
 	 * @param \DateTime|string|null $newTweetDate date and time Tweet was sent or null if set to current date and time
 	 * @throws \InvalidArgumentException if data types are not valid
@@ -47,10 +47,10 @@ class Tweet implements \JsonSerializable {
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 **/
-	public function __construct(int $newTweetId = null, int $newProfileId, string $newTweetContent, $newTweetDate = null) {
+	public function __construct(int $newTweetId = null, int $newTweetProfileId, string $newTweetContent, $newTweetDate = null) {
 		try {
 			$this->setTweetId($newTweetId);
-			$this->setTweetProfileId($newProfileId);
+			$this->setTweetProfileId($newTweetProfileId);
 			$this->setTweetContent($newTweetContent);
 			$this->setTweetDate($newTweetDate);
 		} catch(\InvalidArgumentException $invalidArgument) {
@@ -110,20 +110,20 @@ class Tweet implements \JsonSerializable {
 	}
 
 	/**
-	 * mutator method for profile id
+	 * mutator method for tweet profile id
 	 *
-	 * @param int $newProfileId new value of tweet profile id
+	 * @param int $newTweetProfileId new value of tweet profile id
 	 * @throws \RangeException if $newProfileId is not positive
 	 * @throws \TypeError if $newProfileId is not an integer
 	 **/
-	public function setTweetProfileId(int $newProfileId) {
+	public function setTweetProfileId(int $newTweetProfileId) {
 		// verify the profile id is positive
-		if($newProfileId <= 0) {
-			throw(new \RangeException("profile id is not positive"));
+		if($newTweetProfileId <= 0) {
+			throw(new \RangeException("tweet profile id is not positive"));
 		}
 
 		// convert and store the profile id
-		$this->tweetProfileId = $newProfileId;
+		$this->tweetProfileId = $newTweetProfileId;
 	}
 
 	/**
@@ -422,7 +422,7 @@ class Tweet implements \JsonSerializable {
 	 **/
 	public function jsonSerialize() {
 		$fields = get_object_vars($this);
-		$fields["tweetDate"] = intval($this->tweetDate->format("U")) * 1000;
+		$fields["tweetDate"] = $this->tweetDate->getTimestamp() * 1000;
 		return($fields);
 	}
 }
