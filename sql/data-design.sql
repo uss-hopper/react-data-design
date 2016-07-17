@@ -3,7 +3,7 @@
 -- this is akin to reformatting and reinstalling Windows (OS X never needs a reinstall...) ;)
 -- never ever ever ever ever ever ever ever ever ever ever ever ever ever ever ever ever ever ever ever
 -- do this on live data!!!!
-DROP TABLE IF EXISTS favorite;
+DROP TABLE IF EXISTS `like`;
 DROP TABLE IF EXISTS tweet;
 DROP TABLE IF EXISTS profile;
 
@@ -13,13 +13,13 @@ CREATE TABLE profile (
 -- auto_increment tells mySQL to number them {1, 2, 3, ...}
 -- not null means the attribute is required!
 	profileId INT UNSIGNED AUTO_INCREMENT NOT NULL,
-	email VARCHAR(128) NOT NULL,
+	profileEmail VARCHAR(128) NOT NULL,
 -- to make something optional, exclude the not null
-	phone VARCHAR(32),
-	atHandle VARCHAR(32) NOT NULL,
+	profilePhone VARCHAR(32),
+	profileAtHandle VARCHAR(32) NOT NULL,
 -- to make sure duplicate data cannot exist, create a unique index
-	UNIQUE(email),
-	UNIQUE(atHandle),
+	UNIQUE(profileEmail),
+	UNIQUE(profileAtHandle),
 -- this officiates the primary key for the entity
 	PRIMARY KEY(profileId)
 );
@@ -29,30 +29,30 @@ CREATE TABLE tweet (
 	-- this is for yet another primary key...
 	tweetId INT UNSIGNED AUTO_INCREMENT NOT NULL,
 	-- this is for a foreign key; auto_incremented is omitted by design
-	profileId INT UNSIGNED NOT NULL,
+	tweetProfileId INT UNSIGNED NOT NULL,
 	tweetContent VARCHAR(140) NOT NULL,
 	-- notice dates don't need a size parameter
 	tweetDate DATETIME NOT NULL,
 	-- this creates an index before making a foreign key
-	INDEX(profileId),
+	INDEX(tweetProfileId),
 	-- this creates the actual foreign key relation
-	FOREIGN KEY(profileId) REFERENCES profile(profileId),
+	FOREIGN KEY(tweetProfileId) REFERENCES profile(profileId),
 	-- and finally create the primary key
 	PRIMARY KEY(tweetId)
 );
 
--- create the favorite entity (a weak entity from an m-to-n for profile --> tweet)
-CREATE TABLE favorite (
+-- create the like entity (a weak entity from an m-to-n for profile --> tweet)
+CREATE TABLE `like` (
 	-- these are not auto_increment because they're still foreign keys
-	profileId INT UNSIGNED NOT NULL,
-	tweetId INT UNSIGNED NOT NULL,
-	favoriteDate DATETIME NOT NULL,
+	likeProfileId INT UNSIGNED NOT NULL,
+	likeTweetId INT UNSIGNED NOT NULL,
+	likeDate DATETIME NOT NULL,
 	-- index the foreign keys
-	INDEX(profileId),
-	INDEX(tweetId),
+	INDEX(likeProfileId),
+	INDEX(likeTweetId),
 	-- create the foreign key relations
-	FOREIGN KEY(profileId) REFERENCES profile(profileId),
-	FOREIGN KEY(tweetId) REFERENCES tweet(tweetId),
+	FOREIGN KEY(likeProfileId) REFERENCES profile(profileId),
+	FOREIGN KEY(likeTweetId) REFERENCES tweet(tweetId),
 	-- finally, create a composite foreign key with the two foreign keys
-	PRIMARY KEY(profileId, tweetId)
+	PRIMARY KEY(likeProfileId, likeTweetId)
 );
