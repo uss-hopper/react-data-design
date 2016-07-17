@@ -8,7 +8,7 @@ namespace Edu\Cnm\Dmcdonald21\DataDesign;
  * holds the keys to the other entities in this example (i.e., Favorite and Profile).
  *
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
- * @version 2.0.0
+ * @version 3.0.0
  **/
 class Profile implements \JsonSerializable {
 	/**
@@ -36,20 +36,20 @@ class Profile implements \JsonSerializable {
 	 * constructor for this Profile
 	 *
 	 * @param int|null $newProfileId id of this Profile or null if a new Profile
-	 * @param string $newAtHandle string containing newAtHandle
-	 * @param string $newEmail string containing email
-	 * @param string $newPhone string containing phone number
+	 * @param string $newProfileAtHandle string containing newAtHandle
+	 * @param string $newProfileEmail string containing email
+	 * @param string $newProfilePhone string containing phone number
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 **/
-	public function __construct(int $newProfileId = null, string $newAtHandle, string $newEmail, string $newPhone) {
+	public function __construct(int $newProfileId = null, string $newProfileAtHandle, string $newProfileEmail, string $newProfilePhone) {
 		try {
 			$this->setProfileId($newProfileId);
-			$this->setProfileAtHandle($newAtHandle);
-			$this->setProfileEmail($newEmail);
-			$this->setProfilePhone($newPhone);
+			$this->setProfileAtHandle($newProfileAtHandle);
+			$this->setProfileEmail($newProfileEmail);
+			$this->setProfilePhone($newProfilePhone);
 		} catch(\InvalidArgumentException $invalidArgument) {
 			// rethrow the exception to the caller
 			throw(new \InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
@@ -109,26 +109,26 @@ class Profile implements \JsonSerializable {
 	/**
 	 * mutator method for at handle
 	 *
-	 * @param string $newAtHandle new value of at handle
+	 * @param string $newProfileAtHandle new value of at handle
 	 * @throws \InvalidArgumentException if $newAtHandle is not a string or insecure
 	 * @throws \RangeException if $newAtHandle is > 32 characters
 	 * @throws \TypeError if $newAtHandle is not a string
 	 **/
-	public function setProfileAtHandle(string $newAtHandle) {
+	public function setProfileAtHandle(string $newProfileAtHandle) {
 		// verify the at handle is secure
-		$newAtHandle = trim($newAtHandle);
-		$newAtHandle = filter_var($newAtHandle, FILTER_SANITIZE_STRING);
-		if(empty($newAtHandle) === true) {
-			throw(new \InvalidArgumentException("at handle is empty or insecure"));
+		$newProfileAtHandle = trim($newProfileAtHandle);
+		$newProfileAtHandle = filter_var($newProfileAtHandle, FILTER_SANITIZE_STRING);
+		if(empty($newProfileAtHandle) === true) {
+			throw(new \InvalidArgumentException("profile at handle is empty or insecure"));
 		}
 
 		// verify the at handle will fit in the database
-		if(strlen($newAtHandle) > 32) {
-			throw(new \RangeException("at handle is too large"));
+		if(strlen($newProfileAtHandle) > 32) {
+			throw(new \RangeException("profile at handle is too large"));
 		}
 
 		// store the at handle
-		$this->profileAtHandle = $newAtHandle;
+		$this->profileAtHandle = $newProfileAtHandle;
 	}
 
 	/**
@@ -143,26 +143,26 @@ class Profile implements \JsonSerializable {
 	/**
 	 * mutator method for email
 	 *
-	 * @param string $newEmail new value of email
+	 * @param string $newProfileEmail new value of email
 	 * @throws \InvalidArgumentException if $newEmail is not a valid email or insecure
 	 * @throws \RangeException if $newEmail is > 128 characters
 	 * @throws \TypeError if $newEmail is not a string
 	 **/
-	public function setProfileEmail(string $newEmail) {
+	public function setProfileEmail(string $newProfileEmail) {
 		// verify the email is secure
-		$newEmail = trim($newEmail);
-		$newEmail = filter_var($newEmail, FILTER_VALIDATE_EMAIL);
-		if(empty($newEmail) === true) {
-			throw(new \InvalidArgumentException("email is empty or insecure"));
+		$newProfileEmail = trim($newProfileEmail);
+		$newProfileEmail = filter_var($newProfileEmail, FILTER_VALIDATE_EMAIL);
+		if(empty($newProfileEmail) === true) {
+			throw(new \InvalidArgumentException("profile email is empty or insecure"));
 		}
 
 		// verify the email will fit in the database
-		if(strlen($newEmail) > 128) {
-			throw(new \RangeException("email is too large"));
+		if(strlen($newProfileEmail) > 128) {
+			throw(new \RangeException("profile email is too large"));
 		}
 
 		// store the email
-		$this->profileEmail = $newEmail;
+		$this->profileEmail = $newProfileEmail;
 	}
 
 	/**
@@ -177,26 +177,26 @@ class Profile implements \JsonSerializable {
 	/**
 	 * mutator method for phone
 	 *
-	 * @param string $newPhone new value of phone
+	 * @param string $newProfilePhone new value of phone
 	 * @throws \InvalidArgumentException if $newPhone is not a string or insecure
 	 * @throws \RangeException if $newPhone is > 32 characters
 	 * @throws \TypeError if $newPhone is not a string
 	 **/
-	public function setProfilePhone(string $newPhone) {
+	public function setProfilePhone(string $newProfilePhone) {
 		// verify the phone is secure
-		$newPhone = trim($newPhone);
-		$newPhone = filter_var($newPhone, FILTER_SANITIZE_STRING);
-		if(empty($newPhone) === true) {
-			throw(new \InvalidArgumentException("phone is empty or insecure"));
+		$newProfilePhone = trim($newProfilePhone);
+		$newProfilePhone = filter_var($newProfilePhone, FILTER_SANITIZE_STRING);
+		if(empty($newProfilePhone) === true) {
+			throw(new \InvalidArgumentException("profile phone is empty or insecure"));
 		}
 
 		// verify the phone will fit in the database
-		if(strlen($newPhone) > 32) {
-			throw(new \RangeException("phone is too large"));
+		if(strlen($newProfilePhone) > 32) {
+			throw(new \RangeException("profile phone is too large"));
 		}
 
 		// store the phone
-		$this->profilePhone = $newPhone;
+		$this->profilePhone = $newProfilePhone;
 	}
 
 	/**
