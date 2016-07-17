@@ -45,7 +45,7 @@ abstract class DataDesignTest extends \PHPUnit_Extensions_Database_TestCase {
 		// THESE TABLES *MUST* BE LISTED IN THE SAME ORDER THEY WERE CREATED!!!!
 		$dataset->addTable("profile");
 		$dataset->addTable("tweet");
-		$dataset->addTable("favorite");
+//		$dataset->addTable("like");
 		return($dataset);
 	}
 
@@ -57,10 +57,10 @@ abstract class DataDesignTest extends \PHPUnit_Extensions_Database_TestCase {
 	 * @return \PHPUnit_Extensions_Database_Operation_Composite array containing delete and insert commands
 	 **/
 	public final function getSetUpOperation() {
-		return new \PHPUnit_Extensions_Database_Operation_Composite(array(
+		return new \PHPUnit_Extensions_Database_Operation_Composite([
 			\PHPUnit_Extensions_Database_Operation_Factory::DELETE_ALL(),
 			\PHPUnit_Extensions_Database_Operation_Factory::INSERT()
-		));
+		]);
 	}
 
 	/**

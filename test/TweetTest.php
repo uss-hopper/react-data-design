@@ -7,7 +7,7 @@ use Edu\Cnm\Dmcdonald21\DataDesign\{Profile, Tweet};
 require_once("DataDesignTest.php");
 
 // grab the class under scrutiny
-require_once(dirname(__DIR__, 2) . "/php/php70/classes/autoload.php");
+require_once(dirname(__DIR__) . "/public_html/php/classes/autoload.php");
 
 /**
  * Full PHPUnit test for the Tweet class
@@ -31,7 +31,7 @@ class TweetTest extends DataDesignTest {
 	protected $VALID_TWEETCONTENT2 = "PHPUnit test still passing";
 	/**
 	 * timestamp of the Tweet; this starts as null and is assigned later
-	 * @var DateTime $VALID_TWEETDATE
+	 * @var \DateTime $VALID_TWEETDATE
 	 **/
 	protected $VALID_TWEETDATE = null;
 	/**
@@ -180,6 +180,39 @@ class TweetTest extends DataDesignTest {
 	}
 
 	/**
+	 * test inserting a Tweet and regrabbing it from mySQL
+	 **/
+	public function testGetValidTweetByTweetProfileId() {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("tweet");
+
+		// create a new Tweet and insert to into mySQL
+		$tweet = new Tweet(null, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
+		$tweet->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Tweet::getTweetByTweetProfileId($this->getPDO(), $this->profile->getProfileId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\Dmcdonald21\\DataDesign\\Tweet", $results);
+
+		// grab the result from the array and validate it
+		$pdoTweet = $results[0];
+		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
+		$this->assertEquals($pdoTweet->getTweetDate(), $this->VALID_TWEETDATE);
+	}
+
+	/**
+	 * test grabbing a Tweet that does not exist
+	 **/
+	public function testGetInvalidTweetByTweetProfileId() {
+		// grab a profile id that exceeds the maximum allowable profile id
+		$tweet = Tweet::getTweetByTweetProfileId($this->getPDO(), DataDesignTest::INVALID_KEY);
+		$this->assertCount(0, $tweet);
+	}
+
+	/**
 	 * test grabbing a Tweet by tweet content
 	 **/
 	public function testGetValidTweetByTweetContent() {
@@ -198,7 +231,7 @@ class TweetTest extends DataDesignTest {
 
 		// grab the result from the array and validate it
 		$pdoTweet = $results[0];
-		$this->assertEquals($pdoTweet->getProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
 		$this->assertEquals($pdoTweet->getTweetDate(), $this->VALID_TWEETDATE);
 	}
@@ -207,7 +240,7 @@ class TweetTest extends DataDesignTest {
 	 * test grabbing a Tweet by content that does not exist
 	 **/
 	public function testGetInvalidTweetByTweetContent() {
-		// grab a profile id that exceeds the maximum allowable profile id
+		// grab a tweet by content that does not exist
 		$tweet = Tweet::getTweetByTweetContent($this->getPDO(), "nobody ever tweeted this");
 		$this->assertCount(0, $tweet);
 	}
@@ -231,7 +264,7 @@ class TweetTest extends DataDesignTest {
 
 		// grab the result from the array and validate it
 		$pdoTweet = $results[0];
-		$this->assertEquals($pdoTweet->getProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
 		$this->assertEquals($pdoTweet->getTweetDate(), $this->VALID_TWEETDATE);
 	}

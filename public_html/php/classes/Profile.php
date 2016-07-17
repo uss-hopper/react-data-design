@@ -260,7 +260,7 @@ class Profile implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "UPDATE profile SET profileEmail = :email, profilePhone = :phone, profileAtHandle = :atHandle WHERE profileId = :profileId";
+		$query = "UPDATE profile SET profileEmail = :profileEmail, profilePhone = :profilePhone, profileAtHandle = :profileAtHandle WHERE profileId = :profileId";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
@@ -337,7 +337,7 @@ class Profile implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$profile = new Profile($row["profileId"], $row["atHandle"], $row["email"], $row["phone"]);
+				$profile = new Profile($row["profileId"], $row["profileAtHandle"], $row["profileEmail"], $row["profilePhone"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
@@ -377,7 +377,7 @@ class Profile implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$profile = new Profile($row["profileId"], $row["atHandle"], $row["email"], $row["phone"]);
+				$profile = new Profile($row["profileId"], $row["profileAtHandle"], $row["profileEmail"], $row["profilePhone"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it

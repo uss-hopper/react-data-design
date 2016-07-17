@@ -7,7 +7,7 @@ use Edu\Cnm\Dmcdonald21\DataDesign\Profile;
 require_once("DataDesignTest.php");
 
 // grab the class under scrutiny
-require_once(dirname(__DIR__, 2) . "/php/php70/classes/autoload.php");
+require_once(dirname(__DIR__) . "/public_html/php/classes/autoload.php");
 
 
 /**

@@ -257,7 +257,7 @@ class Tweet implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "UPDATE tweet SET tweetProfileId = :profileId, tweetContent = :tweetContent, tweetDate = :tweetDate WHERE tweetId = :tweetId";
+		$query = "UPDATE tweet SET tweetProfileId = :tweetProfileId, tweetContent = :tweetContent, tweetDate = :tweetDate WHERE tweetId = :tweetId";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
