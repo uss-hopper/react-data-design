@@ -319,7 +319,7 @@ class Like implements \JsonSerializable {
 	 **/
 	public function jsonSerialize() {
 		$fields = get_object_vars($this);
-		$fields["likeDate"] = intval($this->likeDate->format("U")) * 1000;
+		$fields["likeDate"] = $this->likeDate->getTimestamp() * 1000;
 		return($fields);
 	}
 }

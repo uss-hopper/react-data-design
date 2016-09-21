@@ -31,7 +31,7 @@ trait ValidateDate {
 
 
 		// if we got here, the date is clean
-		$newDate = \DateTime::createFromFormat("Y-m-d H:i:s", $newDate . " 00:00:00");
+		$newDate = \DateTime::createFromFormat("Y-m-d H:i:s", $newDate . " 00:00:00", new \DateTimeZone("UTC"));
 		return($newDate);
 	}
 
