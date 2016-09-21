@@ -117,7 +117,7 @@ class Profile implements \JsonSerializable {
 	public function setProfileAtHandle(string $newProfileAtHandle) {
 		// verify the at handle is secure
 		$newProfileAtHandle = trim($newProfileAtHandle);
-		$newProfileAtHandle = filter_var($newProfileAtHandle, FILTER_SANITIZE_STRING);
+		$newProfileAtHandle = filter_var($newProfileAtHandle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newProfileAtHandle) === true) {
 			throw(new \InvalidArgumentException("profile at handle is empty or insecure"));
 		}
@@ -185,7 +185,7 @@ class Profile implements \JsonSerializable {
 	public function setProfilePhone(string $newProfilePhone) {
 		// verify the phone is secure
 		$newProfilePhone = trim($newProfilePhone);
-		$newProfilePhone = filter_var($newProfilePhone, FILTER_SANITIZE_STRING);
+		$newProfilePhone = filter_var($newProfilePhone, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newProfilePhone) === true) {
 			throw(new \InvalidArgumentException("profile phone is empty or insecure"));
 		}
@@ -358,7 +358,7 @@ class Profile implements \JsonSerializable {
 	public static function getProfileByProfileAtHandle(\PDO $pdo, string $profileAtHandle) {
 		// sanitize the at handle before searching
 		$profileAtHandle = trim($profileAtHandle);
-		$profileAtHandle = filter_var($profileAtHandle, FILTER_SANITIZE_STRING);
+		$profileAtHandle = filter_var($profileAtHandle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($profileAtHandle) === true) {
 			throw(new \PDOException("not a valid at handle"));
 		}

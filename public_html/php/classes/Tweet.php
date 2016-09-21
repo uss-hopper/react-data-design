@@ -146,7 +146,7 @@ class Tweet implements \JsonSerializable {
 	public function setTweetContent(string $newTweetContent) {
 		// verify the tweet content is secure
 		$newTweetContent = trim($newTweetContent);
-		$newTweetContent = filter_var($newTweetContent, FILTER_SANITIZE_STRING);
+		$newTweetContent = filter_var($newTweetContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newTweetContent) === true) {
 			throw(new \InvalidArgumentException("tweet content is empty or insecure"));
 		}
@@ -278,7 +278,7 @@ class Tweet implements \JsonSerializable {
 	public static function getTweetByTweetContent(\PDO $pdo, string $tweetContent) {
 		// sanitize the description before searching
 		$tweetContent = trim($tweetContent);
-		$tweetContent = filter_var($tweetContent, FILTER_SANITIZE_STRING);
+		$tweetContent = filter_var($tweetContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($tweetContent) === true) {
 			throw(new \PDOException("tweet content is invalid"));
 		}
