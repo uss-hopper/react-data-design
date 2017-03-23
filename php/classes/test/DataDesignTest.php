@@ -1,8 +1,11 @@
 <?php
 namespace Edu\Cnm\Dmcdonald21\DataDesign\Test;
 
+use PHPUnit\Framework\TestCase;
+use PHPUnit\DbUnit\TestCaseTrait;
+
 // grab the encrypted properties file
-require_once("/etc/apache2/data-design/encrypted-config.php");
+require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
 
 /**
  * Abstract class containing universal and project specific mySQL parameters
@@ -83,8 +86,8 @@ abstract class DataDesignTest extends \PHPUnit_Extensions_Database_TestCase {
 		// if the connection hasn't been established, create it
 		if($this->connection === null) {
 			// connect to mySQL and provide the interface to PHPUnit
-			$config = readConfig("/etc/apache2/data-design/dmcdonald21.ini");
-			$pdo = connectToEncryptedMySQL("/etc/apache2/data-design/dmcdonald21.ini");
+			$config = readConfig("/etc/apache2/capstone-mysql/ddctwitter.ini");
+			$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
 			$this->connection = $this->createDefaultDBConnection($pdo, $config["database"]);
 		}
 		return($this->connection);
