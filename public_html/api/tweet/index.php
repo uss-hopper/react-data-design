@@ -1,5 +1,6 @@
 <?php
 
+require_once dirname( __DIR__, 3 ) . "/vendor/autoload.php" ;
 require_once dirname(__DIR__, 3) . "/php/classes/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
 require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
@@ -72,7 +73,9 @@ try {
 
         verifyXsrf();
         $requestContent = file_get_contents("php://input");
+        // Retrieves the JSON package that the front end sent, and stores it in $requestContent. Here we are using file_get_contents("php://input") to get the request from the front end. file_get_contents() is a PHP function that reads a file into a string. The argument for the function, here, is "php://input". This is a read only stream that allows raw data to be read from the front end request which is, in this case, a JSON package.
         $requestObject = json_decode($requestContent);
+        // This Line Then decodes the JSON package and stores that result in $requestObject
 
         //make sure tweet content is available (required field)
         if(empty($requestObject->tweetContent) === true) {
