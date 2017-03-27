@@ -16,16 +16,32 @@ class Profile implements \JsonSerializable {
 	 * @var int $profileId
 	 **/
 	private $profileId;
+
 	/**
 	 * at handle for this Profile; this is a unique index
 	 * @var string $profileAtHandle
 	 **/
 	private $profileAtHandle;
+
+	/**
+	 * token handed out to verify that the profile is valid and not malicious.
+	 *v@var $profileActivationToken
+	 **/
+	private $profileActivationToken;
+
 	/**
 	 * email for this Profile; this is a unique index
 	 * @var string $profileEmail
 	 **/
 	private $profileEmail;
+
+	/**
+	 * hash for profile password
+	 *
+	 * @var $profileHash
+	 */
+	private $profileHash;
+
 	/**
 	 * phone number for this Profile
 	 * @var string $profilePhone
@@ -33,23 +49,36 @@ class Profile implements \JsonSerializable {
 	private $profilePhone;
 
 	/**
+	 * salt for profile password
+	 *
+	 * @var $profileSalt
+	 */
+	private $profileSalt;
+
+	/**
 	 * constructor for this Profile
 	 *
 	 * @param int|null $newProfileId id of this Profile or null if a new Profile
+	 * @param string $newProfileActivationToken activation token to safe guard against malicious accounts
 	 * @param string $newProfileAtHandle string containing newAtHandle
 	 * @param string $newProfileEmail string containing email
+	 * @param string $newProfileHash string containing password hash
 	 * @param string $newProfilePhone string containing phone number
+	 * @param string $newProfileSalt string containing passowrd salt
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 **/
-	public function __construct(int $newProfileId = null, string $newProfileAtHandle, string $newProfileEmail, string $newProfilePhone) {
+	public function __construct(int $newProfileId = null, string $newProfileActivationToken, string $newProfileAtHandle, string $newProfileEmail, string $newProfileHash, string $newProfilePhone, string $newProfileSalt) {
 		try {
 			$this->setProfileId($newProfileId);
+			$this->setProfileActivationToken($newProfileActivationToken);
 			$this->setProfileAtHandle($newProfileAtHandle);
 			$this->setProfileEmail($newProfileEmail);
+			$this->setProfileHash($newProfileHash);
 			$this->setProfilePhone($newProfilePhone);
+			$this->setProfileSalt($newProfileSalt);
 		} catch(\InvalidArgumentException $invalidArgument) {
 			// rethrow the exception to the caller
 			throw(new \InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
