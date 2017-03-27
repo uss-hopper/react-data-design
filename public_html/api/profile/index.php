@@ -73,7 +73,7 @@ try {
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
 
-		//
+		//profile at handle
 		if(empty($requestObject->profileAtHandle) === true) {
 			throw(new \InvalidArgumentException ("No Venue ID", 405));
 		}
