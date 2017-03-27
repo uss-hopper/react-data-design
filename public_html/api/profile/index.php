@@ -130,23 +130,34 @@ try {
 
 	} elseif($method === "DELETE") {
 
+		//verify the XSRF Token
+		verifyXsrf();
+
+		$profile = Profile::getProfileByProfileId($pdo, $id);
+		if($profile === null) {
+			throw (new RuntimeException("Profile does not exist"));
+		}
+
 		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $id) {
 			throw(new \InvalidArgumentException("You are not allowed to access this profile", 405));
 		}
 
-
-
+		//delete the post from the database
+		$profile->delete($pdo);
+	} else {
+		throw (new InvalidArgumentException("Invalid HTTP request", 400));
 	}
-
-
-
-} catch(Exception $exception) {
+}
+// catch any exceptions that were thrown and update the status and message state variable fields
+catch(Exception $exception) {
 	$reply->status = $exception->getCode();
 	$reply->message = $exception->getMessage();
 } catch( TypeError $typeError ) {
 	$reply->status  = $typeError->getCode();
 	$reply->message = $typeError->getMessage();
 }
+
+// encode and return reply to front end caller
 header( "Content-type: application/json" );
 if ( $reply->data === null ) {
 	unset( $reply->data );
