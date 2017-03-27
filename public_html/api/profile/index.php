@@ -64,7 +64,7 @@ try {
 					$reply->data = $profile;
 				}
 			}
-	} elseif($method === "PUT" || $method === "POST") {
+	} elseif($method === "PUT") {
 
 		//enforce that the XSRF token is present in the header
 		verifyXsrf();
@@ -80,13 +80,62 @@ try {
 
 		//profile email is a required field
 		if(empty($requestObject->profileEmail) === true) {
-			throw(new \InvalidArgumentException ("No post content", 405));
+			throw(new \InvalidArgumentException ("No profile email present", 405));
 		}
 
 		//profile phone # is a required field
 		if(empty($requestObject->profilePhoneNumber) === true) {
-			throw(new \InvalidArgumentException ("No post content", 405));
+			throw(new \InvalidArgumentException ("No phone number present", 405));
 		}
+
+		//retrieve the profile to be updated
+		$profile = Profile::getProfileByProfileId($pdo, $id);
+		if($profile === null) {
+			throw(new RuntimeException("Profile does not exist", 404));
+		}
+
+		$profile->setProfileAtHandle($requestObject->profileAtHAndle);
+		$profile->setProfileEmail($requestObject->profileEmail);
+		$profile->setProfilePhone($requestObject->profilePhoneNumber);
+
+		/**
+		 * update the password if requested
+		 * thanks sprout-swap @author:<solomon.leyba@gmail.com>
+		 **/
+		//enforce that current password new password and confirm password is present
+		if(empty($requestObject->currentProfilePassword) === false && empty($requestObject->newProfilePassword) === false && empty($requestContent->profileConfirmPassword) === false) {
+
+			//make sure the new password and confirm password exist
+			if($requestObject->newProfilePassword !== $requestObject->profileConfirmPassword) {
+				throw(new RuntimeException("New passwords do not match", 401));
+			}
+
+			//hash the previous password
+			$currentPasswordHash = hash_pbkdf2("sha512", $requestObject->currentProfilePassword, $profile->getProfileSalt(), 262144);
+
+			//make sure the hash given by the end user matches what is in the database
+			if($currentPasswordHash !== $profile->getProfilePasswordHash()) {
+				throw(new \RuntimeException("Old password is incorrect", 401));
+			}
+
+			// salt and hash the new password and update the profile object
+			$newPasswordSalt = bin2hex(random_bytes(16));
+			$newPasswordHash = hash_pbkdf2("sha512", $requestObject->newProfilePassword, $newPasswordSalt, 262144);
+			$profile->setProfilePasswordHash($newPasswordHash);
+			$profile->setProfileSalt($newPasswordSalt);
+		}
+
+		//preform the actual update to the database
+		$profile->update($pdo);
+
+	} elseif($method === "DELETE") {
+
+		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $id) {
+			throw(new \InvalidArgumentException("You are not allowed to access this profile", 405));
+		}
+
+
+
 	}
 
 

@@ -25,8 +25,10 @@ try {
 	//determine which HTTP method is being used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
 
+
+
 	//If method is post handle the sign in logic
-	else if($method === "POST") {
+	if($method === "POST") {
 
 		//make sure the XSRF Token is valid
 		verifyXsrf();
