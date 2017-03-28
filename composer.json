@@ -1,6 +1,7 @@
 {
   "require": {
     "phpunit/dbunit": "@stable",
+    "phpunit/phpunit": "@stable",
     "swiftmailer/swiftmailer": "@stable"
   }
 }
