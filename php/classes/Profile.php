@@ -239,7 +239,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \RangeException if the hash is not 128 characters
 	 * @throws \TypeError if profile hash is not a string
 	 */
-	public function setProfilePasswordHash(string $newProfileHash) {
+	public function setProfileHash(string $newProfileHash) {
 		//enforce that the hash is properly formatted
 		$newProfileHash = trim($newProfileHash);
 		$newProfileHash =strtolower($newProfileHash);

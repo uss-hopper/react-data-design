@@ -41,6 +41,14 @@ class ProfileTest extends DataDesignTest {
 	 **/
 	protected $VALID_PHONE = "+12125551212";
 
+	public final function setUp() {
+		//run the default setUp method first
+
+		parent::;
+	}
+
+
+
 	/**
 	 * test inserting a valid Profile and verify that the actual mySQL data matches
 	 **/
