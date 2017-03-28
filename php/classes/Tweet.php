@@ -84,13 +84,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \RangeException if $newTweetId is not positive
 	 * @throws \TypeError if $newTweetId is not an integer
 	 **/
-	public function setTweetId(int $newTweetId = null) {
-		// base case: if the tweet id is null, this a new tweet without a mySQL assigned id (yet)
-		if($newTweetId === null) {
-			$this->tweetId = null;
-			return;
-		}
-
+	public function setTweetId(?int $newTweetId) {
 		// verify the tweet id is positive
 		if($newTweetId <= 0) {
 			throw(new \RangeException("tweet id is not positive"));
