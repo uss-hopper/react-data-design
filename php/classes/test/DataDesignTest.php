@@ -3,9 +3,14 @@ namespace Edu\Cnm\Dmcdonald21\DataDesign\Test;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\DbUnit\TestCaseTrait;
+use PHPUnit\DbUnit\DataSet\QueryDataSet;
+use PHPUnit\DbUnit\Database\Connection;
+use PHPUnit\DbUnit\Operation\{Composite, Factory, Operation};
 
 // grab the encrypted properties file
 require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
+
+require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
 
 /**
  * Abstract class containing universal and project specific mySQL parameters
@@ -22,7 +27,9 @@ require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
  *
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  **/
-abstract class DataDesignTest extends \PHPUnit_Extensions_Database_TestCase {
+abstract class DataDesignTest extends TestCase {
+	use TestCaseTrait;
+
 	/**
 	 * invalid id to use for an INT UNSIGNED field (maximum allowed INT UNSIGTNED in mySQL) + 1
 	 * @see https://dev.mysql.com/doc/refman/5.6/en/integer-types.html mySQL Integer Types
@@ -32,17 +39,17 @@ abstract class DataDesignTest extends \PHPUnit_Extensions_Database_TestCase {
 
 	/**
 	 * PHPUnit database connection interface
-	 * @var \PHPUnit_Extensions_Database_DB_IDatabaseConnection $connection
+	 * @var Connection $connection
 	 **/
 	protected $connection = null;
 
 	/**
 	 * assembles the table from the schema and provides it to PHPUnit
 	 *
-	 * @return \PHPUnit_Extensions_Database_DataSet_QueryDataSet assembled schema for PHPUnit
+	 * @return QueryDataSet assembled schema for PHPUnit
 	 **/
 	public final function getDataSet() {
-		$dataset = new \PHPUnit_Extensions_Database_DataSet_QueryDataSet($this->getConnection());
+		$dataset = new QueryDataSet($this->getConnection());
 
 		// add all the tables for the project here
 		// THESE TABLES *MUST* BE LISTED IN THE SAME ORDER THEY WERE CREATED!!!!
@@ -58,29 +65,29 @@ abstract class DataDesignTest extends \PHPUnit_Extensions_Database_TestCase {
 	 *
 	 * @see https://phpunit.de/manual/current/en/fixtures.html#fixtures.more-setup-than-teardown PHPUnit Fixtures: setUp and tearDown
 	 * @see https://github.com/sebastianbergmann/dbunit/issues/37 TRUNCATE fails on tables which have foreign key constraints
-	 * @return \PHPUnit_Extensions_Database_Operation_Composite array containing delete and insert commands
+	 * @return Composite array containing delete and insert commands
 	 **/
 	public final function getSetUpOperation() {
-		return new \PHPUnit_Extensions_Database_Operation_Composite([
-			\PHPUnit_Extensions_Database_Operation_Factory::DELETE_ALL(),
-			\PHPUnit_Extensions_Database_Operation_Factory::INSERT()
+		return new Composite([
+			Factory::DELETE_ALL(),
+			Factory::INSERT()
 		]);
 	}
 
 	/**
 	 * templates the tearDown method that runs after each test; this method expunges the database after each run
 	 *
-	 * @return \PHPUnit_Extensions_Database_Operation_IDatabaseOperation delete command for the database
+	 * @return Operation delete command for the database
 	 **/
 	public final function getTearDownOperation() {
-		return(\PHPUnit_Extensions_Database_Operation_Factory::DELETE_ALL());
+		return(Factory::DELETE_ALL());
 	}
 
 	/**
 	 * sets up the database connection and provides it to PHPUnit
 	 *
 	 * @see <https://phpunit.de/manual/current/en/database.html#database.configuration-of-a-phpunit-database-testcase>
-	 * @return \PHPUnit_Extensions_Database_DB_IDatabaseConnection PHPUnit database connection interface
+	 * @return Connection PHPUnit database connection interface
 	 **/
 	public final function getConnection() {
 		// if the connection hasn't been established, create it
