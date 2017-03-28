@@ -1,0 +1,75 @@
+{
+	"name": "data-design",
+	"version": "1.0.0",
+	"license": "Apache-2.0",
+	"author": {
+		"name": "Dylan McDonald",
+		"email": "dylan@deepdivedylan.com",
+		"url": "https://bootcamp-coders.cnm.edu/class-materials/data-design/"
+	},
+	"contributors": [
+		{
+			"name": "Eric Debelak",
+			"email": "eric@11online.us"
+		},
+		{
+			"name": "George Kephart",
+			"email": "gkephart@cnm.edu"
+		},
+		{
+			"name": "Valente Meza",
+			"email": "valebmeza@gmail.com"
+		}
+	],
+	"scripts": {
+		"build": "rimraf public_html/dist && tsc && webpack --config webpack/webpack.live.js --progress --profile --bail"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/deepdivedylan/data-design.git"
+	},
+	"dependencies": {
+		"@angular/common": "~4.0.0",
+		"@angular/compiler": "~4.0.0",
+		"@angular/core": "~4.0.0",
+		"@angular/forms": "~4.0.0",
+		"@angular/http": "~4.0.0",
+		"@angular/platform-browser": "~4.0.0",
+		"@angular/platform-browser-dynamic": "~4.0.0",
+		"@angular/router": "~4.0.0",
+		"angular-in-memory-web-api": "~0.3.0",
+		"core-js": "^2.4.1",
+		"rxjs": "5.0.1",
+		"jquery": "^3.2.1",
+		"zone.js": "^0.8.4"
+	},
+	"devDependencies": {
+		"@types/node": "^6.0.46",
+		"awesome-typescript-loader": "^3.1.2",
+		"bootstrap-loader": "^2.0.0",
+		"bootstrap-sass": "^3.3.7",
+		"css-loader": "^0.27.3",
+		"eslint": "^3.18.0",
+		"eslint-plugin-jsx-a11y": "^4.0.0",
+		"eslint-plugin-react": "^6.10.3",
+		"extract-text-webpack-plugin": "^2.1.0",
+		"file-loader": "^0.10.1",
+		"font-awesome": "^4.7.0",
+		"font-awesome-webpack2": "^0.0.6",
+		"html-loader": "^0.4.5",
+		"html-webpack-plugin": "^2.28.0",
+		"less": "^2.7.2",
+		"less-loader": "^4.0.2",
+		"node-sass": "^4.5.1",
+		"null-loader": "^0.1.1",
+		"raw-loader": "^0.5.1",
+		"resolve-url-loader": "^2.0.2",
+		"rimraf": "^2.6.1",
+		"sass-loader": "^6.0.3",
+		"style-loader": "^0.16.0",
+		"typescript": "^2.2.2",
+		"url-loader": "^0.5.8",
+		"webpack": "^2.3.2",
+		"webpack-merge": "^4.1.0"
+	}
+}
