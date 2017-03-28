@@ -7,7 +7,7 @@ use Edu\Cnm\Dmcdonald21\DataDesign\Profile;
 require_once("DataDesignTest.php");
 
 // grab the class under scrutiny
-require_once(dirname(__DIR__) . "/public_html/php/classes/autoload.php");
+require_once(dirname(__DIR__) . "/php/classes/autoload.php");
 
 
 /**
@@ -20,6 +20,12 @@ require_once(dirname(__DIR__) . "/public_html/php/classes/autoload.php");
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  **/
 class ProfileTest extends DataDesignTest {
+	/**
+	 * placeholder until account activation is created
+	 * @var string $VALID_ACTIVATION
+	 */
+	protected $VALID_ACTIVATION;
+
 	/**
 	 * valid at handle to use
 	 * @var string $VALID_ATHANDLE
@@ -35,19 +41,35 @@ class ProfileTest extends DataDesignTest {
 	 * @var string $VALID_EMAIL
 	 **/
 	protected $VALID_EMAIL = "test@phpunit.de";
+
+	/**
+	 * valid hash to use
+	 * @var $VALID_HASH
+	 */
+	protected $VALID_HASH;
+
 	/**
 	 * valid phone number to use
 	 * @var string $VALID_PHONE
 	 **/
 	protected $VALID_PHONE = "+12125551212";
 
+	/**
+	 * valid salt to use
+	 * @var string $VALID_SALT
+	 */
+	protected $VALID_SALT;
+
+	/**
+	 * run the default setup operation to create salt and hash.
+	 */
 	public final function setUp() {
-		//run the default setUp method first
-
-		parent::;
+		parent::setUp();
+		$password = "abc123";
+		$this->VALID_SALT = bin2hex(random_bytes(16));
+		$this->VALID_HASH = hash_pbkdf2("sha512", $password, $this->VALID_SALT, 262144);
+		$this->VALID_ACTIVATION = bin2hex(random_bytes(16));
 	}
-
-
 
 	/**
 	 * test inserting a valid Profile and verify that the actual mySQL data matches
@@ -57,25 +79,28 @@ class ProfileTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		// create a new Profile and insert to into mySQL
-		$profile = new Profile(null, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_PHONE);
+		$profile = new Profile(null, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH,  $this->VALID_PHONE, $this->VALID_SALT);
 		$profile->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId());
 		$this->assertSame($numRows + 1, $this->getConnection()->getRowCount("profile"));
+		$this->assertSame($pdoProfile->getProfileActivationToken(), $this->VALID_ACTIVATION);
 		$this->assertSame($pdoProfile->getProfileAtHandle(), $this->VALID_ATHANDLE);
 		$this->assertSame($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
+		$this->assertSame($pdoProfile->getProfileHash(), $this->VALID_HASH);
 		$this->assertSame($pdoProfile->getProfilePhone(), $this->VALID_PHONE);
+		$this->assertSame($pdoProfile->getProfileSalt(), $this->VALID_SALT);
 	}
 
 	/**
 	 * test inserting a Profile that already exists
 	 *
-	 * @expectedException PDOException
+	 * @expectedException \PDOException
 	 **/
 	public function testInsertInvalidProfile() {
 		// create a profile with a non null profileId and watch it fail
-		$profile = new Profile(DataDesignTest::INVALID_KEY, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_PHONE);
+		$profile = new Profile(null, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH,  $this->VALID_PHONE, $this->VALID_SALT);
 		$profile->insert($this->getPDO());
 	}
 
@@ -87,7 +112,7 @@ class ProfileTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		// create a new Profile and insert to into mySQL
-		$profile = new Profile(null, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_PHONE);
+		$profile = new Profile(null, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH,  $this->VALID_PHONE, $this->VALID_SALT);
 		$profile->insert($this->getPDO());
 
 		// edit the Profile and update it in mySQL
@@ -97,19 +122,22 @@ class ProfileTest extends DataDesignTest {
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId());
 		$this->assertSame($numRows + 1, $this->getConnection()->getRowCount("profile"));
-		$this->assertSame($pdoProfile->getProfileAtHandle(), $this->VALID_ATHANDLE2);
+		$this->assertSame($pdoProfile->getProfileActivationToken(), $this->VALID_ACTIVATION);
+		$this->assertSame($pdoProfile->getProfileAtHandle(), $this->VALID_ATHANDLE);
 		$this->assertSame($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
+		$this->assertSame($pdoProfile->getProfileHash(), $this->VALID_HASH);
 		$this->assertSame($pdoProfile->getProfilePhone(), $this->VALID_PHONE);
+		$this->assertSame($pdoProfile->getProfileSalt(), $this->VALID_SALT);
 	}
 
 	/**
 	 * test updating a Profile that does not exist
 	 *
-	 * @expectedException PDOException
+	 * @expectedException \PDOException
 	 **/
 	public function testUpdateInvalidProfile() {
 		// create a Profile and try to update it without actually inserting it
-		$profile = new Profile(null, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_PHONE);
+		$profile = new Profile(null, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH,  $this->VALID_PHONE, $this->VALID_SALT);
 		$profile->update($this->getPDO());
 	}
 
@@ -121,7 +149,7 @@ class ProfileTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		// create a new Profile and insert to into mySQL
-		$profile = new Profile(null, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_PHONE);
+		$profile = new Profile(null, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH,  $this->VALID_PHONE, $this->VALID_SALT);
 		$profile->insert($this->getPDO());
 
 		// delete the Profile from mySQL
@@ -137,11 +165,11 @@ class ProfileTest extends DataDesignTest {
 	/**
 	 * test deleting a Profile that does not exist
 	 *
-	 * @expectedException PDOException
+	 * @expectedException \PDOException
 	 **/
 	public function testDeleteInvalidProfile() {
 		// create a Profile and try to delete it without actually inserting it
-		$profile = new Profile(null, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_PHONE);
+		$profile = new Profile(null, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH,  $this->VALID_PHONE, $this->VALID_SALT);
 		$profile->delete($this->getPDO());
 	}
 
@@ -153,15 +181,18 @@ class ProfileTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		// create a new Profile and insert to into mySQL
-		$profile = new Profile(null, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_PHONE);
+		$profile = new Profile(null, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH,  $this->VALID_PHONE, $this->VALID_SALT);
 		$profile->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId());
 		$this->assertSame($numRows + 1, $this->getConnection()->getRowCount("profile"));
+		$this->assertSame($pdoProfile->getProfileActivationToken(), $this->VALID_ACTIVATION);
 		$this->assertSame($pdoProfile->getProfileAtHandle(), $this->VALID_ATHANDLE);
 		$this->assertSame($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
+		$this->assertSame($pdoProfile->getProfileHash(), $this->VALID_HASH);
 		$this->assertSame($pdoProfile->getProfilePhone(), $this->VALID_PHONE);
+		$this->assertSame($pdoProfile->getProfileSalt(), $this->VALID_SALT);
 	}
 
 	/**
@@ -178,15 +209,18 @@ class ProfileTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		// create a new Profile and insert to into mySQL
-		$profile = new Profile(null, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_PHONE);
+		$profile = new Profile(null, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH,  $this->VALID_PHONE, $this->VALID_SALT);
 		$profile->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoProfile = Profile::getProfileByProfileAtHandle($this->getPDO(), $this->VALID_ATHANDLE);
 		$this->assertSame($numRows + 1, $this->getConnection()->getRowCount("profile"));
+		$this->assertSame($pdoProfile->getProfileActivationToken(), $this->VALID_ACTIVATION);
 		$this->assertSame($pdoProfile->getProfileAtHandle(), $this->VALID_ATHANDLE);
 		$this->assertSame($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
+		$this->assertSame($pdoProfile->getProfileHash(), $this->VALID_HASH);
 		$this->assertSame($pdoProfile->getProfilePhone(), $this->VALID_PHONE);
+		$this->assertSame($pdoProfile->getProfileSalt(), $this->VALID_SALT);
 	}
 
 	/**
@@ -206,15 +240,18 @@ class ProfileTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		// create a new Profile and insert to into mySQL
-		$profile = new Profile(null, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_PHONE);
+		$profile = new Profile(null, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH,  $this->VALID_PHONE, $this->VALID_SALT);
 		$profile->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoProfile = Profile::getProfileByProfileEmail($this->getPDO(), $profile->getProfileEmail());
 		$this->assertSame($numRows + 1, $this->getConnection()->getRowCount("profile"));
+		$this->assertSame($pdoProfile->getProfileActivationToken(), $this->VALID_ACTIVATION);
 		$this->assertSame($pdoProfile->getProfileAtHandle(), $this->VALID_ATHANDLE);
 		$this->assertSame($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
+		$this->assertSame($pdoProfile->getProfileHash(), $this->VALID_HASH);
 		$this->assertSame($pdoProfile->getProfilePhone(), $this->VALID_PHONE);
+		$this->assertSame($pdoProfile->getProfileSalt(), $this->VALID_SALT);
 	}
 
 	/**
@@ -225,4 +262,34 @@ class ProfileTest extends DataDesignTest {
 		$profile = Profile::getProfileByProfileEmail($this->getPDO(), "does@not.exist");
 		$this->assertNull($profile);
 	}
+	/**
+	 * test grabbing a profile by its activation
+	 */
+	public function testGetValidProfileByActivationToken() {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("profile");
+
+		// create a new Profile and insert to into mySQL
+		$profile = new Profile(null, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH,  $this->VALID_PHONE, $this->VALID_SALT);
+		$profile->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$pdoProfile = Profile::getProfileByProfileEmail($this->getPDO(), $profile->getProfileActivationToken());
+		$this->assertSame($numRows + 1, $this->getConnection()->getRowCount("profile"));
+		$this->assertSame($pdoProfile->getProfileActivationToken(), $this->VALID_ACTIVATION);
+		$this->assertSame($pdoProfile->getProfileAtHandle(), $this->VALID_ATHANDLE);
+		$this->assertSame($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
+		$this->assertSame($pdoProfile->getProfileHash(), $this->VALID_HASH);
+		$this->assertSame($pdoProfile->getProfilePhone(), $this->VALID_PHONE);
+		$this->assertSame($pdoProfile->getProfileSalt(), $this->VALID_SALT);
+	}
+	/**
+	 * test grabbing a Profile by an email that does not exists
+	 **/
+	public function testGetInvalidProfileActivation() {
+		// grab an email that does not exist
+		$profile = Profile::getProfileByProfileActivationToken($this->getPDO(), "5ebc7867885cb8dd25af05b991dd5609");
+		$this->assertNull($profile);
+	}
+
 }
