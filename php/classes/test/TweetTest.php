@@ -1,13 +1,13 @@
 <?php
-namespace Edu\Cnm\Dmcdonald21\DataDesign\Test;
+namespace Edu\Cnm\DataDesign\Test;
 
-use Edu\Cnm\Dmcdonald21\DataDesign\{Profile, Tweet};
+use Edu\Cnm\DataDesign\{Profile, Tweet};
 
 // grab the project test parameters
 require_once("DataDesignTest.php");
 
 // grab the class under scrutiny
-require_once(dirname(__DIR__) . "/public_html/php/classes/autoload.php");
+require_once(dirname(__DIR__) . "/autoload.php");
 
 /**
  * Full PHPUnit test for the Tweet class

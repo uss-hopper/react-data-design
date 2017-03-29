@@ -1,5 +1,5 @@
 <?php
-namespace Edu\Cnm\Dmcdonald21\DataDesign\Test;
+namespace Edu\Cnm\DataDesign\Test;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\DbUnit\TestCaseTrait;

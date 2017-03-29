@@ -1,5 +1,5 @@
 <?php
-namespace Edu\Cnm\Dmcdonald21\DataDesign;
+namespace Edu\Cnm\DataDesign;
 
 /**
  * Cross Section of a Twitter Profile
@@ -70,7 +70,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 **/
-	public function __construct(?int $newProfileId, ?string $newProfileActivationToken, string $newProfileAtHandle, string $newProfileEmail, string $newProfileHash, string $newProfilePhone, string $newProfileSalt) {
+	public function __construct(?int $newProfileId, ?string $newProfileActivationToken, string $newProfileAtHandle, string $newProfileEmail, string $newProfileHash, ?string $newProfilePhone, string $newProfileSalt) {
 		try {
 			$this->setProfileId($newProfileId);
 			$this->setProfileActivationToken($newProfileActivationToken);
@@ -278,7 +278,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \RangeException if $newPhone is > 32 characters
 	 * @throws \TypeError if $newPhone is not a string
 	 **/
-	public function setProfilePhone(string $newProfilePhone) {
+	public function setProfilePhone(?string $newProfilePhone) {
 		// verify the phone is secure
 		$newProfilePhone = trim($newProfilePhone);
 		$newProfilePhone = filter_var($newProfilePhone, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);

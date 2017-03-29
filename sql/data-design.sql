@@ -13,11 +13,14 @@ CREATE TABLE profile (
 -- auto_increment tells mySQL to number them {1, 2, 3, ...}
 -- not null means the attribute is required!
 	profileId INT UNSIGNED AUTO_INCREMENT NOT NULL,
-	profileEmail VARCHAR(128) NOT NULL,
--- to make something optional, exclude the not null
-	profilePhone VARCHAR(32),
+	profileActivationToken CHAR(32),
 	profileAtHandle VARCHAR(32) NOT NULL,
 -- to make sure duplicate data cannot exist, create a unique index
+	profileEmail VARCHAR(128) NOT NULL,
+-- to make something optional, exclude the not null
+	profileHash	CHAR(128) NOT NULL,
+	profilePhone VARCHAR(32),
+	profileSalt CHAR(64) NOT NULL,
 	UNIQUE(profileEmail),
 	UNIQUE(profileAtHandle),
 -- this officiates the primary key for the entity
