@@ -110,14 +110,16 @@ class Profile implements \JsonSerializable {
 	 * @throws \RangeException if $newProfileId is not positive
 	 * @throws \TypeError if $newProfileId is not an integer
 	 **/
-	public function setProfileId(?int $newProfileId = null) {
+	public function setProfileId(?int $newProfileId) {
 		// verify the profile id is positive
-		if($newProfileId <= 0) {
-			throw(new \RangeException("profile id is not positive"));
-		}
+		//if($newProfileId <= 0) {
+		//	throw(new \RangeException("profile id is not positive"));
+		//}
 
 		// convert and store the profile id
-		$this->profileId = intval($newProfileId);
+		$this->profileId = $newProfileId;
+
+
 	}
 
 	/**
@@ -241,8 +243,8 @@ class Profile implements \JsonSerializable {
 	 */
 	public function setProfileHash(string $newProfileHash) {
 		//enforce that the hash is properly formatted
-		$newProfileHash = trim($newProfileHash);
-		$newProfileHash =strtolower($newProfileHash);
+		//$newProfileHash = trim($newProfileHash);
+		//$newProfileHash =strtolower($newProfileHash);
 		if(empty($newProfileHash) === true) {
 			throw(new \InvalidArgumentException("profile password hash empty or insecure"));
 		}
@@ -253,9 +255,9 @@ class Profile implements \JsonSerializable {
 		}
 
 		//enforce that the hash is exactly 128 characters.
-		if(strlen($newProfileHash) !==128 ) {
-			throw(new \RangeException("profile password hash must be 128 characters"));
-		}
+		//if(strlen($newProfileHash) !== 128 ) {
+		//	throw(new \RangeException("profile hash must be 128 characters"));
+		//}
 
 		//store the hash
 		$this->profileHash = $newProfileHash;
@@ -313,7 +315,8 @@ class Profile implements \JsonSerializable {
 	 * @throws \TypeError if profile salt is not a string
 	 */
 	public function setProfileSalt(string $newProfileSalt) {
-		//enforce that the salt is properly formatted
+		//enforce that the salt is properly formatte
+		//d
 		$newProfileSalt = trim($newProfileSalt);
 		$newProfileSalt =strtolower($newProfileSalt);
 
@@ -323,9 +326,9 @@ class Profile implements \JsonSerializable {
 		}
 
 		//enforce that the salt is exactly 64 characters.
-		if(strlen($newProfileSalt) !==64 ) {
-			throw(new \RangeException("profile password hash must be 128 characters"));
-		}
+		//if(strlen($newProfileSalt) !==64 ) {
+		//	throw(new \RangeException("profile salt must be 128 characters"));
+		// }
 
 		//store the hash
 		$this->profileSalt = $newProfileSalt;
@@ -345,7 +348,7 @@ class Profile implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "INSERT INTO profile(profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt) VALUES(:profileActivationCode, :profileAtHandle, :profileEmail, :profileHash, :profilePhone, :profileSalt)";
+		$query = "INSERT INTO profile(profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt) VALUES (:profileActivationCode, :profileAtHandle, :profileEmail, :profileHash, :profilePhone, :profileSalt)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template

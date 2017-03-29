@@ -1,5 +1,5 @@
 <?php
-namespace Edu\Cnm\Dmcdonald21\DataDesign\Test;
+namespace Edu\Cnm\DataDesign\Test;
 
 // grab the project test parameters
 require_once("DataDesignTest.php");
