@@ -47,7 +47,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 **/
-	public function __construct(int $newTweetId = null, int $newTweetProfileId, string $newTweetContent, $newTweetDate = null) {
+	public function __construct(?int $newTweetId, int $newTweetProfileId, string $newTweetContent, ?$newTweetDate) {
 		try {
 			$this->setTweetId($newTweetId);
 			$this->setTweetProfileId($newTweetProfileId);
@@ -85,6 +85,12 @@ class Tweet implements \JsonSerializable {
 	 * @throws \TypeError if $newTweetId is not an integer
 	 **/
 	public function setTweetId(?int $newTweetId) {
+		//if tweet id is null immediately return it
+		if($newTweetId === null) {
+			$this->tweetId = null;
+			return;
+		}
+
 		// verify the tweet id is positive
 		if($newTweetId <= 0) {
 			throw(new \RangeException("tweet id is not positive"));
@@ -170,7 +176,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if $newTweetDate is not a valid object or string
 	 * @throws \RangeException if $newTweetDate is a date that does not exist
 	 **/
-	public function setTweetDate($newTweetDate = null) {
+	public function setTweetDate(?$newTweetDate) {
 		// base case: if the date is null, use the current date and time
 		if($newTweetDate === null) {
 			$this->tweetDate = new \DateTime();

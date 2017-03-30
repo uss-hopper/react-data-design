@@ -54,11 +54,7 @@ class ProfileTest extends DataDesignTest {
 	 **/
 	protected $VALID_PHONE = "+12125551212";
 
-	/**
-	 * valid salt to use
-	 * @var string $VALID_SALT
-	 */
-	protected $VALID_SALT;
+
 
 	/**
 	 * run the default setup operation to create salt and hash.
@@ -82,7 +78,7 @@ class ProfileTest extends DataDesignTest {
 		// create a new Profile and insert to into mySQL
 		$profile = new Profile(null, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE, $this->VALID_SALT);
 
-		var_dump($profile);
+		//var_dump($profile);
 
 		$profile->insert($this->getPDO());
 
@@ -121,6 +117,7 @@ class ProfileTest extends DataDesignTest {
 
 		// edit the Profile and update it in mySQL
 		$profile->setProfileAtHandle($this->VALID_ATHANDLE2);
+		var_dump($profile);
 		$profile->update($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
@@ -155,7 +152,7 @@ class ProfileTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		// create a new Profile and insert to into mySQL
-		$profile = new ProfileTest(null, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE, $this->VALID_SALT);
+		$profile = new Profile(null, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE, $this->VALID_SALT);
 		$profile->insert($this->getPDO());
 
 		// delete the Profile from mySQL
@@ -281,7 +278,7 @@ class ProfileTest extends DataDesignTest {
 		$profile->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoProfile = Profile::getProfileByProfileEmail($this->getPDO(), $profile->getProfileActivationToken());
+		$pdoProfile = Profile::getProfileByProfileActivationToken($this->getPDO(), $profile->getProfileActivationToken());
 		$this->assertSame($numRows + 1, $this->getConnection()->getRowCount("profile"));
 		$this->assertSame($pdoProfile->getProfileActivationToken(), $this->VALID_ACTIVATION);
 		$this->assertSame($pdoProfile->getProfileAtHandle(), $this->VALID_ATHANDLE);

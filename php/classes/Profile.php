@@ -111,10 +111,15 @@ class Profile implements \JsonSerializable {
 	 * @throws \TypeError if $newProfileId is not an integer
 	 **/
 	public function setProfileId(?int $newProfileId) {
+		if($newProfileId === null) {
+			$this->profileId = null;
+			return;
+		}
+
 		// verify the profile id is positive
-		//if($newProfileId <= 0) {
-		//	throw(new \RangeException("profile id is not positive"));
-		//}
+		if($newProfileId <= 0) {
+			throw(new \RangeException("profile id is not positive"));
+		}
 
 		// convert and store the profile id
 		$this->profileId = $newProfileId;
@@ -141,7 +146,11 @@ class Profile implements \JsonSerializable {
 	 *
 	 */
 	public function setProfileActivationToken(?string $newProfileActivationToken ) {
-		//make sure activation token is lower case and secure
+		if($newProfileActivationToken === null) {
+			$this->profileActivationToken = null;
+			return;
+		}
+
 		$newProfileActivationToken = strtolower(trim($newProfileActivationToken));
 		if(ctype_xdigit($newProfileActivationToken) === false) {
 			throw(new\RangeException("user activation token cannot be null"));
@@ -243,8 +252,8 @@ class Profile implements \JsonSerializable {
 	 */
 	public function setProfileHash(string $newProfileHash) {
 		//enforce that the hash is properly formatted
-		//$newProfileHash = trim($newProfileHash);
-		//$newProfileHash =strtolower($newProfileHash);
+		$newProfileHash = trim($newProfileHash);
+		$newProfileHash =strtolower($newProfileHash);
 		if(empty($newProfileHash) === true) {
 			throw(new \InvalidArgumentException("profile password hash empty or insecure"));
 		}
@@ -255,9 +264,9 @@ class Profile implements \JsonSerializable {
 		}
 
 		//enforce that the hash is exactly 128 characters.
-		//if(strlen($newProfileHash) !== 128 ) {
-		//	throw(new \RangeException("profile hash must be 128 characters"));
-		//}
+		if(strlen($newProfileHash) !== 128 ) {
+			throw(new \RangeException("profile hash must be 128 characters"));
+		}
 
 		//store the hash
 		$this->profileHash = $newProfileHash;
@@ -281,6 +290,13 @@ class Profile implements \JsonSerializable {
 	 * @throws \TypeError if $newPhone is not a string
 	 **/
 	public function setProfilePhone(?string $newProfilePhone) {
+		//if $profilePhone is null return it right away
+		if($newProfilePhone === null) {
+			$this->profilePhone = null;
+			return;
+		}
+
+
 		// verify the phone is secure
 		$newProfilePhone = trim($newProfilePhone);
 		$newProfilePhone = filter_var($newProfilePhone, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -326,9 +342,9 @@ class Profile implements \JsonSerializable {
 		}
 
 		//enforce that the salt is exactly 64 characters.
-		//if(strlen($newProfileSalt) !==64 ) {
-		//	throw(new \RangeException("profile salt must be 128 characters"));
-		// }
+		if(strlen($newProfileSalt) !== 64 ) {
+			throw(new \RangeException("profile salt must be 128 characters"));
+		 }
 
 		//store the hash
 		$this->profileSalt = $newProfileSalt;
@@ -348,7 +364,7 @@ class Profile implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "INSERT INTO profile(profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt) VALUES (:profileActivationCode, :profileAtHandle, :profileEmail, :profileHash, :profilePhone, :profileSalt)";
+		$query = "INSERT INTO profile(profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt) VALUES (:profileActivationToken, :profileAtHandle, :profileEmail, :profileHash, :profilePhone, :profileSalt)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
@@ -395,11 +411,12 @@ class Profile implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "UPDATE profile SET profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt WHERE profileId = :profileId";
+		$query = "UPDATE profile SET profileActivationToken = :profileActivationToken, profileAtHandle = :profileAtHandle, profileEmail = :profileEmail, profileHash = :profileHash, profilePhone = :profilePhone, profileSalt = :profileSalt WHERE profileId = :profileId";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$parameters = ["profileActivationToken" => $this->profileActivationToken, "profileAtHandle" => $this->profileAtHandle, "profileEmail" => $this->profileEmail, "profileHash"=> $this->profileHash, "profilePhone" => $this->profilePhone, "profileSalt" => $this->profileSalt];
+		$parameters = ["profileId" =>$this->profileId,"profileActivationToken" => $this->profileActivationToken, "profileAtHandle" => $this->profileAtHandle, "profileEmail" => $this->profileEmail, "profileHash"=> $this->profileHash, "profilePhone" => $this->profilePhone, "profileSalt" => $this->profileSalt];
+		var_dump($parameters);
 		$statement->execute($parameters);
 	}
 
@@ -459,7 +476,7 @@ class Profile implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "SELECT FROM profile WHERE profileEmail = :profileEmail";
+		$query = "SELECT profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt FROM profile WHERE profileEmail = :profileEmail";
 		$statement = $pdo->prepare($query);
 
 		// bind the profile id to the place holder in the template

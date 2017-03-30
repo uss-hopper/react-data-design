@@ -20,25 +20,42 @@ require_once(dirname(__DIR__) . "/autoload.php");
  **/
 class TweetTest extends DataDesignTest {
 	/**
+	 * valid profile hash to create the profile object to own the test
+	 * @var $VALID_HASH
+	 */
+	protected $VALID_PROFILE_HASH;
+
+	/**
+	 * valid salt to use to create the profile object to own the test
+	 * @var string $VALID_SALT
+	 */
+	protected $VALID_PROFILE_SALT;
+
+	/**
 	 * content of the Tweet
 	 * @var string $VALID_TWEETCONTENT
 	 **/
 	protected $VALID_TWEETCONTENT = "PHPUnit test passing";
+
 	/**
 	 * content of the updated Tweet
 	 * @var string $VALID_TWEETCONTENT2
 	 **/
 	protected $VALID_TWEETCONTENT2 = "PHPUnit test still passing";
+
 	/**
 	 * timestamp of the Tweet; this starts as null and is assigned later
 	 * @var \DateTime $VALID_TWEETDATE
 	 **/
 	protected $VALID_TWEETDATE = null;
+
 	/**
 	 * Profile that created the Tweet; this is for foreign key relations
 	 * @var Profile profile
 	 **/
 	protected $profile = null;
+
+
 
 	/**
 	 * create dependent objects before running each test
@@ -46,9 +63,13 @@ class TweetTest extends DataDesignTest {
 	public final function setUp() {
 		// run the default setUp() method first
 		parent::setUp();
+		$password = "abc123";
+		$this->VALID_PROFILE_SALT = bin2hex(random_bytes(32));
+		$this->VALID_PROFILE_HASH = hash_pbkdf2("sha512", $password, $this->VALID_PROFILE_SALT, 262144);
+
 
 		// create and insert a Profile to own the test Tweet
-		$this->profile = new Profile(null, "@phpunit", "test@phpunit.de", "+12125551212");
+		$this->profile = new Profile(null, null,"@handle", "test@phpunit.de",$this->VALID_PROFILE_HASH, "+12125551212", $this->VALID_PROFILE_SALT);
 		$this->profile->insert($this->getPDO());
 
 		// calculate the date (just use the time the unit test was setup...)
@@ -77,7 +98,7 @@ class TweetTest extends DataDesignTest {
 	/**
 	 * test inserting a Tweet that already exists
 	 *
-	 * @expectedException PDOException
+	 * @expectedException \PDOException
 	 **/
 	public function testInsertInvalidTweet() {
 		// create a Tweet with a non null tweet id and watch it fail
@@ -111,7 +132,7 @@ class TweetTest extends DataDesignTest {
 	/**
 	 * test updating a Tweet that already exists
 	 *
-	 * @expectedException PDOException
+	 * @expectedException /PDOException
 	 **/
 	public function testUpdateInvalidTweet() {
 		// create a Tweet with a non null tweet id and watch it fail
@@ -143,7 +164,7 @@ class TweetTest extends DataDesignTest {
 	/**
 	 * test deleting a Tweet that does not exist
 	 *
-	 * @expectedException PDOException
+	 * @expectedException \PDOException
 	 **/
 	public function testDeleteInvalidTweet() {
 		// create a Tweet and try to delete it without actually inserting it
