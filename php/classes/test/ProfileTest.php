@@ -54,6 +54,12 @@ class ProfileTest extends DataDesignTest {
 	 **/
 	protected $VALID_PHONE = "+12125551212";
 
+	/**
+	 * valid salt to use to create the profile object to own the test
+	 * @var string $VALID_SALT
+	 */
+	protected $VALID_SALT;
+
 
 
 	/**

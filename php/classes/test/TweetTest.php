@@ -20,6 +20,13 @@ require_once(dirname(__DIR__) . "/autoload.php");
  **/
 class TweetTest extends DataDesignTest {
 	/**
+	 * Profile that created the Tweet; this is for foreign key relations
+	 * @var Profile profile
+	 **/
+	protected $profile = null;
+
+
+	/**
 	 * valid profile hash to create the profile object to own the test
 	 * @var $VALID_HASH
 	 */
@@ -49,11 +56,6 @@ class TweetTest extends DataDesignTest {
 	 **/
 	protected $VALID_TWEETDATE = null;
 
-	/**
-	 * Profile that created the Tweet; this is for foreign key relations
-	 * @var Profile profile
-	 **/
-	protected $profile = null;
 
 
 
