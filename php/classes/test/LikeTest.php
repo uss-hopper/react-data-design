@@ -19,21 +19,40 @@ require_once(dirname(__DIR__) . "/autoload.php");
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  **/
 class LikeTest extends DataDesignTest {
+
+
+	/**
+	 * Profile that created the liked the Tweet; this is for foreign key relations
+	 * @var  Profile $profile
+	 **/
+	protected $profile;
+
+	/**
+	 * Tweet that was liked; this is for foreign key relations
+	 * @var Tweet $tweet
+	 **/
+	protected $tweet;
+
+	/**
+	 * valid hash to use
+	 * @var $VALID_HASH
+	 */
+	protected $VALID_HASH;
+
 	/**
 	 * timestamp of the Like; this starts as null and is assigned later
 	 * @var \DateTime $VALID_LIKEDATE
 	 **/
-	protected $VALID_LIKEDATE = null;
+	protected $VALID_LIKEDATE;
+
 	/**
-	 * Profile that created the liked the Tweet; this is for foreign key relations
-	 * @var \Edu\Cnm\Dmcdonald21\DataDesign\Profile $profile
-	 **/
-	protected $profile = null;
-	/**
-	 * Tweet that was liked; this is for foreign key relations
-	 * @var \Edu\Cnm\Dmcdonald21\DataDesign\Tweet $tweet
-	 **/
-	protected $tweet = null;
+	 * valid salt to use to create the profile object to own the test
+	 * @var string $VALID_SALT
+	 */
+	protected $VALID_SALT;
+
+
+
 
 	/**
 	 * create dependent objects before running each test
@@ -42,8 +61,14 @@ class LikeTest extends DataDesignTest {
 		// run the default setUp() method first
 		parent::setUp();
 
+		//
+		$password = "abc123";
+		$this->VALID_SALT = bin2hex(random_bytes(32));
+		$this->VALID_HASH = hash_pbkdf2("sha512", $password, $this->VALID_SALT, 262144);
+		$this->VALID_ACTIVATION = bin2hex(random_bytes(16));
+
 		// create and insert a Profile to own the test Tweet
-		$this->profile = new Profile(null, "@phpunit", "test@phpunit.de", "+12125551212");
+		$this->profile = new Profile(null, null,"@phpunit", "test@phpunit.de",$this->VALID_HASH, "+12125551212", $this->VALID_SALT);
 		$this->profile->insert($this->getPDO());
 
 		// create the test Tweet
@@ -81,6 +106,7 @@ class LikeTest extends DataDesignTest {
 	public function testInsertInvalidLike() {
 		// create a like without foreign keys and watch it fail
 		$like = new like(null, null, null);
+		$like->insert($this->getPDO());
 	}
 
 	/**
@@ -180,7 +206,7 @@ class LikeTest extends DataDesignTest {
 		$results = Like::getLikeByLikeProfileId($this->getPDO(), $this->profile->getProfileId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("like"));
 		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\Dmcdonald21\\DataDesign\\Like", $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Like", $results);
 
 		// grab the result from the array and validate it
 		$pdoLike = $results[0];

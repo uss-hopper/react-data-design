@@ -3,8 +3,8 @@
 		<testsuite name="Twitter Data Design">
 			<!--<file>HaversineTest.php</file> -->
 			<file>ProfileTest.php</file>
-			 <!-- <file>TweetTest.php</file> -->
-			<!-- <file>LikeTest.php</file> -->
+			 <file>TweetTest.php</file>
+			<file>LikeTest.php</file>
 		</testsuite>
 	</testsuites>
 	<filter>

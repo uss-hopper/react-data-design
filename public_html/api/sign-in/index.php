@@ -2,7 +2,7 @@
 require_once dirname(__DIR__, 3) . "/php/classes/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
 require_once ("/etc/apache2/capstone-mysql/encrypted-config.php");
-use Edu\Cnm\Dmcdonald21\DataDesign\Profile;
+use Edu\Cnm\DataDesign\Profile;
 
 /**
  * api for handling sign-in
@@ -60,7 +60,7 @@ try {
 		$hash = hash_pbkdf2("sha512", $profilePassword, $profile->getProfileSalt(), 262144);
 
 		//verify hash is correct
-		if($hash !== $profile->getProfilePasswordHash()) {
+		if($hash !== $profile->getProfileHash()) {
 			throw(new \InvalidArgumentException("Password or email is incorrect."));
 		}
 

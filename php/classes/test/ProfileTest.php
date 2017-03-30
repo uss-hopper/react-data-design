@@ -31,11 +31,13 @@ class ProfileTest extends DataDesignTest {
 	 * @var string $VALID_ATHANDLE
 	 **/
 	protected $VALID_ATHANDLE = "@phpunit";
+
 	/**
 	 * second valid at handle to use
 	 * @var string $VALID_ATHANDLE2
 	 **/
 	protected $VALID_ATHANDLE2 = "@passingtests";
+
 	/**
 	 * valid email to use
 	 * @var string $VALID_EMAIL
@@ -67,10 +69,11 @@ class ProfileTest extends DataDesignTest {
 	 */
 	public final function setUp() {
 		parent::setUp();
+
+		//
 		$password = "abc123";
 		$this->VALID_SALT = bin2hex(random_bytes(32));
 		$this->VALID_HASH = hash_pbkdf2("sha512", $password, $this->VALID_SALT, 262144);
-		var_dump($this->VALID_HASH);
 		$this->VALID_ACTIVATION = bin2hex(random_bytes(16));
 	}
 
@@ -106,7 +109,7 @@ class ProfileTest extends DataDesignTest {
 	 **/
 	public function testInsertInvalidProfile() {
 		// create a profile with a non null profileId and watch it fail
-		$profile = new Profile(null, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE, $this->VALID_SALT);
+		$profile = new Profile(DataDesignTest::INVALID_KEY, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE, $this->VALID_SALT);
 		$profile->insert($this->getPDO());
 	}
 
@@ -123,14 +126,13 @@ class ProfileTest extends DataDesignTest {
 
 		// edit the Profile and update it in mySQL
 		$profile->setProfileAtHandle($this->VALID_ATHANDLE2);
-		var_dump($profile);
 		$profile->update($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId());
 		$this->assertSame($numRows + 1, $this->getConnection()->getRowCount("profile"));
 		$this->assertSame($pdoProfile->getProfileActivationToken(), $this->VALID_ACTIVATION);
-		$this->assertSame($pdoProfile->getProfileAtHandle(), $this->VALID_ATHANDLE);
+		$this->assertSame($pdoProfile->getProfileAtHandle(), $this->VALID_ATHANDLE2);
 		$this->assertSame($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
 		$this->assertSame($pdoProfile->getProfileHash(), $this->VALID_HASH);
 		$this->assertSame($pdoProfile->getProfilePhone(), $this->VALID_PHONE);

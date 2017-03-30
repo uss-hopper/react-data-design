@@ -134,7 +134,7 @@ class TweetTest extends DataDesignTest {
 	/**
 	 * test updating a Tweet that already exists
 	 *
-	 * @expectedException /PDOException
+	 * @expectedException \PDOException
 	 **/
 	public function testUpdateInvalidTweet() {
 		// create a Tweet with a non null tweet id and watch it fail
@@ -217,7 +217,7 @@ class TweetTest extends DataDesignTest {
 		$results = Tweet::getTweetByTweetProfileId($this->getPDO(), $this->profile->getProfileId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
 		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\Dmcdonald21\\DataDesign\\Tweet", $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Tweet", $results);
 
 		// grab the result from the array and validate it
 		$pdoTweet = $results[0];
@@ -250,7 +250,7 @@ class TweetTest extends DataDesignTest {
 		$results = Tweet::getTweetByTweetContent($this->getPDO(), $tweet->getTweetContent());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
 		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\Dmcdonald21\\DataDesign\\Tweet", $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Tweet", $results);
 
 		// grab the result from the array and validate it
 		$pdoTweet = $results[0];
@@ -283,7 +283,7 @@ class TweetTest extends DataDesignTest {
 		$results = Tweet::getAllTweets($this->getPDO());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
 		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\Dmcdonald21\\DataDesign\\Tweet", $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Tweet", $results);
 
 		// grab the result from the array and validate it
 		$pdoTweet = $results[0];
