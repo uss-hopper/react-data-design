@@ -3,7 +3,7 @@ require_once dirname( __DIR__, 3 ) . "/vendor/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/classes/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
 require_once ("/etc/apache2/capstone-mysql/encrypted-config.php");
-use Edu\Cnm\Dmcdonald21\DataDesign\Profile;
+use Edu\Cnm\DataDesign\Profile;
 
 /**
  * api for signing up too DDC Twitter
@@ -34,7 +34,7 @@ try {
 		$requestObject = json_decode($requestContent);
 
 		//verify that all needed fields are present
-		if(empty($requestObject->password) === true) {
+		if(empty($requestObject->profilePassword) === true) {
 			throw(new \InvalidArgumentException ("Must input valid password", 405));
 		}
 
@@ -48,13 +48,8 @@ try {
 			throw(new \InvalidArgumentException ("No profile email present", 405));
 		}
 
-		//profile phone # is a required field
-		if(empty($requestObject->profilePhoneNumber) === true) {
-			throw(new \InvalidArgumentException ("No phone number present", 405));
-		}
-
 		$salt = bin2hex(random_bytes(32));
-		$hash = hash_pbkdf2("sha512", $requestObject->password, $salt, 262144);
+		$hash = hash_pbkdf2("sha512", $requestObject->profilePassword, $salt, 262144);
 
 		$profileActivationToken = bin2hex(random_bytes(16));
 
