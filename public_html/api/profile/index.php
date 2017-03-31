@@ -6,8 +6,7 @@ require_once( dirname( __DIR__, 3 ) . "/php/classes/autoload.php" );
 require_once( dirname( __DIR__, 3 ) . "/php/lib/xsrf.php" );
 require_once( "/etc/apache2/capstone-mysql/encrypted-config.php" );
 
-use Edu\Cnm\Dmcdonald21\DataDesign\ {
-	Tweet,
+use Edu\Cnm\DataDesign\ {
 	Profile
 };
 
@@ -114,14 +113,14 @@ try {
 			$currentPasswordHash = hash_pbkdf2("sha512", $requestObject->currentProfilePassword, $profile->getProfileSalt(), 262144);
 
 			//make sure the hash given by the end user matches what is in the database
-			if($currentPasswordHash !== $profile->getProfilePasswordHash()) {
+			if($currentPasswordHash !== $profile->getProfileHash()) {
 				throw(new \RuntimeException("Old password is incorrect", 401));
 			}
 
 			// salt and hash the new password and update the profile object
 			$newPasswordSalt = bin2hex(random_bytes(16));
 			$newPasswordHash = hash_pbkdf2("sha512", $requestObject->newProfilePassword, $newPasswordSalt, 262144);
-			$profile->setProfilePasswordHash($newPasswordHash);
+			$profile->setProfileHash($newPasswordHash);
 			$profile->setProfileSalt($newPasswordSalt);
 		}
 
@@ -139,7 +138,7 @@ try {
 		}
 
 		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $id) {
-			throw(new \InvalidArgumentException("You are not allowed to access this profile", 405));
+			throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
 		}
 
 		//delete the post from the database

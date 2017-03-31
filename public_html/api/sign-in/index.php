@@ -20,7 +20,7 @@ try {
 		session_start();
 	}
 	//grab mySQL statement
-	$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/sprout-swap.ini");
+	$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
 
 	//determine which HTTP method is being used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
@@ -37,7 +37,7 @@ try {
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
 
-		//check to make sure the password and email field is not empty and are secure
+		//check to make sure the password and email field is not empty.s
 		if(empty($requestObject->profileEmail) === true) {
 			throw(new \InvalidArgumentException("Wrong email address.", 401));
 		} else {

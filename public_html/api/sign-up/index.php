@@ -67,7 +67,7 @@ try {
 		$basePath = dirname($_SERVER["SCRIPT_NAME"], 3);
 
 		//create the path
-		$urlglue = $basePath . "/activation/" . $profileActivationToken;
+		$urlglue = $basePath . "/api/activation/?activation=" . $profileActivationToken;
 
 		//create the redirect link
 		$confirmLink = "https://" . $_SERVER["SERVER_NAME"] . $urlglue;

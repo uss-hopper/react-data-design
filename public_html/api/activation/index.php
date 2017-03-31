@@ -3,7 +3,7 @@
 require_once dirname(__DIR__,3)."/php/classes/autoload.php";
 require_once dirname(__DIR__,3)."/php/lib/xsrf.php";
 require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
-use Edu\Cnm\Dmcdonald21\DataDesign\Profile;
+use Edu\Cnm\DataDesign\Profile;
 /**
  * API to check profile activation status
  * @author Gkephart
@@ -18,7 +18,7 @@ $reply->status = 200;
 $reply->data = null;
 try{
 	// grab the MySQL connection
-	$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/growify.ini");
+	$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
 
 	//check the HTTP method being used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
@@ -27,9 +27,9 @@ try{
 	$activation = filter_input(INPUT_GET, "activation", FILTER_SANITIZE_STRING);
 
 	// make sure the activation token is the correct size
-	if(strlen($activation) !== 16){
-		throw(new InvalidArgumentException("activation has an incorrect length", 405));
-	}
+//	if(strlen($activation) !== 32){
+//		throw(new InvalidArgumentException("activation has an incorrect length", 405));
+//	}
 
 	// verify that the activation tokens value is a string hexadeciaml value
 	if(ctype_xdigit($activation) === false) {
@@ -42,16 +42,16 @@ try{
 		setXsrfCookie();
 
 		//find profile associated with the activation token
-		$profile = Profile::getProfileByProfileActivation($pdo, $activation);
+		$profile = Profile::getProfileByProfileActivationToken($pdo, $activation);
 
 		//verify the profile is not null
 		if($profile !== null){
 
 			//make sure the activation token matches
-			if($activation === $profile->getProfileActivation()) {
+			if($activation === $profile->getProfileActivationToken()) {
 
 				//set activation to null
-				$profile->setProfileActivation(null);
+				$profile->setProfileActivationToken(null);
 
 				//update the profile in the database
 				$profile->update($pdo);

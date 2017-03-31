@@ -23,7 +23,7 @@ $reply->status = 200;
 $reply->data = null;
 try {
 	//grab the mySQL connection
-	$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/sprout-swap.ini");
+	$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
 
 	//determine which HTTP method was used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
@@ -32,10 +32,11 @@ try {
 			$reply->message = "You are already signed out";
 		}
 		$_SESSION = [];
+		var_dump($_SESSION);
 		$reply->message = "You are now signed out.";
 	}
 	else {
-		throw (InvalidArgumentException("Invalid HTTP method request"));
+		throw (new \InvalidArgumentException("Invalid HTTP method request"));
 	}
 
 } catch(Exception $exception) {
