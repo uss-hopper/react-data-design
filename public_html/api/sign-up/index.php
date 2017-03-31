@@ -78,12 +78,36 @@ try {
 <p>In order to start posting tweets of cats you must confirm your account </p>
 <p><a href="$confirmLink">$confirmLink</a></p>
 EOF;
-		$response = sendEmail($requestObject->profileEmail, $requestObject->profilePhoneNumber, $messageSubject, $message);
-		if($response === "Email sent.") {
-			$reply->message = "Sign up was successful, please check your email for activation message.";
-		} else {
-			throw(new InvalidArgumentException("Error sending email."));
-		}
+		//create swift email
+		$swiftMessage = Swift_Message::newInstance();
+
+		// attach the sender to the message
+		// this takes the form of an associative array where the email is the key to a real name
+		$swiftMessage->setFrom(["gkephart@cnm.edu"=> "Gkephart"]);
+
+		/**
+		 * attach recipients to the message
+		 * notice this is an array that can include or omit the recipient's name
+		 * use the recipient's real name where possible;
+		 * this reduces the probability of the email is marked as spam
+		 */
+		//define who the recipient is
+		$recipients = [$requestObject->profileEmail];
+
+		//set the recipient to the swift message
+		$swiftMessage->setTo($recipients);
+
+		//attach the subject line to the email message
+		$swiftMessage->setSubject($messageSubject);
+
+		/**
+		 * attach the actuak message to the email
+		 * herem we set two versions of the message: html formatted version and a filter_var()ed version of the message
+		 * that is a plain text version
+		 *
+		 */
+
+
 	} else{
 		throw (new InvalidArgumentException("invalid http request"));
 	}

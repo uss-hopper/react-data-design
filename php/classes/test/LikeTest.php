@@ -95,7 +95,8 @@ class LikeTest extends DataDesignTest {
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("like"));
 		$this->assertEquals($pdoLike->getLikeProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoLike->getLikeTweetId(), $this->tweet->getTweetId());
-		$this->assertEquals($pdoLike->getLikeDate(), $this->VALID_LIKEDATE);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoLike->getLikeDate()->getTimeStamp(), $this->VALID_LIKEDATE->getTimestamp());
 	}
 
 	/**
@@ -146,7 +147,8 @@ class LikeTest extends DataDesignTest {
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("like"));
 		$this->assertEquals($pdoLike->getLikeProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoLike->getLikeTweetId(), $this->tweet->getTweetId());
-		$this->assertEquals($pdoLike->getLikeDate(), $this->VALID_LIKEDATE);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoLike->getLikeDate()->getTimeStamp(), $this->VALID_LIKEDATE->getTimestamp());
 	}
 
 	/**
@@ -173,13 +175,14 @@ class LikeTest extends DataDesignTest {
 		$results = Like::getLikeByLikeTweetId($this->getPDO(), $this->tweet->getTweetId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("like"));
 		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\Dmcdonald21\\DataDesign\\Like", $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Like", $results);
 
 		// grab the result from the array and validate it
 		$pdoLike = $results[0];
 		$this->assertEquals($pdoLike->getLikeProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoLike->getLikeTweetId(), $this->tweet->getTweetId());
-		$this->assertEquals($pdoLike->getLikeDate(), $this->VALID_LIKEDATE);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoLike->getLikeDate()->getTimeStamp(), $this->VALID_LIKEDATE->getTimestamp());
 	}
 
 	/**
@@ -212,7 +215,8 @@ class LikeTest extends DataDesignTest {
 		$pdoLike = $results[0];
 		$this->assertEquals($pdoLike->getLikeProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoLike->getLikeTweetId(), $this->tweet->getTweetId());
-		$this->assertEquals($pdoLike->getLikeDate(), $this->VALID_LIKEDATE);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoLike->getLikeDate()->getTimeStamp(), $this->VALID_LIKEDATE->getTimestamp());
 	}
 
 	/**

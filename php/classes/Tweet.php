@@ -422,6 +422,7 @@ class Tweet implements \JsonSerializable {
 	 **/
 	public function jsonSerialize() {
 		$fields = get_object_vars($this);
+		//format the tweetDate to seconds since the beginning of time to avoid conflicts with angular
 		$fields["tweetDate"] = $this->tweetDate->getTimestamp() * 1000;
 		return($fields);
 	}

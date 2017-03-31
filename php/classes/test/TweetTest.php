@@ -94,7 +94,8 @@ class TweetTest extends DataDesignTest {
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
 		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
-		$this->assertEquals($pdoTweet->getTweetDate(), $this->VALID_TWEETDATE);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
 	}
 
 	/**
@@ -128,7 +129,8 @@ class TweetTest extends DataDesignTest {
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
 		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT2);
-		$this->assertEquals($pdoTweet->getTweetDate(), $this->VALID_TWEETDATE);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
 	}
 
 	/**
@@ -190,7 +192,8 @@ class TweetTest extends DataDesignTest {
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
 		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
-		$this->assertEquals($pdoTweet->getTweetDate(), $this->VALID_TWEETDATE);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
 	}
 
 	/**
@@ -223,7 +226,8 @@ class TweetTest extends DataDesignTest {
 		$pdoTweet = $results[0];
 		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
-		$this->assertEquals($pdoTweet->getTweetDate(), $this->VALID_TWEETDATE);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
 	}
 
 	/**
@@ -250,13 +254,15 @@ class TweetTest extends DataDesignTest {
 		$results = Tweet::getTweetByTweetContent($this->getPDO(), $tweet->getTweetContent());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
 		$this->assertCount(1, $results);
+
 		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Tweet", $results);
 
 		// grab the result from the array and validate it
 		$pdoTweet = $results[0];
 		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
-		$this->assertEquals($pdoTweet->getTweetDate(), $this->VALID_TWEETDATE);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
 	}
 
 	/**
@@ -289,6 +295,7 @@ class TweetTest extends DataDesignTest {
 		$pdoTweet = $results[0];
 		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
-		$this->assertEquals($pdoTweet->getTweetDate(), $this->VALID_TWEETDATE);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
 	}
 }
