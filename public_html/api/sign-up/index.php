@@ -1,8 +1,8 @@
 <?php
-require_once dirname( __DIR__, 3 ) . "/vendor/autoload.php";
+require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/classes/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
-require_once ("/etc/apache2/capstone-mysql/encrypted-config.php");
+require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
 use Edu\Cnm\DataDesign\Profile;
 
 /**
@@ -83,7 +83,7 @@ EOF;
 
 		// attach the sender to the message
 		// this takes the form of an associative array where the email is the key to a real name
-		$swiftMessage->setFrom(["gkephart@cnm.edu"=> "Gkephart"]);
+		$swiftMessage->setFrom(["gkephart@cnm.edu" => "Gkephart"]);
 
 		/**
 		 * attach recipients to the message
@@ -101,18 +101,45 @@ EOF;
 		$swiftMessage->setSubject($messageSubject);
 
 		/**
-		 * attach the actuak message to the email
-		 * herem we set two versions of the message: html formatted version and a filter_var()ed version of the message
-		 * that is a plain text version
-		 *
+		 * attach the message to the email
+		 * set two versions of the message: a html formatted version and a filter_var()ed version of the message, plain text
+		 * notice the tactic used is to display the entire $confirmLink to plain text
+		 * this lets users who are not viewing the html content to still access the link
 		 */
+		//attach the html version fo the message
+		$swiftMessage->setBody($message, "text/html");
 
+		//attach the plain text version of the message
+		$swiftMessage->addPart(html_entity_decode($message), "text/plain");
 
-	} else{
+		/**
+		 * send the Email via SMTP; the SMTP server here is configured to relay everything upstream via CNM
+		 * this default may or may not be available on all web hosts; consult their documentation/support for details
+		 * SwiftMailer supports many different transport methods; SMTP was chosen because it's the most compatible and has the best error handling
+		 * @see http://swiftmailer.org/docs/sending.html Sending Messages - Documentation - SwitftMailer
+		 **/
+		//setup smtp
+		$smtp = Swift_SmtpTransport::newInstance("localhost", 25);
+		$mailer = Swift_Mailer::newInstance($smtp);
+
+		//send the message
+		$numSent = $mailer->send($swiftMessage, $failedRecipients);
+
+		/**
+		 * the send method returns the number of recipients that accepted the Email
+		 * so, if the number attempted is not the number accepted, this is an Exception
+		 **/
+		if($numSent !== count($recipients)) {
+			// the $failedRecipients parameter passed in the send() method now contains contains an array of the Emails that failed
+			throw(new RuntimeException("unable to send email"));
+		}
+
+		// update reply
+		$reply->message = "Thank you for creating a profile with DDC-Twitter";
+	} else {
 		throw (new InvalidArgumentException("invalid http request"));
 	}
-
-}catch(\Exception $exception) {
+} catch(\Exception $exception) {
 	$reply->status = $exception->getCode();
 	$reply->message = $exception->getMessage();
 } catch(\TypeError $typeError) {
