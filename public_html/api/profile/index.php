@@ -68,6 +68,11 @@ try {
 		//enforce that the XSRF token is present in the header
 		verifyXsrf();
 
+		//enforce the user is signed in and only trying to edit their own profile
+		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $id) {
+			throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
+		}
+
 		//decode the response from the front end
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
@@ -137,7 +142,8 @@ try {
 			throw (new RuntimeException("Profile does not exist"));
 		}
 
-		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $id) {
+		//enforce the user is signed in and only trying to edit their own profile
+		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $profile->getProfileId()) {
 			throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
 		}
 

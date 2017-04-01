@@ -33,11 +33,6 @@ try {
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
 
-		//verify that all needed fields are present
-		if(empty($requestObject->profilePassword) === true) {
-			throw(new \InvalidArgumentException ("Must input valid password", 405));
-		}
-
 		//profile at handle is a required field
 		if(empty($requestObject->profileAtHandle) === true) {
 			throw(new \InvalidArgumentException ("No profile @handle", 405));
@@ -46,6 +41,16 @@ try {
 		//profile email is a required field
 		if(empty($requestObject->profileEmail) === true) {
 			throw(new \InvalidArgumentException ("No profile email present", 405));
+		}
+
+		//verify that all needed fields are present
+		if(empty($requestObject->profilePassword) === true) {
+			throw(new \InvalidArgumentException ("Must input valid password", 405));
+		}
+
+		//if phone is empty set it too null
+		if(empty($requestObject->profilePhone) === true) {
+			$requestObject->profilePhone = null;
 		}
 
 		$salt = bin2hex(random_bytes(32));

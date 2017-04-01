@@ -5,7 +5,8 @@ require_once dirname(__DIR__, 3) . "/php/classes/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
 require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
 
-use Edu\Cnm\Dmcdonald21\DataDesign\Tweet;
+use Edu\Cnm\DataDesign\Tweet;
+
 
 
 /**
@@ -101,6 +102,11 @@ try {
                 throw(new RuntimeException("Tweet does not exist", 404));
             }
 
+			  //enforce the user is signed in and only trying to edit their own tweet
+			  if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $tweet->getTweetProfileId()) {
+				  throw(new \InvalidArgumentException("You are not allowed to edit this tweet", 403));
+			  }
+
             // update all attributes
             $tweet->setTweetDate($requestObject->tweetDate);
             $tweet->setTweetContent($requestObject->tweetContent);
@@ -127,6 +133,11 @@ try {
         if($tweet === null) {
             throw(new RuntimeException("Tweet does not exist", 404));
         }
+
+		 //enforce the user is signed in and only trying to edit their own tweet
+		 if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $tweet->getTweetProfileId()) {
+			 throw(new \InvalidArgumentException("You are not allowed to delete this tweet", 403));
+		 }
 
         // delete tweet
         $tweet->delete($pdo);
