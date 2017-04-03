@@ -53,18 +53,9 @@ class Tweet implements \JsonSerializable {
 			$this->setTweetProfileId($newTweetProfileId);
 			$this->setTweetContent($newTweetContent);
 			$this->setTweetDate($newTweetDate);
-		} catch(\InvalidArgumentException $invalidArgument) {
-			// rethrow the exception to the caller
-			throw(new \InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
-		} catch(\RangeException $range) {
-			// rethrow the exception to the caller
-			throw(new \RangeException($range->getMessage(), 0, $range));
-		} catch(\TypeError $typeError) {
-			// rethrow the exception to the caller
-			throw(new \TypeError($typeError->getMessage(), 0, $typeError));
-		} catch(\Exception $exception) {
-			// rethrow the exception to the caller
-			throw(new \Exception($exception->getMessage(), 0, $exception));
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 	}
 
@@ -355,41 +346,39 @@ class Tweet implements \JsonSerializable {
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
 	/**
-	 * gets the Tweet by tweetId
+	 * gets the Tweet by profile id
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param int $tweetProfileId tweet id to search for
-	 * @return Tweet|null Tweet found or null if not found
+	 * @param int $tweetProfileId profile id to search by
+	 * @return \SplFixedArray SplFixedArray of Tweets found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
 	public static function getTweetByTweetProfileId(\PDO $pdo, int $tweetProfileId) {
-		// enforce the tweetProfileId is positive
+		// sanitize the profile id before searching
 		if($tweetProfileId <= 0) {
-			throw(new \PDOException("tweet id is not positive"));
+			throw(new \RangeException("tweet profile id must be positive"));
 		}
-
 		// create query template
 		$query = "SELECT tweetId, tweetProfileId, tweetContent, tweetDate FROM tweet WHERE tweetProfileId = :tweetProfileId";
 		$statement = $pdo->prepare($query);
-
-		// bind the tweet id to the place holder in the template
+		// bind the tweet profile id to the place holder in the template
 		$parameters = ["tweetProfileId" => $tweetProfileId];
 		$statement->execute($parameters);
-
-		// grab the tweet from mySQL
-		try {
-			$tweet = null;
-			$statement->setFetchMode(\PDO::FETCH_ASSOC);
-			$row = $statement->fetch();
-			if($row !== false) {
+		// build an array of tweets
+		$tweets = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
 				$tweet = new Tweet($row["tweetId"], $row["tweetProfileId"], $row["tweetContent"], $row["tweetDate"]);
+				$tweets[$tweets->key()] = $tweet;
+				$tweets->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
-		} catch(\Exception $exception) {
-			// if the row couldn't be converted, rethrow it
-			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return($tweet);
+		return($tweets);
 	}
 
 
