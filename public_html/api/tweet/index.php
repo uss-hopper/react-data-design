@@ -5,7 +5,11 @@ require_once dirname(__DIR__, 3) . "/php/classes/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
 require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
 
-use Edu\Cnm\DataDesign\Tweet;
+use Edu\Cnm\DataDesign\{
+	Tweet,
+	// we only use the profile class for testing purposes
+	Profile
+};
 
 
 
@@ -27,15 +31,19 @@ $reply->data = null;
 
 try {
     //grab the mySQL connection
-    $pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/tweet.ini");
+    $pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
 
-    //determine which HTTP method was used
+	// mock a logged in user by mocking the session and assigning a specific user to it.
+	// this is only for testing purposes and should not be in the live code.
+	$_SESSION["profile"] =Profile::getProfileByProfileId($pdo, 288);
+
+	//determine which HTTP method was used
     $method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
 
     //sanitize input
     $id = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
-    $profileId = filter_input(INPUT_GET, "profileId", FILTER_VALIDATE_INT);
-    $content = filter_input(INPUT_GET, "content", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+    $tweetProfileId = filter_input(INPUT_GET, "tweetProfileId", FILTER_VALIDATE_INT);
+    $tweetContent = filter_input(INPUT_GET, "tweetContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
     //make sure the id is valid for methods that require it
     if(($method === "DELETE" || $method === "PUT") && (empty($id) === true || $id < 0)) {
@@ -48,19 +56,21 @@ try {
         //set XSRF cookie
         setXsrfCookie();
 
+        var_dump($tweetContent);
+
         //get a specific tweet or all tweets and update reply
         if(empty($id) === false) {
             $tweet = Tweet::getTweetByTweetId($pdo, $id);
             if($tweet !== null) {
                 $reply->data = $tweet;
             }
-        } else if(empty($profileId) === false) {
-            $tweets = Tweet::getTweetByTweetProfileId($pdo, $profileId);
-            if($tweets !== null) {
-                $reply->data = $tweets;
+        } else if(empty($tweetProfileId) === false) {
+            $tweet = Tweet::getTweetByTweetProfileId($pdo, $tweetProfileId);
+            if($tweet !== null) {
+                $reply->data = $tweet;
             }
-        } else if(empty($content) === false) {
-            $tweets = Tweet::getTweetByTweetContent($pdo, $content);
+        } else if(empty($tweetContent) === false) {
+            $tweets = Tweet::getTweetByTweetContent($pdo, $tweetContent);
             if($tweets !== null) {
                 $reply->data = $tweets;
             }
@@ -89,18 +99,23 @@ try {
         }
 
         //  make sure profileId is available
-        if(empty($requestObject->profileId) === true) {
+        if(empty($requestObject->tweetProfileId) === true) {
             throw(new \InvalidArgumentException ("No Profile ID.", 405));
         }
 
         //perform the actual put or post
         if($method === "PUT") {
 
-            // retrieve the tweet to update
-            $tweet = Tweet::getTweetByTweetId($pdo, $id);
-            if($tweet === null) {
-                throw(new RuntimeException("Tweet does not exist", 404));
-            }
+			  //enforce that the end user has a XSRF token.
+			  verifyXsrf();
+
+
+
+			  // retrieve the tweet to update
+			  $tweet = Tweet::getTweetByTweetId($pdo, $id);
+			  if($tweet === null) {
+				  throw(new RuntimeException("Tweet does not exist", 404));
+			  }
 
 			  //enforce the user is signed in and only trying to edit their own tweet
 			  if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $tweet->getTweetProfileId()) {
@@ -117,8 +132,13 @@ try {
 
         } else if($method === "POST") {
 
+			  // enforce the user is signed in
+			  if(empty($_SESSION["profile"]) === true ) {
+			  throw(new \InvalidArgumentException("you must be logged in to post tweets", 403));
+			  }
+
             // create new tweet and insert into the database
-            $tweet = new Tweet(null, $requestObject->profileId, $requestObject->tweetContent, null);
+            $tweet = new Tweet(null, $requestObject->tweetProfileId, $requestObject->tweetContent, null);
             $tweet->insert($pdo);
 
             // update reply
@@ -126,23 +146,24 @@ try {
         }
 
     } else if($method === "DELETE") {
-        verifyXsrf();
 
-        // retrieve the Tweet to be deleted
-        $tweet = Tweet::getTweetByTweetId($pdo, $id);
-        if($tweet === null) {
-            throw(new RuntimeException("Tweet does not exist", 404));
-        }
+    	//enforce that the end user has a XSRF token.
+    	verifyXsrf();
+
+		 // retrieve the Tweet to be deleted
+		 $tweet = Tweet::getTweetByTweetId($pdo, $id);
+		 if($tweet === null) {
+			 throw(new RuntimeException("Tweet does not exist", 404));
+		 }
 
 		 //enforce the user is signed in and only trying to edit their own tweet
 		 if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $tweet->getTweetProfileId()) {
 			 throw(new \InvalidArgumentException("You are not allowed to delete this tweet", 403));
 		 }
 
-        // delete tweet
-        $tweet->delete($pdo);
-
-        // update reply
+		 // delete tweet
+		 $tweet->delete($pdo);
+		 // update reply
         $reply->message = "Tweet deleted OK";
     } else {
         throw (new InvalidArgumentException("Invalid HTTP method request"));
