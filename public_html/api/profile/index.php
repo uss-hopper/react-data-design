@@ -46,9 +46,11 @@ try {
 	if($method === "GET") {
 			//set XSRF cookie
 			setXsrfCookie();
+
 			//gets a post by content
 			if(empty($id) === false) {
 				$profile = Profile::getProfileByProfileId($pdo, $id);
+
 				if($profile !== null) {
 					$reply->data = $profile;
 				}
@@ -57,7 +59,8 @@ try {
 				if($profile !== null) {
 					$reply->data = $profile;
 				}
-			} else if (empty($profileEmail)){
+			} else if (empty($profileEmail) === false){
+				var_dump($profileEmail);
 				$profile = Profile::getProfileByProfileEmail($pdo, $profileEmail);
 				if($profile !== null) {
 					$reply->data = $profile;
@@ -77,9 +80,11 @@ try {
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
 
+		var_dump();
+
 		//profile at handle
 		if(empty($requestObject->profileAtHandle) === true) {
-			throw(new \InvalidArgumentException ("No Venue ID", 405));
+			throw(new \InvalidArgumentException ("No profile at handle", 405));
 		}
 
 		//profile email is a required field
@@ -88,7 +93,7 @@ try {
 		}
 
 		//profile phone # is a required field
-		if(empty($requestObject->profilePhoneNumber) === true) {
+		if(empty($requestObject->profilePhone) === true) {
 			throw(new \InvalidArgumentException ("No phone number present", 405));
 		}
 
@@ -98,9 +103,12 @@ try {
 			throw(new RuntimeException("Profile does not exist", 404));
 		}
 
-		$profile->setProfileAtHandle($requestObject->profileAtHAndle);
+		var_dump($requestObject);
+
+		$profile->setProfileAtHandle($requestObject->profileAtHandle);
 		$profile->setProfileEmail($requestObject->profileEmail);
-		$profile->setProfilePhone($requestObject->profilePhoneNumber);
+		$profile->setProfilePhone($requestObject->profilePhone);
+		$profile->update($pdo);
 
 		/**
 		 * update the password if requested
