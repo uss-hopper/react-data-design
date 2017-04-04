@@ -223,8 +223,15 @@ class ProfileTest extends DataDesignTest {
 		$profile = new Profile(null, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE, $this->VALID_SALT);
 		$profile->insert($this->getPDO());
 
-		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoProfile = Profile::getProfileByProfileAtHandle($this->getPDO(), $this->VALID_ATHANDLE);
+		//grab the data from MySQL
+		$results = Profile::getProfileByProfileAtHandle($this->getPDO(), $this->VALID_ATHANDLE);
+		$this->assertEquals($numRows +1, $this->getConnection()->getRowCount("profile"));
+
+		//enforce no other objects are bleeding into profile
+		$this->assertContainsOnlyInstancesOf("Edu\\CNM\\DataDesign\\Profile", $results);
+
+		//enforce the results meet expectations
+		$pdoProfile = $results[0];
 		$this->assertSame($numRows + 1, $this->getConnection()->getRowCount("profile"));
 		$this->assertSame($pdoProfile->getProfileActivationToken(), $this->VALID_ACTIVATION);
 		$this->assertSame($pdoProfile->getProfileAtHandle(), $this->VALID_ATHANDLE);
@@ -240,7 +247,7 @@ class ProfileTest extends DataDesignTest {
 	public function testGetInvalidProfileByAtHandle() {
 		// grab an at handle that does not exist
 		$profile = Profile::getProfileByProfileAtHandle($this->getPDO(), "@doesnotexist");
-		$this->assertNull($profile);
+		$this->assertCount(0, $profile);
 	}
 
 	/**

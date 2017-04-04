@@ -71,7 +71,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 **/
-	public function __construct(?int $newProfileId, ?string $newProfileActivationToken, string $newProfileAtHandle, string $newProfileEmail, string $newProfileHash, ?string $newProfilePhone, string $newProfileSalt) {
+	public function __construct(?int $newProfileId, ?string $newProfileActivationToken, ?string $newProfileAtHandle, string $newProfileEmail, string $newProfileHash, ?string $newProfilePhone, string $newProfileSalt) {
 		try {
 			$this->setProfileId($newProfileId);
 			$this->setProfileActivationToken($newProfileActivationToken);
@@ -172,7 +172,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \RangeException if $newAtHandle is > 32 characters
 	 * @throws \TypeError if $newAtHandle is not a string
 	 **/
-	public function setProfileAtHandle(string $newProfileAtHandle): void {
+	public function setProfileAtHandle(string $newProfileAtHandle) : void {
 		// verify the at handle is secure
 		$newProfileAtHandle = trim($newProfileAtHandle);
 		$newProfileAtHandle = filter_var($newProfileAtHandle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -266,9 +266,9 @@ class Profile implements \JsonSerializable {
 	/**
 	 * accessor method for phone
 	 *
-	 * @return string value of phone
+	 * @return string value of phone or null
 	 **/
-	public function getProfilePhone(): string {
+	public function getProfilePhone(): ?string {
 		return ($this->profilePhone);
 	}
 
@@ -508,16 +508,19 @@ class Profile implements \JsonSerializable {
 		$query = "SELECT  profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt FROM profile WHERE profileAtHandle = :profileAtHandle";
 		$statement = $pdo->prepare($query);
 
-		// bind the profile id to the place holder in the template
+		// bind the profile at handle to the place holder in the template
 		$parameters = ["profileAtHandle" => $profileAtHandle];
 		$statement->execute($parameters);
 
+
+
 		$profiles = new \SPLFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		while($row = $statement->fetch() !== false) {
+
+
+		while (($row = $statement->fetch()) !== false) {
 			try {
 				$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileEmail"], $row["profileHash"], $row["profilePhone"], $row["profileSalt"]);
-
 				$profiles[$profiles->key()] = $profile;
 				$profiles->next();
 			} catch(\Exception $exception) {
