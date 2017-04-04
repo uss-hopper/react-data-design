@@ -30,6 +30,8 @@ try {
 	//grab the mySQL connection
 	$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
 
+	$_SESSION["profile"] = Profile::getProfileByProfileId($pdo,377);
+
 	//determine which HTTP method was used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
 
@@ -80,7 +82,6 @@ try {
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
 
-		var_dump();
 
 		//profile at handle
 		if(empty($requestObject->profileAtHandle) === true) {
