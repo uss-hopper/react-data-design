@@ -496,7 +496,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getProfileByProfileAtHandle(\PDO $pdo, string $profileAtHandle): \SPLFixedArray {
+	public static function getProfileByProfileAtHandle(\PDO $pdo, string $profileAtHandle) : \SPLFixedArray {
 		// sanitize the at handle before searching
 		$profileAtHandle = trim($profileAtHandle);
 		$profileAtHandle = filter_var($profileAtHandle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -533,12 +533,12 @@ class Profile implements \JsonSerializable {
 		 *
 		 * @param string $profileActivationToken
 		 * @param \PDO object $pdo
-		 * @return profile object
+		 * @return Profile|null Profile or null if not found
 		 * @throws \PDOException when mySQL related errors occur
 		 * @throws \TypeError when variables are not the correct data type
 		 **/
 		public
-		static function getProfileByProfileActivationToken(\PDO $pdo, string $profileActivationToken) {
+		static function getProfileByProfileActivationToken(\PDO $pdo, string $profileActivationToken) : ?Profile {
 			//make sure activation token is in the right format and that it is a string representation of a hexadecimal
 			$profileActivationToken = trim($profileActivationToken);
 			if(ctype_xdigit($profileActivationToken) === false) {

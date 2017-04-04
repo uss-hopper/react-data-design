@@ -57,7 +57,7 @@ class Like implements \JsonSerializable {
 	 *
 	 * @return int value of profile id
 	 **/
-	public function getLikeProfileId() {
+	public function getLikeProfileId() : int{
 		return ($this->likeProfileId);
 	}
 
@@ -68,7 +68,7 @@ class Like implements \JsonSerializable {
 	 * @throws \RangeException if $newProfileId is not positive
 	 * @throws \TypeError if $newProfileId is not an integer
 	 **/
-	public function setLikeProfileId(int $newProfileId) {
+	public function setLikeProfileId(int $newProfileId) : void {
 		// verify the profile id is positive
 		if($newProfileId <= 0) {
 			throw(new \RangeException("profile id is not positive"));
@@ -83,7 +83,7 @@ class Like implements \JsonSerializable {
 	 *
 	 * @return int value of tweet id
 	 **/
-	public function getLikeTweetId() {
+	public function getLikeTweetId() : int {
 		return ($this->likeTweetId);
 	}
 
@@ -94,7 +94,7 @@ class Like implements \JsonSerializable {
 	 * @throws \RangeException if $newTweetId is not positive
 	 * @throws \TypeError if $newTweetId is not an integer
 	 **/
-	public function setLikeTweetId(int $newLikeTweetId) {
+	public function setLikeTweetId(int $newLikeTweetId) : void {
 		// verify the tweet id is positive
 		if($newLikeTweetId <= 0) {
 			throw(new \RangeException("tweet id is not positive"));
@@ -109,7 +109,7 @@ class Like implements \JsonSerializable {
 	 *
 	 * @return \DateTime value of like date
 	 **/
-	public function getLikeDate() {
+	public function getLikeDate() : \DateTime {
 		return ($this->likeDate);
 	}
 
@@ -120,7 +120,7 @@ class Like implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if $newLikeDate is not a valid object or string
 	 * @throws \RangeException if $newLikeDate is a date that does not exist
 	 **/
-	public function setLikeDate($newLikeDate) {
+	public function setLikeDate($newLikeDate) : void {
 		// base case: if the date is null, use the current date and time
 		if($newLikeDate === null) {
 			$this->likeDate = new \DateTime();
@@ -145,7 +145,7 @@ class Like implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	public function insert(\PDO $pdo) {
+	public function insert(\PDO $pdo) : void {
 		// ensure the object exists before inserting
 		if($this->likeProfileId === null || $this->likeTweetId === null) {
 			throw(new \PDOException("not a valid like"));
@@ -168,7 +168,7 @@ class Like implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	public function delete(\PDO $pdo) {
+	public function delete(\PDO $pdo) : void {
 		// ensure the object exists before deleting
 		if($this->likeProfileId === null || $this->likeTweetId === null) {
 			throw(new \PDOException("not a valid like"));
@@ -191,7 +191,7 @@ class Like implements \JsonSerializable {
 	 * @param int $likeTweetId tweet id to search for
 	 * @return Like|null Like found or null if not found
 	 */
-	public static function getLikeByLikeTweetIdAndLikeProfileId(\PDO $pdo, int $likeProfileId, int $likeTweetId) {
+	public static function getLikeByLikeTweetIdAndLikeProfileId(\PDO $pdo, int $likeProfileId, int $likeTweetId) : ?Like {
 		// sanitize the tweet id and profile id before searching
 		if($likeProfileId <= 0) {
 			throw(new \PDOException("profile id is not positive"));
@@ -233,7 +233,7 @@ class Like implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getLikeByLikeProfileId(\PDO $pdo, int $likeProfileId) {
+	public static function getLikeByLikeProfileId(\PDO $pdo, int $likeProfileId)  : \SPLFixedArray{
 		// sanitize the profile id
 		if($likeProfileId <= 0) {
 			throw(new \PDOException("profile id is not positive"));
@@ -272,7 +272,7 @@ class Like implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getLikeByLikeTweetId(\PDO $pdo, int $likeTweetId) {
+	public static function getLikeByLikeTweetId(\PDO $pdo, int $likeTweetId) : \SplFixedArray {
 		// sanitize the tweet id
 		$likeTweetId = filter_var($likeTweetId, FILTER_VALIDATE_INT);
 		if($likeTweetId <= 0) {
@@ -310,7 +310,7 @@ class Like implements \JsonSerializable {
 	 **/
 	public function jsonSerialize() {
 		$fields = get_object_vars($this);
-		$fields["likeDate"] = $this->likeDate->getTimestamp() * 1000;
+		$fields["likeDate"] = round(floatval($this->likeDate->format("U.u")) * 1000);
 		return($fields);
 	}
 }

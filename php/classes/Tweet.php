@@ -64,7 +64,7 @@ class Tweet implements \JsonSerializable {
 	 *
 	 * @return int|null value of tweet id
 	 **/
-	public function getTweetId() {
+	public function getTweetId() : int {
 		return($this->tweetId);
 	}
 
@@ -75,7 +75,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \RangeException if $newTweetId is not positive
 	 * @throws \TypeError if $newTweetId is not an integer
 	 **/
-	public function setTweetId(?int $newTweetId) {
+	public function setTweetId(?int $newTweetId) : void {
 		//if tweet id is null immediately return it
 		if($newTweetId === null) {
 			$this->tweetId = null;
@@ -96,7 +96,7 @@ class Tweet implements \JsonSerializable {
 	 *
 	 * @return int value of tweet profile id
 	 **/
-	public function getTweetProfileId() {
+	public function getTweetProfileId() : int{
 		return($this->tweetProfileId);
 	}
 
@@ -107,7 +107,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \RangeException if $newProfileId is not positive
 	 * @throws \TypeError if $newProfileId is not an integer
 	 **/
-	public function setTweetProfileId(int $newTweetProfileId) {
+	public function setTweetProfileId(int $newTweetProfileId) : void {
 		// verify the profile id is positive
 		if($newTweetProfileId <= 0) {
 			throw(new \RangeException("tweet profile id is not positive"));
@@ -122,7 +122,7 @@ class Tweet implements \JsonSerializable {
 	 *
 	 * @return string value of tweet content
 	 **/
-	public function getTweetContent() {
+	public function getTweetContent() :string {
 		return($this->tweetContent);
 	}
 
@@ -134,7 +134,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \RangeException if $newTweetContent is > 140 characters
 	 * @throws \TypeError if $newTweetContent is not a string
 	 **/
-	public function setTweetContent(string $newTweetContent) {
+	public function setTweetContent(string $newTweetContent) : void {
 		// verify the tweet content is secure
 		$newTweetContent = trim($newTweetContent);
 		$newTweetContent = filter_var($newTweetContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -156,7 +156,7 @@ class Tweet implements \JsonSerializable {
 	 *
 	 * @return \DateTime value of tweet date
 	 **/
-	public function getTweetDate() {
+	public function getTweetDate() : \DateTime {
 		return($this->tweetDate);
 	}
 
@@ -167,7 +167,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if $newTweetDate is not a valid object or string
 	 * @throws \RangeException if $newTweetDate is a date that does not exist
 	 **/
-	public function setTweetDate($newTweetDate = null) {
+	public function setTweetDate($newTweetDate = null) : void {
 		// base case: if the date is null, use the current date and time
 		if($newTweetDate === null) {
 			$this->tweetDate = new \DateTime();
@@ -192,7 +192,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	public function insert(\PDO $pdo) {
+	public function insert(\PDO $pdo) : void {
 		// enforce the tweetId is null (i.e., don't insert a tweet that already exists)
 		if($this->tweetId !== null) {
 			throw(new \PDOException("not a new tweet"));
@@ -219,7 +219,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	public function delete(\PDO $pdo) {
+	public function delete(\PDO $pdo) : void {
 		// enforce the tweetId is not null (i.e., don't delete a tweet that hasn't been inserted)
 		if($this->tweetId === null) {
 			throw(new \PDOException("unable to delete a tweet that does not exist"));
@@ -241,7 +241,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	public function update(\PDO $pdo) {
+	public function update(\PDO $pdo) : void {
 		// enforce the tweetId is not null (i.e., don't update a tweet that hasn't been inserted)
 		if($this->tweetId === null) {
 			throw(new \PDOException("unable to update a tweet that does not exist"));
@@ -308,7 +308,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getTweetByTweetId(\PDO $pdo, int $tweetId) {
+	public static function getTweetByTweetId(\PDO $pdo, int $tweetId) : ?Tweet {
 		// sanitize the tweetId before searching
 		if($tweetId <= 0) {
 			throw(new \PDOException("tweet id is not positive"));
@@ -354,7 +354,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getTweetByTweetProfileId(\PDO $pdo, int $tweetProfileId) {
+	public static function getTweetByTweetProfileId(\PDO $pdo, int $tweetProfileId) : \SPLFixedArray {
 		// sanitize the profile id before searching
 		if($tweetProfileId <= 0) {
 			throw(new \RangeException("tweet profile id must be positive"));
@@ -391,7 +391,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getAllTweets(\PDO $pdo) {
+	public static function getAllTweets(\PDO $pdo) : \SPLFixedArray {
 		// create query template
 		$query = "SELECT tweetId, tweetProfileId, tweetContent, tweetDate FROM tweet";
 		$statement = $pdo->prepare($query);
@@ -421,7 +421,7 @@ class Tweet implements \JsonSerializable {
 	public function jsonSerialize() {
 		$fields = get_object_vars($this);
 		//format the tweetDate to seconds since the beginning of time to avoid conflicts with angular
-		$fields["tweetDate"] = $this->tweetDate->getTimestamp() * 1000;
+		$fields["tweetDate"] = round(floatval($this->tweetDate->format("U.u")) * 1000);
 		return($fields);
 	}
 }
