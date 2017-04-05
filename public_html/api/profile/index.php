@@ -57,7 +57,7 @@ try {
 				$reply->data = $profile;
 			}
 		} else if(empty($profileAtHandle) === false) {
-			$profile = Profile::getProfileByProfileAtHandle($pdo, $profileAtHandle);
+			$profile = Profile::getProfileByProfileAtHandle($pdo, $profileAtHandle)->toArray();
 			if($profile !== null) {
 				$reply->data = $profile;
 			}
@@ -168,20 +168,16 @@ try {
 	} else {
 		throw (new InvalidArgumentException("Invalid HTTP request", 400));
 	}
-} // catch any exceptions that were thrown and update the status and message state variable fields
-catch(Exception $exception) {
+ // catch any exceptions that were thrown and update the status and message state variable fields
+} catch(\Exception | \TypeError $exception ) {
 	$reply->status = $exception->getCode();
 	$reply->message = $exception->getMessage();
-
-} catch(TypeError $typeError) {
-	$reply->status = $typeError->getCode();
-	$reply->message = $typeError->getMessage();
 }
 
-// encode and return reply to front end caller
 header("Content-type: application/json");
 if($reply->data === null) {
 	unset($reply->data);
 }
+
 // encode and return reply to front end caller
 echo json_encode($reply);
