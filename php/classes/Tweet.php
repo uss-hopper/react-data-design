@@ -177,10 +177,9 @@ class Tweet implements \JsonSerializable {
 		// store the tweet date
 		try {
 			$newTweetDate = self::validateDateTime($newTweetDate);
-		} catch(\InvalidArgumentException $invalidArgument) {
-			throw(new \InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
-		} catch(\RangeException $range) {
-			throw(new \RangeException($range->getMessage(), 0, $range));
+		} catch(\InvalidArgumentException | \RangeException $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 		$this->tweetDate = $newTweetDate;
 	}

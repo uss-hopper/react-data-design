@@ -1,6 +1,7 @@
 <?php
+
 namespace Edu\Cnm\DataDesign;
-      require_once("autoload.php");
+require_once("autoload.php");
 
 /**
  * Cross Section of a Twitter Like
@@ -56,7 +57,7 @@ class Like implements \JsonSerializable {
 	 *
 	 * @return int value of profile id
 	 **/
-	public function getLikeProfileId() : int{
+	public function getLikeProfileId() : int {
 		return ($this->likeProfileId);
 	}
 
@@ -119,7 +120,7 @@ class Like implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if $newLikeDate is not a valid object or string
 	 * @throws \RangeException if $newLikeDate is a date that does not exist
 	 **/
-	public function setLikeDate($newLikeDate) : void {
+	public function setLikeDate($newLikeDate): void {
 		// base case: if the date is null, use the current date and time
 		if($newLikeDate === null) {
 			$this->likeDate = new \DateTime();
@@ -129,10 +130,9 @@ class Like implements \JsonSerializable {
 		// store the like date
 		try {
 			$newLikeDate = self::validateDateTime($newLikeDate);
-		} catch(\InvalidArgumentException $invalidArgument) {
-			throw(new \InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
-		} catch(\RangeException $range) {
-			throw(new \RangeException($range->getMessage(), 0, $range));
+		} catch(\InvalidArgumentException | \RangeException $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 		$this->likeDate = $newLikeDate;
 	}
@@ -220,7 +220,7 @@ class Like implements \JsonSerializable {
 			var_dump($exception->getTrace());
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return($like);
+		return ($like);
 	}
 
 	/**
@@ -232,7 +232,7 @@ class Like implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getLikeByLikeProfileId(\PDO $pdo, int $likeProfileId)  : \SPLFixedArray{
+	public static function getLikeByLikeProfileId(\PDO $pdo, int $likeProfileId) : \SPLFixedArray {
 		// sanitize the profile id
 		if($likeProfileId <= 0) {
 			throw(new \PDOException("profile id is not positive"));
@@ -259,7 +259,7 @@ class Like implements \JsonSerializable {
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return($likes);
+		return ($likes);
 	}
 
 	/**
@@ -299,7 +299,7 @@ class Like implements \JsonSerializable {
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return($likes);
+		return ($likes);
 	}
 
 	/**
@@ -310,6 +310,6 @@ class Like implements \JsonSerializable {
 	public function jsonSerialize() {
 		$fields = get_object_vars($this);
 		$fields["likeDate"] = round(floatval($this->likeDate->format("U.u")) * 1000);
-		return($fields);
+		return ($fields);
 	}
 }
