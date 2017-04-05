@@ -36,6 +36,8 @@ try {
 	//determine which HTTP method was used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
 
+	var_dump($method);
+
 	//sanitize the search parameters
 	$likeProfileId = filter_input(INPUT_GET, "LikeProfileId", FILTER_VALIDATE_INT);
 	$likeTweetId = filter_input(INPUT_GET, "likeTweetId", FILTER_VALIDATE_INT);
@@ -50,6 +52,7 @@ try {
 		//gets all likes associated with the end user
 		if ($likeProfileId !== null && $likeTweetId !== null) {
 			$like = Like::getLikeByLikeTweetIdAndLikeProfileId($pdo, $likeProfileId, $likeTweetId);
+			var_dump($like);
 
 			if($like!== null) {
 				$reply->data = $like;
@@ -72,25 +75,27 @@ try {
 		}
 
 
-	} else if($method === "POST" || $method === "DELETE") {
+	} else if($method === "POST" || $method === "PUT") {
 
 		//decode the response from the front end
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
 
+		if(empty($requestObject->likeProfileId) === true) {
+			throw (new \InvalidArgumentException("No Profile linked to the Like", 405));
+		}
+
+		if(empty($requestObject->likeTweetId) === true) {
+			throw (new \InvalidArgumentException("No tweet linked to the Like", 405));
+		}
+
+		if(empty($requestObject->likeDate) === true) {
+			$requestObject->LikeDate = null;
+		}
+
 
 		if($method === "POST") {
-			if(empty($requestObject->likeProfileId) === true) {
-				throw (new \InvalidArgumentException("No Profile linked to the Like", 405));
-			}
 
-			if(empty($requestObject->likeTweetId) === true) {
-				throw (new \InvalidArgumentException("No tweet linked to the Like", 405));
-			}
-
-			if(empty($requestObject->likeDate) === true) {
-				$requestObject->LikeDate = null;
-			}
 
 			// enforce the user is signed in
 			if(empty($_SESSION["profile"]) === true) {
@@ -102,28 +107,22 @@ try {
 			$reply->message = "liked tweet successful";
 
 
-		} else if($method === "DELETE") {
+		} else if($method === "PUT") {
 
 			//enforce that the end user has a XSRF token.
 			verifyXsrf();
 
-			var_dump($likeTweetId);
-
-			//make sure that both the tweetId and profileId are present
-			if(empty($requestObject->likeProfileId && $requestObject->likeTweetDate) === true) {
-				throw (new \InvalidArgumentException("No Profile linked to the Like", 405));
-			}
-
 			//grab the like by its composite key
-			$like = Like::getLikeByLikeTweetIdAndLikeProfileId($pdo, $likeProfileId, $likeTweetId);
+			$like = Like::getLikeByLikeTweetIdAndLikeProfileId($pdo, $requestObject->likeProfileId, $requestObject->likeTweetId);
 			if($like === null) {
 				throw (new RuntimeException("Like does not exist"));
 			}
 
 			//enforce the user is signed in and only trying to edit their own like
-			if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $requestObject->LikeProfileId) {
+			if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $like->getLikeProfileId()) {
 				throw(new \InvalidArgumentException("You are not allowed to delete this tweet", 403));
 			}
+
 			//preform the actual delete
 			$like->delete($pdo);
 
