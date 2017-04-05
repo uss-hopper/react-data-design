@@ -40,31 +40,34 @@ try {
 	$likeProfileId = filter_input(INPUT_GET, "LikeProfileId", FILTER_VALIDATE_INT);
 	$likeTweetId = filter_input(INPUT_GET, "likeTweetId", FILTER_VALIDATE_INT);
 
-	if($method === "Get") {
+	if($method === "GET") {
 		//set XSRF cookie
 		setXsrfCookie();
 
-		//gets a
+		//gets all likes associated with the end user
 		if(empty($likeProfileId) === false) {
 			$like = Like::getLikeByLikeProfileId($pdo, $likeProfileId)->toArray();
 			if($like !== null) {
 				$reply->data = $like;
 			}
+		//get all the likes associated with the tweetId
 		} else if(empty($likeTweetId) === false) {
 			$like = Like::getLikeByLikeTweetId($pdo, $likeTweetId)->toArray();
 			if($like !== null) {
 				$reply->data = $like;
 			}
-		} else {
+		} else if ($likeProfileId !== null && $likeTweetId !== null) {
 			$like = Like::getLikeByLikeTweetIdAndLikeProfileId($pdo, $likeProfileId, $likeTweetId);
-			if($like !== null) {
+			if($like!== null) {
 				$reply->data = $like;
-			} else {
-				throw (new InvalidArgumentException("Search failed"));
 			}
+		//if none of the search parameters are met throw an exception
+		} else {
+			throw new InvalidArgumentException("incorrect search parameters ", 404);
 		}
 
-	} elseif($method === "POST" || $method === "DELETE") {
+
+	} else if($method === "POST" || $method === "DELETE") {
 
 		//decode the response from the front end
 		$requestContent = file_get_contents("php://input");
@@ -116,13 +119,14 @@ try {
 			$like->delete($pdo);
 
 			//update the message
-			//$reply->message = "Like successfully deleted";
-			var_dump($reply->message);
+			$reply->message = "Like successfully deleted";
 		}
+
+		// if any other HTTP request is sent throw an exception
 	} else {
 		throw new \InvalidArgumentException("invalid http request", 400);
-	}
-	//catch any exception that is thrown and update the status and message
+	 }
+	//catch any exceptions that is thrown and update the reply status and message
 } catch(\Exception | \TypeError $exception) {
 	$reply->status = $exception->getCode();
 	$reply->message = $exception->getMessage();
