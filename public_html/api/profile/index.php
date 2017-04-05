@@ -40,6 +40,7 @@ try {
 	$profileAtHandle = filter_input(INPUT_GET, "profileAtHandle", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$profileEmail = filter_input(INPUT_GET, "profileEmail", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
+	var_dump($profileAtHandle);
 	// make sure the id is valid for methods that require it
 	if(($method === "DELETE" || $method === "PUT") && (empty($id) === true || $id < 0)) {
 		throw(new InvalidArgumentException("id cannot be empty or negative", 405));
@@ -57,12 +58,12 @@ try {
 				$reply->data = $profile;
 			}
 		} else if(empty($profileAtHandle) === false) {
-			$profile = Profile::getProfileByProfileAtHandle($pdo, $profileAtHandle)->toArray();
+			$profile = Profile::getProfileByProfileAtHandle($pdo, $profileAtHandle);
 			if($profile !== null) {
 				$reply->data = $profile;
 			}
 		} else if(empty($profileEmail) === false) {
-			var_dump($profileEmail);
+
 			$profile = Profile::getProfileByProfileEmail($pdo, $profileEmail);
 			if($profile !== null) {
 				$reply->data = $profile;

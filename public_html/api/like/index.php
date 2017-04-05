@@ -40,6 +40,8 @@ try {
 	$likeProfileId = filter_input(INPUT_GET, "LikeProfileId", FILTER_VALIDATE_INT);
 	$likeTweetId = filter_input(INPUT_GET, "likeTweetId", FILTER_VALIDATE_INT);
 
+	var_dump($likeTweetId);
+
 	if($method === "GET") {
 		//set XSRF cookie
 		setXsrfCookie();
@@ -95,6 +97,8 @@ try {
 			$like = new Like($requestObject->likeProfileId, $requestObject->likeTweetId, $requestObject->likeDate);
 			$like->insert($pdo);
 			$reply->message = "liked tweet successful";
+
+
 		} else if($method === "DELETE") {
 
 			//enforce that the end user has a XSRF token.
