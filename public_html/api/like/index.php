@@ -40,6 +40,7 @@ try {
 	$likeProfileId = filter_input(INPUT_GET, "LikeProfileId", FILTER_VALIDATE_INT);
 	$likeTweetId = filter_input(INPUT_GET, "likeTweetId", FILTER_VALIDATE_INT);
 
+	var_dump($likeProfileId);
 	var_dump($likeTweetId);
 
 	if($method === "GET") {
@@ -47,7 +48,14 @@ try {
 		setXsrfCookie();
 
 		//gets all likes associated with the end user
-		if(empty($likeProfileId) === false) {
+		if ($likeProfileId !== null && $likeTweetId !== null) {
+			$like = Like::getLikeByLikeTweetIdAndLikeProfileId($pdo, $likeProfileId, $likeTweetId);
+
+			if($like!== null) {
+				$reply->data = $like;
+			}
+			//if none of the search parameters are met throw an exception
+		} else if(empty($likeProfileId) === false) {
 			$like = Like::getLikeByLikeProfileId($pdo, $likeProfileId)->toArray();
 			if($like !== null) {
 				$reply->data = $like;
@@ -55,15 +63,10 @@ try {
 		//get all the likes associated with the tweetId
 		} else if(empty($likeTweetId) === false) {
 			$like = Like::getLikeByLikeTweetId($pdo, $likeTweetId)->toArray();
+
 			if($like !== null) {
 				$reply->data = $like;
 			}
-		} else if ($likeProfileId !== null && $likeTweetId !== null) {
-			$like = Like::getLikeByLikeTweetIdAndLikeProfileId($pdo, $likeProfileId, $likeTweetId);
-			if($like!== null) {
-				$reply->data = $like;
-			}
-		//if none of the search parameters are met throw an exception
 		} else {
 			throw new InvalidArgumentException("incorrect search parameters ", 404);
 		}
@@ -103,6 +106,8 @@ try {
 
 			//enforce that the end user has a XSRF token.
 			verifyXsrf();
+
+			var_dump($likeTweetId);
 
 			//make sure that both the tweetId and profileId are present
 			if(empty($requestObject->likeProfileId && $requestObject->likeTweetDate) === true) {
