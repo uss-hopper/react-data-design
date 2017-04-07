@@ -39,14 +39,17 @@ class Like implements \JsonSerializable {
 	 * @param \DateTime|null $newLikeDate date the tweet was liked (or null for current time)
 	 * @throws \Exception if some other exception occurs
 	 * @throws \TypeError if data types violate type hints
+	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
 	public function __construct(int $newLikeProfileId, int $newLikeTweetId, $newLikeDate = null) {
-		// use the mutators to do the work for us!
+		// use the mutator methods to do the work for us!
 		try {
 			$this->setLikeProfileId($newLikeProfileId);
 			$this->setLikeTweetId($newLikeTweetId);
 			$this->setLikeDate($newLikeDate);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+
+			// determine what exception type was thrown
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -127,7 +130,7 @@ class Like implements \JsonSerializable {
 			return;
 		}
 
-		// store the like date
+		// store the like date using the ValidateDate trait
 		try {
 			$newLikeDate = self::validateDateTime($newLikeDate);
 		} catch(\InvalidArgumentException | \RangeException $exception) {
@@ -217,7 +220,6 @@ class Like implements \JsonSerializable {
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
-			var_dump($exception->getTrace());
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		return ($like);
@@ -286,7 +288,7 @@ class Like implements \JsonSerializable {
 		$parameters = ["likeTweetId" => $likeTweetId];
 		$statement->execute($parameters);
 
-		// build an array of likes
+		// build the array of likes
 		$likes = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
@@ -309,6 +311,7 @@ class Like implements \JsonSerializable {
 	 **/
 	public function jsonSerialize() {
 		$fields = get_object_vars($this);
+		//format the date so that the front end can consume it
 		$fields["likeDate"] = round(floatval($this->likeDate->format("U.u")) * 1000);
 		return ($fields);
 	}

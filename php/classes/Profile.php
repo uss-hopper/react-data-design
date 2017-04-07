@@ -9,7 +9,7 @@ namespace Edu\Cnm\DataDesign;
  * holds the keys to the other entities in this example (i.e., Favorite and Profile).
  *
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
- * @version 3.0.0
+ * @version 4.0.0
  **/
 class Profile implements \JsonSerializable {
 	/**
@@ -38,9 +38,8 @@ class Profile implements \JsonSerializable {
 
 	/**
 	 * hash for profile password
-	 *
 	 * @var $profileHash
-	 */
+	 **/
 	private $profileHash;
 
 	/**
@@ -70,6 +69,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
+	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
 	public function __construct(?int $newProfileId, ?string $newProfileActivationToken, ?string $newProfileAtHandle, string $newProfileEmail, string $newProfileHash, ?string $newProfilePhone, string $newProfileSalt) {
 		try {
@@ -81,6 +81,7 @@ class Profile implements \JsonSerializable {
 			$this->setProfilePhone($newProfilePhone);
 			$this->setProfileSalt($newProfileSalt);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			//determine what exception type was thrown
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}

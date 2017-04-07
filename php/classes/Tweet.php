@@ -46,6 +46,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
+	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
 	public function __construct(?int $newTweetId, int $newTweetProfileId, string $newTweetContent, $newTweetDate = null) {
 		try {
@@ -53,7 +54,9 @@ class Tweet implements \JsonSerializable {
 			$this->setTweetProfileId($newTweetProfileId);
 			$this->setTweetContent($newTweetContent);
 			$this->setTweetDate($newTweetDate);
-		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+		}
+			//determine what exception type was thrown
+		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -174,7 +177,7 @@ class Tweet implements \JsonSerializable {
 			return;
 		}
 
-		// store the tweet date
+		// store the like date using the ValidateDate trait
 		try {
 			$newTweetDate = self::validateDateTime($newTweetDate);
 		} catch(\InvalidArgumentException | \RangeException $exception) {
@@ -341,14 +344,6 @@ class Tweet implements \JsonSerializable {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @param int $tweetProfileId profile id to search by
-	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError when variables are not the correct data type
-	 **/
-	/**
-	 * gets the Tweet by profile id
-	 *
-	 * @param \PDO $pdo PDO connection object
-	 * @param int $tweetProfileId profile id to search by
 	 * @return \SplFixedArray SplFixedArray of Tweets found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
@@ -419,7 +414,7 @@ class Tweet implements \JsonSerializable {
 	 **/
 	public function jsonSerialize() {
 		$fields = get_object_vars($this);
-		//format the tweetDate to seconds since the beginning of time to avoid conflicts with angular
+		//format the date so that the front end can consume it
 		$fields["tweetDate"] = round(floatval($this->tweetDate->format("U.u")) * 1000);
 		return($fields);
 	}
