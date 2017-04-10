@@ -27,9 +27,9 @@ try{
 	$activation = filter_input(INPUT_GET, "activation", FILTER_SANITIZE_STRING);
 
 	// make sure the activation token is the correct size
-//	if(strlen($activation) !== 32){
-//		throw(new InvalidArgumentException("activation has an incorrect length", 405));
-//	}
+	if(strlen($activation) !== 32){
+		throw(new InvalidArgumentException("activation has an incorrect length", 405));
+	}
 
 	// verify that the activation token is a string value of a hexadeciaml
 	if(ctype_xdigit($activation) === false) {
