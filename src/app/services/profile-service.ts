@@ -42,4 +42,18 @@ export class ProfileService extends BaseService {
 			.map(BaseService.extractData)
 			.catch(BaseService.handleError));
 	}
+
+	// call to the API to grab an array of profiles based on the user input
+	getProfileByProfileAtHandle(profileAtHandle: string) :Observable<Profile[]> {
+		return (this.http.get(this.profileUrl + profileAtHandle)
+			.map(BaseService.extractData)
+			.catch(BaseService.handleError));
+	}
+
+	//call to the profile API and grab the corresponding profile by its email
+	getProfileByProfileEmail(profileEmail: string) :Observable<Profile> {
+		return(this.http.get(this.profileUrl + profileEmail)
+			.map(BaseService.extractData)
+			.catch(BaseService.handleError));
+	}
 }

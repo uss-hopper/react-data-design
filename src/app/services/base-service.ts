@@ -31,7 +31,7 @@ export abstract class BaseService {
 		return(status);
 	}
 
-	protected static handleError(error:any) {
+	protected static handleError(error : any) {
 		let message = error.message;
 		console.log(message);
 		return(Observable.throw(message));
