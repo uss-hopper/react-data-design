@@ -29,5 +29,17 @@ export class ProfileService extends BaseService {
 			.catch(BaseService.handleError));
 	}
 
-	// call the the Profile API and create
+	// call to the Profile API and edit the profile in question
+	editProfile(profile: Profile) : Observable<Status> {
+		return(this.http.put(this.profileUrl + profile.id, profile)
+			.map(BaseService.extractMessage)
+			.catch(BaseService.handleError));
+	}
+
+	// call to the Profile API and get a Profile object by its id
+	getProfile(id: number) : Observable<Profile> {
+		return(this.http.get(this.profileUrl + id)
+			.map(BaseService.extractData)
+			.catch(BaseService.handleError));
+	}
 }

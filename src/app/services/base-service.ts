@@ -5,7 +5,7 @@ import {Status} from "../classes/status";
 export abstract class BaseService {
 	constructor(protected http: Http) {}
 
-	protected extractData(response: Response) : any {
+	protected static extractData(response: Response) : any {
 		if(response.status < 200 || response.status >= 300) {
 			throw(new Error("Bad response status: " + response.status))
 		}
