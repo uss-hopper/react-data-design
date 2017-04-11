@@ -43,8 +43,13 @@ try {
 			throw(new \InvalidArgumentException ("No profile email present", 405));
 		}
 
-		//verify that all needed fields are present
+		//verify that profile password is present
 		if(empty($requestObject->profilePassword) === true) {
+			throw(new \InvalidArgumentException ("Must input valid password", 405));
+		}
+
+		//verify that the confirm password is present
+		if(empty($requestObject->profilePasswordConfirm) === true) {
 			throw(new \InvalidArgumentException ("Must input valid password", 405));
 		}
 
@@ -53,6 +58,11 @@ try {
 			$requestObject->profilePhone = null;
 		}
 
+		//make sure the password and confirm password match
+		if ($requestObject->profilePassword !== $requestObject->profilePasswordConfirm) {
+			throw(new \InvalidArgumentException("passwords do not match"));
+
+		}
 		$salt = bin2hex(random_bytes(32));
 		$hash = hash_pbkdf2("sha512", $requestObject->profilePassword, $salt, 262144);
 
