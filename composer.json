@@ -1,7 +1,8 @@
 {
-  "require": {
-    "phpunit/dbunit": "@stable",
-    "phpunit/phpunit": "@stable",
-    "swiftmailer/swiftmailer": "@stable"
-  }
+	"require": {
+		"guzzlehttp/guzzle": "@stable",
+		"phpunit/dbunit": "@stable",
+		"phpunit/phpunit": "@stable",
+		"swiftmailer/swiftmailer": "@stable"
+	}
 }
