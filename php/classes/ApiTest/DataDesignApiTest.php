@@ -6,6 +6,9 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJarInterface;
 use PHPUnit\Framework\TestCase;
 
+// grab the encrypted properties file
+require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
+
 require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
 
 /**
@@ -37,7 +40,15 @@ abstract class DataDesignApiTest extends TestCase {
 	 * setup method that grabs the XSRF token and puts in the cookie jar
 	 **/
 	public function setUp() {
+		// expunge tables
+		$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
+		$tables = ["like", "tweet", "profile"];
+		foreach($tables as $table) {
+			$pdo->query("DELETE FROM `$table`");
+		}
+
 		// get an XSRF token by visiting the main site
+		parent::setUp();
 		$this->guzzle = new Client(["cookies" => true]);
 		$this->guzzle->get("https://bootcamp-coders.cnm.edu/");
 
