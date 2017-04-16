@@ -3,9 +3,6 @@ namespace Edu\Cnm\DataDesign\Test;
 
 use Edu\Cnm\DataDesign\{Profile, Tweet};
 
-// grab the project test parameters
-require_once("DataDesignTest.php");
-
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
 
