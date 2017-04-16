@@ -37,15 +37,21 @@ abstract class DataDesignApiTest extends TestCase {
 	protected $xsrfToken = "";
 
 	/**
-	 * setup method that grabs the XSRF token and puts in the cookie jar
+	 * helper method to expunge the database in setup and tear down
 	 **/
-	public function setUp() {
-		// expunge tables
+	public final function expungeTables() {
 		$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
 		$tables = ["like", "tweet", "profile"];
 		foreach($tables as $table) {
 			$pdo->query("DELETE FROM `$table`");
 		}
+	}
+
+	/**
+	 * setup method that grabs the XSRF token and puts in the cookie jar
+	 **/
+	public function setUp() {
+		$this->expungeTables();
 
 		// get an XSRF token by visiting the main site
 		$this->guzzle = new Client(["cookies" => true]);
@@ -61,5 +67,12 @@ abstract class DataDesignApiTest extends TestCase {
 				break;
 			}
 		}
+	}
+
+	/**
+	 * tear down method to expunge tables
+	 **/
+	public final function tearDown() {
+		$this->expungeTables();
 	}
 }
