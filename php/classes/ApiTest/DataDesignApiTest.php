@@ -48,7 +48,6 @@ abstract class DataDesignApiTest extends TestCase {
 		}
 
 		// get an XSRF token by visiting the main site
-		parent::setUp();
 		$this->guzzle = new Client(["cookies" => true]);
 		$this->guzzle->get("https://bootcamp-coders.cnm.edu/");
 
