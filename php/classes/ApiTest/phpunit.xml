@@ -1,0 +1,7 @@
+<phpunit>
+	<testsuites>
+		<testsuite name="Twitter Data Design API">
+			<file>SignUpApiTest.php</file>
+		</testsuite>
+	</testsuites>
+</phpunit>
