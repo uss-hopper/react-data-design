@@ -23,7 +23,7 @@ class SignUpApiTest extends DataDesignApiTest {
 	 *
 	 * @return \stdClass valid object created
 	 **/
-	public function createValidObject() {
+	public function createValidObject() : \stdClass {
 		$requestObject = new \stdClass();
 		$requestObject->profileAtHandle = "phpunit";
 		$requestObject->profileEmail = "dmcdonald21@cnm.edu";

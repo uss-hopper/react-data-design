@@ -119,7 +119,7 @@ try {
 		 * thanks sprout-swap @author:<solomon.leyba@gmail.com>
 		 **/
 		//enforce that current password new password and confirm password is present
-		if(empty($requestObject->ProfilePassword) === false && empty($requestObject->newPassword) === false && empty($requestContent->ConfirmPassword) === false) {
+		if(empty($requestObject->ProfilePassword) === false && empty($requestObject->profileConfirmPassword) === false && empty($requestContent->ConfirmPassword) === false) {
 
 			//make sure the new password and confirm password exist
 			if($requestObject->newProfilePassword !== $requestObject->profileConfirmPassword) {
