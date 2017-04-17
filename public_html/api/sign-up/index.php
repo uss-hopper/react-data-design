@@ -50,7 +50,7 @@ try {
 
 		//verify that the confirm password is present
 		if(empty($requestObject->profilePasswordConfirm) === true) {
-			throw(new \InvalidArgumentException ("Must input valid password", 405));
+			throw(new \InvalidArgumentException ("Must input valid confirmed password", 405));
 		}
 
 		//if phone is empty set it too null
@@ -124,6 +124,8 @@ EOF;
 		//attach the html version fo the message
 		$swiftMessage->setBody($message, "text/html");
 
+
+
 		//attach the plain text version of the message
 		$swiftMessage->addPart(html_entity_decode($message), "text/plain");
 
@@ -139,6 +141,8 @@ EOF;
 
 		//send the message
 		$numSent = $mailer->send($swiftMessage, $failedRecipients);
+
+		var_dump($numSent);
 
 		/**
 		 * the send method returns the number of recipients that accepted the Email

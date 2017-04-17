@@ -45,7 +45,7 @@ try {
 		}
 
 		if(empty($requestObject->profilePassword) === true) {
-			throw(new \InvalidArgumentException("Must enter a password."));
+			throw(new \InvalidArgumentException("Must enter a password.", 401));
 		} else {
 		 	$profilePassword = $requestObject->profilePassword;
 		}
@@ -53,7 +53,12 @@ try {
 		//grab the profile from the database by the email provided
 		$profile = Profile::getProfileByProfileEmail($pdo, $profileEmail);
 		if(empty($profile) === true) {
-			throw(new \InvalidArgumentException("Invalid Email"));
+			throw(new \InvalidArgumentException("Invalid Email", 401));
+		}
+
+		//if the profile activation is not null throw an error
+		if($profile->getProfileActivationToken() !== null){
+			throw (new \InvalidArgumentException ("you are not allowed to sign in unless you have activated your account", 403));
 		}
 
 		//hash the password given to make sure it matches.
