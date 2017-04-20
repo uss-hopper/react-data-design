@@ -1,6 +1,6 @@
 export class Tweet {
 	constructor(
-		public id: number,
+		public tweetId: number,
 		public tweetProfileId: number,
 		public tweetContent: string,
 		public tweetDate: string
