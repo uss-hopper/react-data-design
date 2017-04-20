@@ -53,8 +53,15 @@ class TweetTest extends DataDesignTest {
 	 **/
 	protected $VALID_TWEETDATE = null;
 
+	/**
+	 * Valid timestamp to use as sunriseTweetDate
+	 */
+	protected $VALID_SUNRISEDATE = null;
 
-
+	/**
+	 * Valid timestamp to use as sunsetTweetDate
+	 */
+	protected $VALID_SUNSETDATE = null;
 
 	/**
 	 * create dependent objects before running each test
@@ -73,6 +80,17 @@ class TweetTest extends DataDesignTest {
 
 		// calculate the date (just use the time the unit test was setup...)
 		$this->VALID_TWEETDATE = new \DateTime();
+
+		//format the sunrise date to use for testing
+		$this->VALID_SUNRISEDATE = new \DateTime();
+		$this->VALID_SUNRISEDATE->sub(new \DateInterval("P10D"));
+
+		//format the sunset date to use for testing
+		$this->VALID_SUNSETDATE = new\DateTime();
+		$this->VALID_SUNSETDATE->add(new \DateInterval("P10D"));
+
+
+
 	}
 
 	/**
@@ -270,6 +288,35 @@ class TweetTest extends DataDesignTest {
 		// grab a tweet by content that does not exist
 		$tweet = Tweet::getTweetByTweetContent($this->getPDO(), "nobody ever tweeted this");
 		$this->assertCount(0, $tweet);
+	}
+
+	/**
+	 * test grabbing a valid Tweet by sunset and sunrise date
+	 *
+	 */
+	public function testGetValidTweetBySunDate() {
+		//count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("tweet");
+
+		//create a new Tweet and insert it into the database
+		$tweet = new Tweet(null, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
+		$tweet->insert($this->getPDO());
+
+		// grab the tweet from the database and see if it matches expectations
+		$results = Tweet::getTweetByTweetDate($this->getPDO(), $this->VALID_SUNRISEDATE, $this->VALID_SUNSETDATE);
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
+		$this->assertCount(1,$results);
+
+		//enforce that no other objects are bleeding into the test
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Tweet", $results);
+
+		//use the first result to make sure that the inserted tweet meets expectations
+		$pdoTweet = $results[0];
+		$this->assertEquals($pdoTweet->getTweetId(), $tweet->getTweetId());
+		$this->assertEquals($pdoTweet->getTweetProfileId(), $tweet->getTweetProfileId());
+		$this->assertEquals($pdoTweet->getTweetContent(), $tweet->getTweetContent());
+		$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
+
 	}
 
 	/**

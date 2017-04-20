@@ -48,7 +48,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
-	public function __construct(?int $newTweetId, int $newTweetProfileId, string $newTweetContent, $newTweetDate = null) {
+	public function __construct(?int $newTweetId, ?int $newTweetProfileId, string $newTweetContent, $newTweetDate = null) {
 		try {
 			$this->setTweetId($newTweetId);
 			$this->setTweetProfileId($newTweetProfileId);
@@ -111,6 +111,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \TypeError if $newProfileId is not an integer
 	 **/
 	public function setTweetProfileId(int $newTweetProfileId) : void {
+
 		// verify the profile id is positive
 		if($newTweetProfileId <= 0) {
 			throw(new \RangeException("tweet profile id is not positive"));
@@ -376,6 +377,61 @@ class Tweet implements \JsonSerializable {
 	}
 
 
+	/**
+	 * gets an array of tweets based on its date
+	 * (this is an optional get by method and has only been added for when specific edge cases arise in capstone projects)
+	 *
+	 * @param \PDO $pdo connection object
+	 * @param \DateTime $sunriseTweetDate beginning date to search for
+	 * @param \DateTime $sunsetTweetDate ending date to search for
+	 * @return \SplFixedArray of tweets found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 * @throws \InvalidArgumentException if either sun dates are in the wrong format
+	 */
+	public static function getTweetByTweetDate (\PDO $pdo, \DateTime $sunriseTweetDate, \DateTime $sunsetTweetDate ) : \SplFixedArray {
+		//enforce both date are present
+		if((empty ($sunriseTweetDate) === true) || (empty($sunsetTweetDate) === true)) {
+			throw (new \InvalidArgumentException("dates are empty of insecure"));
+		}
+
+		//ensure both dates are in the correct format and are secure
+		try {
+			$sunriseTweetDate = self::validateDateTime($sunriseTweetDate);
+			$sunsetTweetDate = self::validateDateTime($sunsetTweetDate);
+
+		} catch(\InvalidArgumentException | \RangeException $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+
+		//create query template
+		$query = "SELECT tweetId, tweetProfileId, tweetContent, tweetDate from tweet WHERE tweetDate >= :sunriseTweetDate AND tweetDate <= :sunsetTweetDate";
+		$statement = $pdo->prepare($query);
+
+
+		//format the dates so that mySQL can use them
+		$formattedSunriseDate = $sunriseTweetDate->format("Y-m-d H:i:s");
+		$formattedSunsetDate = $sunsetTweetDate->format("Y-m-d H:i:s");
+
+		$parameters = ["sunriseTweetDate" => $formattedSunriseDate, "sunsetTweetDate" => $formattedSunsetDate];
+		$statement->execute($parameters);
+
+
+		//build an array of tweets
+		$tweets = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$tweet = new Tweet($row["tweetId"], $row["tweetProfileId"],$row["tweetContent"], $row["tweetDate"]);
+				$tweets[$tweets->key()] = $tweet;
+				$tweets->next();
+			} catch(\Exception $exception) {
+				throw (new \PDOException($exception->getMessage(),0, $exception));
+			}
+		}
+		return($tweets);
+	}
 
 	/**
 	 * gets all Tweets

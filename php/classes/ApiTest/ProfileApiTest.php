@@ -17,7 +17,7 @@ class ProfileApiTest extends DataDesignApiTest {
 	/**
 	 * API endpoint to connect too
 	 */
-	protected $apiEndPoint = "https://bootcamp-coders.cnm.edu/~gkephart/data-design/public_html/api/profile/";
+	protected $apiEndPoint = "https://bootcamp-coders.cnm.edu/~gkephart/ddc-twitter/public_html/api/profile/";
 	protected $salt = null;
 	protected $hash = null;
 	protected $profile = null;
@@ -25,9 +25,10 @@ class ProfileApiTest extends DataDesignApiTest {
 
 	/**
 	 * create a profile object to insert into the database to use with testing
+	 *
 	 */
 
-	ublic function setUp() {
+	public function setUp() {
 		parent::setUp();
 		//connect to the database in order to stamp out needed object dependencies
 		$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
@@ -37,9 +38,11 @@ class ProfileApiTest extends DataDesignApiTest {
 		$salt = bin2hex(random_bytes(32));
 		$hash = hash_pbkdf2("sha512", $password, $salt, 262144);
 
-		$profile = new Profile(null, null,"phpunit","gkephart@gmail", $hash, "5050001111", $salt);
+		$profile = new Profile(null, null,"phpunit","gkephart@gmail.com", $hash, "5050001111", $salt);
 		$profile->insert($pdo);
+
 	}
+
 
 
 	/**
@@ -47,6 +50,7 @@ class ProfileApiTest extends DataDesignApiTest {
 	 *
 	 * @return \stdClass valid object
 	 */
+
 
 	public function createValidObject() : \stdClass{
 		$requestObject = new \stdClass();
@@ -56,6 +60,14 @@ class ProfileApiTest extends DataDesignApiTest {
 		$requestObject->password = "newPass";
 		$requestObject->profileConfirmPassword = "newPass";
 		return($requestObject);
+
+	}
+
+	public function testValidGet() {
+
+		var_dump($this->profile);
+		$reply = $this->guzzle->get($this->apiEndPoint,["request" => "1"]);
+		var_dump($reply);
 	}
 
 
