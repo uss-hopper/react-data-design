@@ -49,10 +49,10 @@ try {
 		//set XSRF cookie
 		setXsrfCookie();
 
-		//gets all likes associated with the end user
+		//gets  a specific like associated based on its composite key
 		if ($likeProfileId !== null && $likeTweetId !== null) {
 			$like = Like::getLikeByLikeTweetIdAndLikeProfileId($pdo, $likeProfileId, $likeTweetId);
-			var_dump($like);
+
 
 			if($like!== null) {
 				$reply->data = $like;
