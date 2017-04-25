@@ -12,6 +12,8 @@ export class SignInService extends BaseService {
 	}
 
 	private signInUrl = "api/sign-in/";
+	public isSignedIn = false;
+
 
 	//preform the post to initiate sign in
 	postSignIn(signIn:SignIn) : Observable<Status> {
