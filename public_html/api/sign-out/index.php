@@ -28,11 +28,7 @@ try {
 	//determine which HTTP method was used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
 	if($method === "GET") {
-		if(session_status() !== PHP_SESSION_ACTIVE) {
-			$reply->message = "You are already signed out";
-		}
 		$_SESSION = [];
-		var_dump($_SESSION);
 		$reply->message = "You are now signed out.";
 	}
 	else {
