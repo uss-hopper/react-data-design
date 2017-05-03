@@ -64,7 +64,7 @@ class ProfileTest extends DataDesignTest {
 	/**
 	 * run the default setup operation to create salt and hash.
 	 */
-	public final function setUp() {
+	public final function setUp() : void {
 		parent::setUp();
 
 		//
@@ -77,7 +77,7 @@ class ProfileTest extends DataDesignTest {
 	/**
 	 * test inserting a valid Profile and verify that the actual mySQL data matches
 	 **/
-	public function testInsertValidProfile() {
+	public function testInsertValidProfile() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("profile");
 
@@ -104,7 +104,7 @@ class ProfileTest extends DataDesignTest {
 	 *
 	 * @expectedException \PDOException
 	 **/
-	public function testInsertInvalidProfile() {
+	public function testInsertInvalidProfile() : void {
 		// create a profile with a non null profileId and watch it fail
 		$profile = new Profile(DataDesignTest::INVALID_KEY, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE, $this->VALID_SALT);
 		$profile->insert($this->getPDO());
@@ -152,7 +152,7 @@ class ProfileTest extends DataDesignTest {
 	/**
 	 * test creating a Profile and then deleting it
 	 **/
-	public function testDeleteValidProfile() {
+	public function testDeleteValidProfile() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("profile");
 
@@ -175,7 +175,7 @@ class ProfileTest extends DataDesignTest {
 	 *
 	 * @expectedException \PDOException
 	 **/
-	public function testDeleteInvalidProfile() {
+	public function testDeleteInvalidProfile() : void {
 		// create a Profile and try to delete it without actually inserting it
 		$profile = new Profile(null, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE, $this->VALID_SALT);
 		$profile->delete($this->getPDO());
@@ -184,7 +184,7 @@ class ProfileTest extends DataDesignTest {
 	/**
 	 * test inserting a Profile and regrabbing it from mySQL
 	 **/
-	public function testGetValidProfileByProfileId() {
+	public function testGetValidProfileByProfileId() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("profile");
 
@@ -206,7 +206,7 @@ class ProfileTest extends DataDesignTest {
 	/**
 	 * test grabbing a Profile that does not exist
 	 **/
-	public function testGetInvalidProfileByProfileId() {
+	public function testGetInvalidProfileByProfileId() : void {
 		// grab a profile id that exceeds the maximum allowable profile id
 		$profile = Profile::getProfileByProfileId($this->getPDO(), DataDesignTest::INVALID_KEY);
 		$this->assertNull($profile);
@@ -241,7 +241,7 @@ class ProfileTest extends DataDesignTest {
 	/**
 	 * test grabbing a Profile by at handle that does not exist
 	 **/
-	public function testGetInvalidProfileByAtHandle() {
+	public function testGetInvalidProfileByAtHandle() : void {
 		// grab an at handle that does not exist
 		$profile = Profile::getProfileByProfileAtHandle($this->getPDO(), "@doesnotexist");
 		$this->assertCount(0, $profile);
@@ -250,7 +250,7 @@ class ProfileTest extends DataDesignTest {
 	/**
 	 * test grabbing a Profile by email
 	 **/
-	public function testGetValidProfileByEmail() {
+	public function testGetValidProfileByEmail() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("profile");
 
@@ -272,7 +272,7 @@ class ProfileTest extends DataDesignTest {
 	/**
 	 * test grabbing a Profile by an email that does not exists
 	 **/
-	public function testGetInvalidProfileByEmail() {
+	public function testGetInvalidProfileByEmail() : void {
 		// grab an email that does not exist
 		$profile = Profile::getProfileByProfileEmail($this->getPDO(), "does@not.exist");
 		$this->assertNull($profile);
@@ -281,7 +281,7 @@ class ProfileTest extends DataDesignTest {
 	/**
 	 * test grabbing a profile by its activation
 	 */
-	public function testGetValidProfileByActivationToken() {
+	public function testGetValidProfileByActivationToken() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("profile");
 
@@ -303,7 +303,7 @@ class ProfileTest extends DataDesignTest {
 	/**
 	 * test grabbing a Profile by an email that does not exists
 	 **/
-	public function testGetInvalidProfileActivation() {
+	public function testGetInvalidProfileActivation() : void {
 		// grab an email that does not exist
 		$profile = Profile::getProfileByProfileActivationToken($this->getPDO(), "5ebc7867885cb8dd25af05b991dd5609");
 		$this->assertNull($profile);

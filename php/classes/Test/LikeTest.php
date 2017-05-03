@@ -54,7 +54,7 @@ class LikeTest extends DataDesignTest {
 	/**
 	 * create dependent objects before running each test
 	 **/
-	public final function setUp() {
+	public final function setUp() : void {
 		// run the default setUp() method first
 		parent::setUp();
 
@@ -79,7 +79,7 @@ class LikeTest extends DataDesignTest {
 	/**
 	 * test inserting a valid Like and verify that the actual mySQL data matches
 	 **/
-	public function testInsertValidLike() {
+	public function testInsertValidLike() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("like");
 
@@ -101,7 +101,7 @@ class LikeTest extends DataDesignTest {
 	 *
 	 * @expectedException \TypeError
 	 **/
-	public function testInsertInvalidLike() {
+	public function testInsertInvalidLike() : void {
 		// create a like without foreign keys and watch it fail
 		$like = new like(null, null, null);
 		$like->insert($this->getPDO());
@@ -110,7 +110,7 @@ class LikeTest extends DataDesignTest {
 	/**
 	 * test creating a Like and then deleting it
 	 **/
-	public function testDeleteValidLike() {
+	public function testDeleteValidLike() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("like");
 
@@ -131,7 +131,7 @@ class LikeTest extends DataDesignTest {
 	/**
 	 * test inserting a Like and regrabbing it from mySQL
 	 **/
-	public function testGetValidLikeByTweetIdAndProfileId() {
+	public function testGetValidLikeByTweetIdAndProfileId() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("like");
 
@@ -161,7 +161,7 @@ class LikeTest extends DataDesignTest {
 	/**
 	 * test grabbing a Like by tweet id
 	 **/
-	public function testGetValidLikeByTweetId() {
+	public function testGetValidLikeByTweetId() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("like");
 
@@ -187,7 +187,7 @@ class LikeTest extends DataDesignTest {
 	/**
 	 * test grabbing a Like by a tweet id that does not exist
 	 **/
-	public function testGetInvalidLikeByTweetId() {
+	public function testGetInvalidLikeByTweetId() : void {
 		// grab a tweet id that exceeds the maximum allowable tweet id
 		$like = Like::getLikeByLikeTweetId($this->getPDO(), DataDesignTest::INVALID_KEY);
 		$this->assertCount(0, $like);
@@ -196,7 +196,7 @@ class LikeTest extends DataDesignTest {
 	/**
 	 * test grabbing a Like by profile id
 	 **/
-	public function testGetValidLikeByProfileId() {
+	public function testGetValidLikeByProfileId() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("like");
 
@@ -224,7 +224,7 @@ class LikeTest extends DataDesignTest {
 	/**
 	 * test grabbing a Like by a profile id that does not exist
 	 **/
-	public function testGetInvalidLikeByProfileId() {
+	public function testGetInvalidLikeByProfileId() : void {
 		// grab a tweet id that exceeds the maximum allowable profile id
 		$like = Like::getLikeByLikeProfileId($this->getPDO(), DataDesignTest::INVALID_KEY);
 		$this->assertCount(0, $like);

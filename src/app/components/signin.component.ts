@@ -11,7 +11,7 @@ import {SignIn} from "../classes/sign-in";
 declare var $: any;
 
 @Component({
-	template: "",
+	templateUrl: "./templates/signin",
 	selector: "sign-in"
 })
 

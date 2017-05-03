@@ -103,10 +103,6 @@ try {
 		//perform the actual put or post
 		if($method === "PUT") {
 
-			//enforce that the end user has a XSRF token.
-			verifyXsrf();
-
-
 			// retrieve the tweet to update
 			$tweet = Tweet::getTweetByTweetId($pdo, $id);
 			if($tweet === null) {
@@ -127,9 +123,6 @@ try {
 			$reply->message = "Tweet updated OK";
 
 		} else if($method === "POST") {
-
-			//enforce that the end user has a XSRF token.
-			verifyXsrf();
 
 			// enforce the user is signed in
 			if(empty($_SESSION["profile"]) === true) {

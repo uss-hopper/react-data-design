@@ -66,7 +66,7 @@ class TweetTest extends DataDesignTest {
 	/**
 	 * create dependent objects before running each test
 	 **/
-	public final function setUp() {
+	public final function setUp()  : void {
 		// run the default setUp() method first
 		parent::setUp();
 		$password = "abc123";
@@ -96,7 +96,7 @@ class TweetTest extends DataDesignTest {
 	/**
 	 * test inserting a valid Tweet and verify that the actual mySQL data matches
 	 **/
-	public function testInsertValidTweet() {
+	public function testInsertValidTweet() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("tweet");
 
@@ -118,7 +118,7 @@ class TweetTest extends DataDesignTest {
 	 *
 	 * @expectedException \PDOException
 	 **/
-	public function testInsertInvalidTweet() {
+	public function testInsertInvalidTweet() : void {
 		// create a Tweet with a non null tweet id and watch it fail
 		$tweet = new Tweet(DataDesignTest::INVALID_KEY, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
 		$tweet->insert($this->getPDO());
@@ -127,7 +127,7 @@ class TweetTest extends DataDesignTest {
 	/**
 	 * test inserting a Tweet, editing it, and then updating it
 	 **/
-	public function testUpdateValidTweet() {
+	public function testUpdateValidTweet() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("tweet");
 
@@ -153,7 +153,7 @@ class TweetTest extends DataDesignTest {
 	 *
 	 * @expectedException \PDOException
 	 **/
-	public function testUpdateInvalidTweet() {
+	public function testUpdateInvalidTweet() : void {
 		// create a Tweet with a non null tweet id and watch it fail
 		$tweet = new Tweet(null, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
 		$tweet->update($this->getPDO());
@@ -162,7 +162,7 @@ class TweetTest extends DataDesignTest {
 	/**
 	 * test creating a Tweet and then deleting it
 	 **/
-	public function testDeleteValidTweet() {
+	public function testDeleteValidTweet() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("tweet");
 
@@ -185,7 +185,7 @@ class TweetTest extends DataDesignTest {
 	 *
 	 * @expectedException \PDOException
 	 **/
-	public function testDeleteInvalidTweet() {
+	public function testDeleteInvalidTweet() : void {
 		// create a Tweet and try to delete it without actually inserting it
 		$tweet = new Tweet(null, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
 		$tweet->delete($this->getPDO());
@@ -194,7 +194,7 @@ class TweetTest extends DataDesignTest {
 	/**
 	 * test inserting a Tweet and regrabbing it from mySQL
 	 **/
-	public function testGetValidTweetByTweetId() {
+	public function testGetValidTweetByTweetId() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("tweet");
 
@@ -214,7 +214,7 @@ class TweetTest extends DataDesignTest {
 	/**
 	 * test grabbing a Tweet that does not exist
 	 **/
-	public function testGetInvalidTweetByTweetId() {
+	public function testGetInvalidTweetByTweetId() : void {
 		// grab a profile id that exceeds the maximum allowable profile id
 		$tweet = Tweet::getTweetByTweetId($this->getPDO(), DataDesignTest::INVALID_KEY);
 		$this->assertNull($tweet);
@@ -248,7 +248,7 @@ class TweetTest extends DataDesignTest {
 	/**
 	 * test grabbing a Tweet that does not exist
 	 **/
-	public function testGetInvalidTweetByTweetProfileId() {
+	public function testGetInvalidTweetByTweetProfileId() : void {
 		// grab a profile id that exceeds the maximum allowable profile id
 		$tweet = Tweet::getTweetByTweetProfileId($this->getPDO(), DataDesignTest::INVALID_KEY);
 		$this->assertCount(0, $tweet);
@@ -257,7 +257,7 @@ class TweetTest extends DataDesignTest {
 	/**
 	 * test grabbing a Tweet by tweet content
 	 **/
-	public function testGetValidTweetByTweetContent() {
+	public function testGetValidTweetByTweetContent() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("tweet");
 
@@ -284,7 +284,7 @@ class TweetTest extends DataDesignTest {
 	/**
 	 * test grabbing a Tweet by content that does not exist
 	 **/
-	public function testGetInvalidTweetByTweetContent() {
+	public function testGetInvalidTweetByTweetContent() : void {
 		// grab a tweet by content that does not exist
 		$tweet = Tweet::getTweetByTweetContent($this->getPDO(), "nobody ever tweeted this");
 		$this->assertCount(0, $tweet);
@@ -294,7 +294,7 @@ class TweetTest extends DataDesignTest {
 	 * test grabbing a valid Tweet by sunset and sunrise date
 	 *
 	 */
-	public function testGetValidTweetBySunDate() {
+	public function testGetValidTweetBySunDate() : void {
 		//count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("tweet");
 
@@ -322,7 +322,7 @@ class TweetTest extends DataDesignTest {
 	/**
 	 * test grabbing all Tweets
 	 **/
-	public function testGetAllValidTweets() {
+	public function testGetAllValidTweets() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("tweet");
 
