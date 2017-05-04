@@ -149,7 +149,7 @@ class TweetTest extends DataDesignTest {
 	}
 
 	/**
-	 * test updating a Tweet that already exists
+	 * test updating a Tweet that does not exist
 	 *
 	 * @expectedException \PDOException
 	 **/

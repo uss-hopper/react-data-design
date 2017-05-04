@@ -19,9 +19,10 @@ require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
  * parameters about the project so that table specific tests can share the parameters in on place. To use it:
  *
  * 1. Rename the class from DataDesignTest to a project specific name (e.g., ProjectNameTest)
- * 2. Modify DataDesignTest::getDataSet() to include all the tables in your project.
- * 3. Modify DataDesignTest::getConnection() to include the correct mySQL properties file.
- * 4. Have all table specific tests include this class.
+ * 2. Rename the namespace to be the same as in (1) (e.g., Edu\Cnm\ProjectName\Test)
+ * 3. Modify DataDesignTest::getDataSet() to include all the tables in your project.
+ * 4. Modify DataDesignTest::getConnection() to include the correct mySQL properties file.
+ * 5. Have all table specific tests include this class.
  *
  * *NOTE*: Tables must be added in the order they were created in step (2).
  *
