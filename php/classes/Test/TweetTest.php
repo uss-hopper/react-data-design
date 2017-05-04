@@ -192,26 +192,6 @@ class TweetTest extends DataDesignTest {
 	}
 
 	/**
-	 * test inserting a Tweet and regrabbing it from mySQL
-	 **/
-	public function testGetValidTweetByTweetId() : void {
-		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("tweet");
-
-		// create a new Tweet and insert to into mySQL
-		$tweet = new Tweet(null, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
-		$tweet->insert($this->getPDO());
-
-		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoTweet = Tweet::getTweetByTweetId($this->getPDO(), $tweet->getTweetId());
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
-		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
-		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
-		//format the date too seconds since the beginning of time to avoid round off error
-		$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
-	}
-
-	/**
 	 * test grabbing a Tweet that does not exist
 	 **/
 	public function testGetInvalidTweetByTweetId() : void {
