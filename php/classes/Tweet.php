@@ -48,7 +48,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
-	public function __construct(?int $newTweetId, ?int $newTweetProfileId, string $newTweetContent, $newTweetDate = null) {
+	public function __construct(?int $newTweetId, int $newTweetProfileId, string $newTweetContent, $newTweetDate = null) {
 		try {
 			$this->setTweetId($newTweetId);
 			$this->setTweetProfileId($newTweetProfileId);
@@ -421,7 +421,8 @@ class Tweet implements \JsonSerializable {
 		//build an array of tweets
 		$tweets = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		while(($row = $statement->fetch()) !== false) {
+
+		while($row = $statement->fetch() !== false) {
 			try {
 				$tweet = new Tweet($row["tweetId"], $row["tweetProfileId"],$row["tweetContent"], $row["tweetDate"]);
 				$tweets[$tweets->key()] = $tweet;
