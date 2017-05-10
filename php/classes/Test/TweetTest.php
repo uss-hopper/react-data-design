@@ -266,7 +266,7 @@ class TweetTest extends DataDesignTest {
 	 **/
 	public function testGetInvalidTweetByTweetContent() : void {
 		// grab a tweet by content that does not exist
-		$tweet = Tweet::getTweetByTweetContent($this->getPDO(), "nobody ever tweeted this");
+		$tweet = Tweet::getTweetByTweetContent($this->getPDO(), "Comcast has the best service EVER #comcastLove");
 		$this->assertCount(0, $tweet);
 	}
 
