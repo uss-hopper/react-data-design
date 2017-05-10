@@ -1,12 +1,14 @@
 {
 	"require": {
 		"guzzlehttp/guzzle": "@stable",
+		"phpdocumentor/phpdocumentor": "@stable",
 		"phpunit/dbunit": "@stable",
 		"phpunit/phpunit": "@stable",
 		"swiftmailer/swiftmailer": "@stable"
 	},
 
 	"scripts":{
-		"dbTest" : "./vendor/bin/phpunit -c ./php/classes/Test --coverage-html coverage"
+		"phpdoc": "./vendor/bin/phpdoc -t doc -d ./php/classes",
+		"phpunit" : "./vendor/bin/phpunit -c ./php/classes/Test --coverage-html coverage"
 	}
 }
