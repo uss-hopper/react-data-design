@@ -7,6 +7,6 @@
 	},
 
 	"scripts":{
-		"dbTest" : "phpunit --coverage-html coverage"
+		"dbTest" : "./vendor/bin/phpunit -c ./php/classes/Test --coverage-html coverage"
 	}
 }
