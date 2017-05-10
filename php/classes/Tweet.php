@@ -422,7 +422,7 @@ class Tweet implements \JsonSerializable {
 		$tweets = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 
-		while($row = $statement->fetch() !== false) {
+		while(($row = $statement->fetch()) !== false) {
 			try {
 				$tweet = new Tweet($row["tweetId"], $row["tweetProfileId"],$row["tweetContent"], $row["tweetDate"]);
 				$tweets[$tweets->key()] = $tweet;
