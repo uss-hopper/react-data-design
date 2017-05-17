@@ -36,14 +36,11 @@ try {
 	//determine which HTTP method was used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
 
-	var_dump($method);
 
 	//sanitize the search parameters
 	$likeProfileId = filter_input(INPUT_GET, "LikeProfileId", FILTER_VALIDATE_INT);
 	$likeTweetId = filter_input(INPUT_GET, "likeTweetId", FILTER_VALIDATE_INT);
 
-	var_dump($likeProfileId);
-	var_dump($likeTweetId);
 
 	if($method === "GET") {
 		//set XSRF cookie

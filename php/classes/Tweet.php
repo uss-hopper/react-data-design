@@ -389,7 +389,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \TypeError when variables are not the correct data type
 	 * @throws \InvalidArgumentException if either sun dates are in the wrong format
 	 */
-	public static function getTweetByTweetDate (\PDO $pdo, $sunriseTweetDate, $sunsetTweetDate ) : \SplFixedArray {
+	public static function getTweetByTweetDate (\PDO $pdo, \DateTime $sunriseTweetDate, \DateTime $sunsetTweetDate ) : \SplFixedArray {
 		//enforce both date are present
 		if((empty ($sunriseTweetDate) === true) || (empty($sunsetTweetDate) === true)) {
 			throw (new \InvalidArgumentException("dates are empty of insecure"));
@@ -411,8 +411,8 @@ class Tweet implements \JsonSerializable {
 
 
 		//format the dates so that mySQL can use them
-		$formattedSunriseDate = $sunriseTweetDate->format("Y-m-d H:i:s.u");
-		$formattedSunsetDate = $sunsetTweetDate->format("Y-m-d H:i:s.u");
+		$formattedSunriseDate = $sunriseTweetDate->format("Y-m-d H:i:s");
+		$formattedSunsetDate = $sunsetTweetDate->format("Y-m-d H:i:s");
 
 		$parameters = ["sunriseTweetDate" => $formattedSunriseDate, "sunsetTweetDate" => $formattedSunsetDate];
 		$statement->execute($parameters);
@@ -422,7 +422,7 @@ class Tweet implements \JsonSerializable {
 		$tweets = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 
-		while(($row = $statement->fetch()) !== false) {
+		while($row = $statement->fetch()  !== false) {
 			try {
 				$tweet = new Tweet($row["tweetId"], $row["tweetProfileId"],$row["tweetContent"], $row["tweetDate"]);
 				$tweets[$tweets->key()] = $tweet;
