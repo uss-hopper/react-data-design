@@ -85,6 +85,13 @@ try {
 		$requestObject = json_decode($requestContent);
 		// This Line Then decodes the JSON package and stores that result in $requestObject
 
+
+		var_dump($requestObject);
+
+
+		$requestObject->locationx;
+		$requestObject->locationy;
+
 		//make sure tweet content is available (required field)
 		if(empty($requestObject->tweetContent) === true) {
 			throw(new \InvalidArgumentException ("No content for Tweet.", 405));
