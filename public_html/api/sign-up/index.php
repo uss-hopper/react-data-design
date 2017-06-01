@@ -50,7 +50,7 @@ try {
 
 		//verify that the confirm password is present
 		if(empty($requestObject->profilePasswordConfirm) === true) {
-			throw(new \InvalidArgumentException ("Must input valid confirmed password", 405));
+			throw(new \InvalidArgumentException ("Must input valid password", 405));
 		}
 
 		//if phone is empty set it too null
@@ -94,7 +94,7 @@ try {
 <p><a href="$confirmLink">$confirmLink</a></p>
 EOF;
 		//create swift email
-		$swiftMessage = Swift_Message::newInstance();
+		$swiftMessage = new Swift_Message();
 
 		// attach the sender to the message
 		// this takes the form of an associative array where the email is the key to a real name
@@ -124,8 +124,6 @@ EOF;
 		//attach the html version fo the message
 		$swiftMessage->setBody($message, "text/html");
 
-
-
 		//attach the plain text version of the message
 		$swiftMessage->addPart(html_entity_decode($message), "text/plain");
 
@@ -136,8 +134,9 @@ EOF;
 		 * @see http://swiftmailer.org/docs/sending.html Sending Messages - Documentation - SwitftMailer
 		 **/
 		//setup smtp
-		$smtp = Swift_SmtpTransport::newInstance("localhost", 25);
-		$mailer = Swift_Mailer::newInstance($smtp);
+		$smtp = new Swift_SmtpTransport(
+			"localhost", 25);
+		$mailer = new Swift_Mailer($smtp);
 
 		//send the message
 		$numSent = $mailer->send($swiftMessage, $failedRecipients);

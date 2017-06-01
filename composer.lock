@@ -327,7 +327,7 @@
             "homepage": "http://www.doctrine-project.org",
             "keywords": [
                 "lexer",
-                "parser"
+
             ],
             "time": "2014-09-09T13:34:57+00:00"
         },
