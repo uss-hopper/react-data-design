@@ -30,6 +30,8 @@ try {
 	//grab the mySQL connection
 	$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
 
+	$_SESSION = Profile::getProfileByProfileId($pdo, 1);
+
 	//determine which HTTP method was used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
 
@@ -119,7 +121,7 @@ try {
 		 * thanks sprout-swap @author:<solomon.leyba@gmail.com>
 		 **/
 		//enforce that current password new password and confirm password is present
-		if(empty($requestObject->ProfilePassword) === false && empty($requestObject->profileConfirmPassword) === false && empty($requestContent->ConfirmPassword) === false) {
+		if(empty($requestObject->ProfilePassword) === false && empty($requestObject->profileConfirmPassword) === false && empty($requestObject->ConfirmPassword) === false) {
 
 			//make sure the new password and confirm password exist
 			if($requestObject->newProfilePassword !== $requestObject->profileConfirmPassword) {

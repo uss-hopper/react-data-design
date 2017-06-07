@@ -33,7 +33,6 @@ export abstract class BaseService {
 
 	protected static handleError(error : any) {
 		let message = error.message;
-		console.log(message);
 		return(Observable.throw(message));
 	}
 }

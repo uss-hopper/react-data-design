@@ -65,7 +65,7 @@ try{
 		}
 	} else {
 		//throw an exception if the HTTP request is not a GET
-		throw(new InvalidArgumentException("Invalid HTTP method request"));
+		throw(new InvalidArgumentException("Invalid HTTP method request", 403));
 	}
 
 	//update the reply objects status and message state variables if an exception or type exception was thrown;
