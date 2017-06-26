@@ -6,7 +6,7 @@ import {Like} from "../classes/like";
 import {Observable} from "rxjs/Observable";
 
 @Injectable ()
-export class likeService extends BaseService {
+export class LikeService extends BaseService {
 
 	constructor(protected http:Http ) {
 		super(http);
