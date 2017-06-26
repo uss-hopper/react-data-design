@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Http} from "@angular/http";
 import {Observable} from "rxjs/Observable";
-import {BaseService} from "./base-service";
+import {BaseService} from "./base.service";
 import {Status} from "../classes/status";
 
 @Injectable()
@@ -14,7 +14,7 @@ export class SignOutService extends BaseService {
 
 	getSignOut() : Observable<Status> {
 		return(this.http.get(this.signOutUrl)
-			.map(BaseService.extractMessage)
-			.catch(BaseService.handleError));
+			.map(this.extractMessage)
+			.catch(this.handleError));
 	}
 }

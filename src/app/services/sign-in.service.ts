@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Http} from "@angular/http";
 import {Observable} from "rxjs/Observable";
-import {BaseService} from "./base-service";
+import {BaseService} from "./base.service";
 import {Status} from "../classes/status";
 import {SignIn} from "../classes/sign-in";
 
@@ -18,7 +18,7 @@ export class SignInService extends BaseService {
 	//preform the post to initiate sign in
 	postSignIn(signIn:SignIn) : Observable<Status> {
 		return(this.http.post(this.signInUrl, signIn)
-			.map(BaseService.extractMessage)
-			.catch(BaseService.handleError));
+			.map(this.extractMessage)
+			.catch(this.handleError));
 	}
 }

@@ -6,13 +6,13 @@ import {Component, ViewChild, EventEmitter, Output} from "@angular/core";
 import {Router} from "@angular/router";
 import {Observable} from "rxjs/Observable"
 import {Status} from "../classes/status";
-import {SignInService} from"../services/sign-in-service";
+import {SignInService} from"../services/sign-in.service";
 import {SignIn} from "../classes/sign-in";
 declare var $: any;
 
 @Component({
 	templateUrl: "./templates/signin",
-	selector: "sign-in"
+	selector: "signin"
 })
 
 export class SignInComponent {

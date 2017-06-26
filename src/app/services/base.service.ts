@@ -5,7 +5,7 @@ import {Status} from "../classes/status";
 export abstract class BaseService {
 	constructor(protected http: Http) {}
 
-	protected static extractData(response: Response) : any {
+	protected  extractData(response: Response) : any {
 		if(response.status < 200 || response.status >= 300) {
 			throw(new Error("Bad response status: " + response.status))
 		}
@@ -17,7 +17,7 @@ export abstract class BaseService {
 		return(json.data);
 	}
 
-	protected static extractMessage(response: Response) : Status {
+	protected extractMessage(response: Response) : Status {
 		if(response.status < 200 || response.status >= 300) {
 			throw(new Error("Bad response status: " + response.status))
 		}
@@ -31,7 +31,7 @@ export abstract class BaseService {
 		return(status);
 	}
 
-	protected static handleError(error : any) {
+	protected handleError(error : any) {
 		let message = error.message;
 		return(Observable.throw(message));
 	}
