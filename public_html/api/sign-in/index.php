@@ -31,7 +31,7 @@ try {
 	if($method === "POST") {
 
 		//make sure the XSRF Token is valid
-		verifyXsrf();
+		//verifyXsrf();
 
 		//process the request content and decode the json object into a php object
 		$requestContent = file_get_contents("php://input");

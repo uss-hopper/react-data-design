@@ -8,6 +8,9 @@
 			<div class="container center-splash">
 				this is a template
 			</div>
+
 		</div>
 	</div>
+
+	<signin></signin>
 </main>

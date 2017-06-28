@@ -1,6 +1,10 @@
 <?php
-if(session_status() !== PHP_SESSION_ACTIVE) {
+require_once dirname(__DIR__, 1) . "/php/lib/xsrf.php";
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
 	session_start();
+	setXsrfCookie();
+
 }
 ?>
 <!DOCTYPE html>
