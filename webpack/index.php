@@ -1,11 +1,11 @@
 <?php
 require_once dirname(__DIR__, 1) . "/php/lib/xsrf.php";
 
+//start the session and set a XSRF TOKEN if one is no present
 if (session_status() !== PHP_SESSION_ACTIVE) {
 	session_start();
-	setXsrfCookie();
-
 }
+setXsrfCookie();
 ?>
 <!DOCTYPE html>
 <html lang="en">
