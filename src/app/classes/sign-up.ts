@@ -3,7 +3,8 @@ export class SignUp {
 		public profileAtHandle: string,
 		public profileEmail: string,
 		public profilePassword: string,
-		public profilePasswordConfirm: string
+		public profilePasswordConfirm: string,
+		public profilePhone: string
 
 	) {}
 }
