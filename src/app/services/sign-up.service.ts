@@ -12,7 +12,7 @@ export class SignUpService extends BaseService {
 		super(http);
 	}
 
-	private signUpUrl = "api/sign-up";
+	private signUpUrl = "api/sign-up/";
 
 	createProfile(signUp: SignUp) : Observable<Status> {
 		return(this.http.post(this.signUpUrl, signUp)

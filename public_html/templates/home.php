@@ -12,5 +12,5 @@
 		</div>
 	</div>
 
-	<signin></signin>
+	<signin></signin>  <sign-up></sign-up>
 </main>

@@ -1,7 +1,7 @@
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signup_modal"> Sign Up</button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signUp-modal"> Sign Up</button>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="signUp-modal">
-	<div class="modal-dialog modal-md" role="document">
+	<div class="modal-dialog modal-sm" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span></button>
@@ -40,6 +40,9 @@
 					<label for="passwordConfirm" class="modal-labels">Password Confirm</label>
 					<input type="password" id="passwordConfirm" name="passwordConfirm" class="modal-inputs" required [(ngModel)] = "signUp.profilePasswordConfirm" #signUpPasswordConfirm="ngModel">
 				</div>
+
+				<!-- Submit button -->
+				<input type="submit" name="signUp" class="modal-inputs" value="signUp">
 
 			</form>
 		</div>
