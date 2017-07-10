@@ -100,7 +100,7 @@ try {
 
 		// make sure tweet date is accurate (optional field)
 		if(empty($requestObject->tweetDate) === true) {
-			$requestObject->tweetDate = null;
+			$requestObject->tweetDate = date("y-m-d H:i:s");
 		}
 
 		//  make sure profileId is available
@@ -138,7 +138,7 @@ try {
 			}
 
 			// create new tweet and insert into the database
-			$tweet = new Tweet(null, $requestObject->tweetProfileId, $requestObject->tweetContent, null);
+			$tweet = new Tweet(null, $_SESSION["profile"]->getProfileId(), $requestObject->tweetContent, null);
 			$tweet->insert($pdo);
 
 			// update reply
