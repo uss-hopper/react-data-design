@@ -103,11 +103,6 @@ try {
 			$requestObject->tweetDate = date("y-m-d H:i:s");
 		}
 
-		//  make sure profileId is available
-		if(empty($requestObject->tweetProfileId) === true) {
-			throw(new \InvalidArgumentException ("No Profile ID.", 405));
-		}
-
 		//perform the actual put or post
 		if($method === "PUT") {
 

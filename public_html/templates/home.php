@@ -4,18 +4,7 @@
 
 	<div class="container-fluid">
 		<div class="row">
-
-			<div class="row">
-				<div class="col-sm-6">
-					<p>my content</p>
-				</div>
-
-				<div class="row">
-					<p>ddc-twitter</p>
-				</div>
-
-			</div>
-
+		<create-tweet></create-tweet>
 		</div>
 	</div>
 </main>

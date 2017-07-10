@@ -7,18 +7,7 @@ import{Tweet} from "../classes/tweet";
 
 @Component({
 	selector: "create-tweet",
-	template: `
-		
-		
-		<form id="new-tweet" name="new-tweet" #new-tweet = "ngForm" (submit)="createTweet();" novalidate>
-		<div class="form-group">
-			<span>
-				<input id="tweetContent" name="tweetContent" type="text" class="form-control input-lg" [(ngModel)] =tweet.tweetContent>
-				<button name="submit" type="submit" class="btn btn-success"><i class="fa-code" aria-hidden="true"></i></button>
-			</span>
-		</div>
-	</form>
-	`
+	templateUrl: "./templates/create-tweet.php"
 })
 
 export class CreateTweetComponent {
