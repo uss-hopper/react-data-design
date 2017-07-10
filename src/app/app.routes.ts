@@ -3,8 +3,9 @@ import {HomeComponent} from "./components/home-component";
 import {MainNavComponent} from "./components/main-nav";
 import {SignInComponent} from "./components/signin.component";
 import {SignUpComponent} from "./components/sign-up.component";
+import {CreateTweetComponent} from "./components/create-tweet.component";
 
-export const allAppComponents = [HomeComponent, MainNavComponent, SignInComponent, SignUpComponent];
+export const allAppComponents = [HomeComponent, MainNavComponent, SignInComponent, SignUpComponent, CreateTweetComponent];
 
 export const routes: Routes = [
 	{path: "", component: HomeComponent}

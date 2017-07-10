@@ -39,7 +39,6 @@ export class SignUpComponent {
 				console.log(this.status);
 				if(status.status === 200) {
 					alert(status.message);
-					this.signUpForm.reset();
 					setTimeout(function() {
 						$("#signUp-modal").modal('hide');
 					}, 500);

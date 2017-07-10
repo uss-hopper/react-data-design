@@ -1,16 +1,22 @@
 <main-nav></main-nav>
 
-<main class="bg-info">
+<main>
 
 	<div class="container-fluid">
 		<div class="row">
 
-			<div class="container center-splash">
-				this is a template
+			<div class="row">
+				<div class="col-sm-6">
+					<p>my content</p>
+				</div>
+
+				<div class="row">
+					<p>ddc-twitter</p>
+				</div>
+
 			</div>
 
 		</div>
 	</div>
-
-	<signin></signin>  <sign-up></sign-up>
 </main>
+

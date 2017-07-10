@@ -16,7 +16,7 @@
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+					<li><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#signin-modal"> Signin</button></li>
 					<li><a href="#">Link2</a></li>
 					<li><a href="#">Link3</a></li>
 

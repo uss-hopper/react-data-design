@@ -1,4 +1,3 @@
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signUp-modal"> Sign Up</button>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="signUp-modal">
 	<div class="modal-dialog modal-sm" role="document">

@@ -24,21 +24,16 @@ export class SignInComponent {
 	constructor(private SignInService: SignInService, private router: Router) {
 	}
 
-	isSignedIn = false;
 
-	ngOnChanges(): void {
-		this.isSignedIn = this.SignInService.isSignedIn;
-	}
 
 	signIn(): void {
-		this.SignInService.postSignIn(this.signin)
-			.subscribe(status => {
+		this.SignInService.postSignIn(this.signin).subscribe(status => {
 				this.status = status;
 				if(status.status === 200) {
 
 					this.router.navigate([""]);
 					//location.reload(true);
-					//this.signInForm.reset();
+					this.signInForm.reset();
 					setTimeout(function(){$("#signin-modal").modal('hide');},1000);
 				} else {
 					console.log("failed login")
