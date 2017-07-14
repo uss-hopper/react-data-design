@@ -1,5 +1,6 @@
 -- @author Dylan McDonald
 -- @see https://github.com/dylan-mcdonald/data-design/blob/master/sql/haversine.sql#L35
+-- adding a comment
 
 -- drop the procedure if already defined
 DROP FUNCTION IF EXISTS haversine;
