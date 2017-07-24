@@ -261,48 +261,6 @@ class Tweet implements \JsonSerializable {
 	}
 
 	/**
-	 * gets the Tweet by content
-	 *
-	 * @param \PDO $pdo PDO connection object
-	 * @param string $tweetContent tweet content to search for
-	 * @return \SplFixedArray SplFixedArray of Tweets found
-	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError when variables are not the correct data type
-	 **/
-	public static function getTweetByTweetContent(\PDO $pdo, string $tweetContent) : \SPLFixedArray {
-		// sanitize the description before searching
-		$tweetContent = trim($tweetContent);
-		$tweetContent = filter_var($tweetContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(empty($tweetContent) === true) {
-			throw(new \PDOException("tweet content is invalid"));
-		}
-
-		// create query template
-		$query = "SELECT tweetId, tweetProfileId, tweetContent, tweetDate FROM tweet WHERE tweetContent LIKE :tweetContent";
-		$statement = $pdo->prepare($query);
-
-		// bind the tweet content to the place holder in the template
-		$tweetContent = "%$tweetContent%";
-		$parameters = ["tweetContent" => $tweetContent];
-		$statement->execute($parameters);
-
-		// build an array of tweets
-		$tweets = new \SplFixedArray($statement->rowCount());
-		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		while(($row = $statement->fetch()) !== false) {
-			try {
-				$tweet = new Tweet($row["tweetId"], $row["tweetProfileId"], $row["tweetContent"], $row["tweetDate"]);
-				$tweets[$tweets->key()] = $tweet;
-				$tweets->next();
-			} catch(\Exception $exception) {
-				// if the row couldn't be converted, rethrow it
-				throw(new \PDOException($exception->getMessage(), 0, $exception));
-			}
-		}
-		return($tweets);
-	}
-
-	/**
 	 * gets the Tweet by tweetId
 	 *
 	 * @param \PDO $pdo PDO connection object
@@ -376,6 +334,51 @@ class Tweet implements \JsonSerializable {
 		return($tweets);
 	}
 
+	/**
+	 * gets the Tweet by content
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param string $tweetContent tweet content to search for
+	 * @return \SplFixedArray SplFixedArray of Tweets found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public static function getTweetByTweetContent(\PDO $pdo, string $tweetContent) : \SPLFixedArray {
+		// sanitize the description before searching
+		$tweetContent = trim($tweetContent);
+		$tweetContent = filter_var($tweetContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($tweetContent) === true) {
+			throw(new \PDOException("tweet content is invalid"));
+		}
+
+		// escape any mySQL wild cards
+		$tweetContent = str_replace("_", "\\_", str_replace("%", "\\%", $tweetContent));
+
+		// create query template
+		$query = "SELECT tweetId, tweetProfileId, tweetContent, tweetDate FROM tweet WHERE tweetContent LIKE :tweetContent";
+		$statement = $pdo->prepare($query);
+
+		// bind the tweet content to the place holder in the template
+		$tweetContent = "%$tweetContent%";
+		$parameters = ["tweetContent" => $tweetContent];
+		$statement->execute($parameters);
+
+		// build an array of tweets
+		$tweets = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$tweet = new Tweet($row["tweetId"], $row["tweetProfileId"], $row["tweetContent"], $row["tweetDate"]);
+				$tweets[$tweets->key()] = $tweet;
+				$tweets->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($tweets);
+	}
+
 
 	/**
 	 * gets an array of tweets based on its date
@@ -422,8 +425,9 @@ class Tweet implements \JsonSerializable {
 		$tweets = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 
-		while($row = $statement->fetch()  !== false) {
+		while(($row = $statement->fetch())  !== false) {
 			try {
+
 				$tweet = new Tweet($row["tweetId"], $row["tweetProfileId"],$row["tweetContent"], $row["tweetDate"]);
 				$tweets[$tweets->key()] = $tweet;
 				$tweets->next();

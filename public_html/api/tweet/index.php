@@ -32,16 +32,16 @@ try {
 	//grab the mySQL connection
 	$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
 
-	/*
-	 * // mock a logged in user by forcing the session. This is only for testing purposes and should not be in the live code.
-	 *
-	 * // profileId of profile to use for testing,
-	 * $person = 2
-	 *
-	 * // grab a profile by its profileId and add it to the session
-	 * $_SESSION["profile"] = Profile::getProfileByProfileId($pdo, $person);
-	 *
-	 */
+
+	  // mock a logged in user by forcing the session. This is only for testing purposes and should not be in the live code.
+
+	  // profileId of profile to use for testing,
+	  $person = 95;
+
+	  // grab a profile by its profileId and add it to the session
+	  $_SESSION["profile"] = Profile::getProfileByProfileId($pdo, $person);
+
+
 
 	//determine which HTTP method was used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
