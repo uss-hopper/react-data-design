@@ -206,7 +206,7 @@ class Tweet implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$formattedDate = $this->tweetDate->format("Y-m-d H:i:s");
+		$formattedDate = $this->tweetDate->format("Y-m-d H:i:s.u");
 		$parameters = ["tweetProfileId" => $this->tweetProfileId, "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate];
 		$statement->execute($parameters);
 
@@ -255,7 +255,7 @@ class Tweet implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$formattedDate = $this->tweetDate->format("Y-m-d H:i:s");
+		$formattedDate = $this->tweetDate->format("Y-m-d H:i:s.u");
 		$parameters = ["tweetProfileId" => $this->tweetProfileId, "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate, "tweetId" => $this->tweetId];
 		$statement->execute($parameters);
 	}
@@ -414,8 +414,8 @@ class Tweet implements \JsonSerializable {
 
 
 		//format the dates so that mySQL can use them
-		$formattedSunriseDate = $sunriseTweetDate->format("Y-m-d H:i:s");
-		$formattedSunsetDate = $sunsetTweetDate->format("Y-m-d H:i:s");
+		$formattedSunriseDate = $sunriseTweetDate->format("Y-m-d H:i:s.u");
+		$formattedSunsetDate = $sunsetTweetDate->format("Y-m-d H:i:s.u");
 
 		$parameters = ["sunriseTweetDate" => $formattedSunriseDate, "sunsetTweetDate" => $formattedSunsetDate];
 		$statement->execute($parameters);

@@ -158,7 +158,7 @@ class Like implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$formattedDate = $this->likeDate->format("Y-m-d H:i:s");
+		$formattedDate = $this->likeDate->format("Y-m-d H:i:s.u");
 		$parameters = ["likeProfileId" => $this->likeProfileId, "likeTweetId" => $this->likeTweetId, "likeDate" => $formattedDate];
 		$statement->execute($parameters);
 	}
