@@ -5,7 +5,7 @@ import {Tweet} from "../classes/tweet";
 
 @Component({
 	selector: "list-tweet",
-	templateUrl: ".templates/list-tweets.php"
+	templateUrl: "./templates/list-tweets.php"
 })
 
 export class ListTweetsComponent implements OnInit{

@@ -10,7 +10,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr #ngFor="let tweet of tweets">
+			<tr *ngFor="let tweet of tweets">
 				<td>Bob Dole</td>
 				<td> {{tweet.tweetContent }}</td>
 				<td> {{ tweet.tweetDate | date: 'medium'}} </td>

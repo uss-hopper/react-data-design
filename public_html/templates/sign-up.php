@@ -1,5 +1,5 @@
 
-<div class="modal fade" tabindex="-1" role="dialog" id="signUp-modal">
+<div class="modal fade" tabindex="-1" role="dialog" id="signup-modal">
 	<div class="modal-dialog modal-sm" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
