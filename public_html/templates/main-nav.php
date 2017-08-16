@@ -16,9 +16,10 @@
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
-					<li><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#signin-modal"> Signin</button></li>
-					<li><sign-up></sign-up></li>
-					<li><a href="#">Link3</a></li>
+					<li><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#signin-modal">Sign In</button></li>
+					<li><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#signup-modal">Sign Up</button>  </li>
+
+
 
 				</ul>
 			</div><!-- /.navbar-collapse -->
