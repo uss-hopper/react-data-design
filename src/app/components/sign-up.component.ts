@@ -17,7 +17,7 @@ declare let $: any;
 // set the template url and the selector for the ng powered html tag
 
 @Component({
-	templateUrl: "./templates/sign-up.php",
+	templateUrl: "./templates/sign-up.html",
 	selector: "sign-up"
 })
 export class SignUpComponent {

@@ -35,11 +35,7 @@ try {
 
 	  // mock a logged in user by forcing the session. This is only for testing purposes and should not be in the live code.
 
-	  // profileId of profile to use for testing,
-	  $person = 95;
 
-	  // grab a profile by its profileId and add it to the session
-	  $_SESSION["profile"] = Profile::getProfileByProfileId($pdo, $person);
 
 
 
@@ -127,6 +123,7 @@ try {
 
 		} else if($method === "POST") {
 
+
 			// enforce the user is signed in
 			if(empty($_SESSION["profile"]) === true) {
 				throw(new \InvalidArgumentException("you must be logged in to post tweets", 403));
@@ -161,7 +158,7 @@ try {
 		// update reply
 		$reply->message = "Tweet deleted OK";
 	} else {
-		throw (new InvalidArgumentException("Invalid HTTP method request"));
+		throw (new InvalidArgumentException("Invalid HTTP method request", 418));
 	}
 // update the $reply->status $reply->message
 } catch(\Exception | \TypeError $exception) {

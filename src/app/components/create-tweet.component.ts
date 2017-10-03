@@ -7,7 +7,7 @@ import{Tweet} from "../classes/tweet";
 
 @Component({
 	selector: "create-tweet",
-	templateUrl: "./templates/create-tweet.php"
+	templateUrl: "./templates/create-tweet.html"
 })
 
 export class CreateTweetComponent {

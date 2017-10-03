@@ -2,10 +2,15 @@ import {Component, OnInit} from "@angular/core";
 import {TweetService} from "../services/tweet.service";
 import {Status} from "../classes/status";
 import {Tweet} from "../classes/tweet";
+import {ProfileService} from "../services/profile.service";
+import {Profile} from "../classes/profile";
+import {Params} from "@angular/router";
+import {subscribeToResult} from "rxjs/util/subscribeToResult";
+
 
 @Component({
 	selector: "list-tweet",
-	templateUrl: "./templates/list-tweets.php"
+	templateUrl: "./templates/list-tweets.html"
 })
 
 export class ListTweetsComponent implements OnInit{
@@ -16,11 +21,20 @@ export class ListTweetsComponent implements OnInit{
 	tweet: Tweet = new Tweet(null,null,null,null);
 	tweets: Tweet[] = [];
 
-	constructor(private tweetService: TweetService) {}
+
+	profile: Profile = new Profile(null,null,null,null,null);
+
+
+
+	constructor(private tweetService: TweetService, private profileService: ProfileService) {}
 
 	//life cycling before my eyes
 	ngOnInit() : void {
 		this.listTweets()
+	}
+
+	getTweetProfile(): void {
+		this.profileService.getProfile(this.tweet.tweetProfileId)
 	}
 
 
@@ -28,5 +42,12 @@ export class ListTweetsComponent implements OnInit{
 		this.tweetService.getAlltweets()
 			.subscribe(tweets => this.tweets = tweets);
 
+		for (this.tweet of this.tweets) {
+
+				console.log("fuck you tom wu");
+
+		}
 	}
+
+
 }
