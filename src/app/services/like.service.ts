@@ -20,12 +20,12 @@ export class LikeService {
 		return (this.http.post<Status>(this.likeUrl, like));
 	}
 
-	//grabs a spcfic like based on its composite key
-	getLikeByCompositeKey(likeProfileId : string, likeTweetId : string) : Observable <Like> {
+	//grabs a  like based on its composite key
+	getLikeByCompositeKey(likeProfileId : number, likeTweetId : number) : Observable <Like> {
 		return (this.http.get<Like>(this.likeUrl+ "?likeProfileId=" + likeProfileId +"&likeTweetId=" + likeTweetId))
 	}
 
-	getLikeBytweetId (likeTweetId : string ) : Observable<Like[]> {
+	getLikeBytweetId (likeTweetId : number) : Observable<Like[]> {
 	return(this.http.get<Like[]>(this.likeUrl + likeTweetId))
 	}
 
