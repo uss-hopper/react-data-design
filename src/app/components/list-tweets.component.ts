@@ -39,7 +39,7 @@ export class ListTweetsComponent implements OnInit{
 
 
 	listTweets(): void {
-		this.tweetService.getAlltweets()
+		this.tweetService.getAllTweets()
 			.subscribe(tweets => this.tweets = tweets);
 
 		for (this.tweet of this.tweets) {
