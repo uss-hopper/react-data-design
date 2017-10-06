@@ -4,9 +4,22 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script>
+			(function() {
+				var basePath = "/";
+				var baseIndex = location.pathname.split("/").findIndex(function(directory) {
+					return(directory === "public_html");
+				});
+				if(baseIndex >= 0) {
+					basePath = location.pathname.split("/").splice(0, baseIndex + 1).join("/") + "/";
+				}
+				window["_base_href"] = basePath;
+				document.write("<base href=\"" + basePath + "\" />");
+			})();
+		</script>
 
 
-		<title>Twitter Data Design Example</title>
+		<title>DDC-Twitter</title>
 	</head>
 	<body>
 		<data-design-app>Loading&hellip;</data-design-app>
