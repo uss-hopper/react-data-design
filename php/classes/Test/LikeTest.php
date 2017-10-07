@@ -48,6 +48,12 @@ class LikeTest extends DataDesignTest {
 	 */
 	protected $VALID_SALT;
 
+	/**
+	 * valid activationToken to create the profile object to own the test
+	 * @var string $VALID_ACTIVATION
+	 */
+	protected $VALID_ACTIVATION;
+
 
 
 
@@ -65,11 +71,11 @@ class LikeTest extends DataDesignTest {
 		$this->VALID_ACTIVATION = bin2hex(random_bytes(16));
 
 		// create and insert the mocked profile
-		$this->profile = new Profile(null, null,"@phpunit", "test@phpunit.de",$this->VALID_HASH, "+12125551212", $this->VALID_SALT);
+		$this->profile = new Profile(generateUuidV4(), null,"@phpunit", "test@phpunit.de",$this->VALID_HASH, "+12125551212", $this->VALID_SALT);
 		$this->profile->insert($this->getPDO());
 
 		// create the and insert the mocked tweet
-		$this->tweet = new Tweet(null, $this->profile->getProfileId(), "PHPUnit like test passing");
+		$this->tweet = new Tweet(generateUuidV4(), $this->profile->getProfileId(), "PHPUnit like test passing");
 		$this->tweet->insert($this->getPDO());
 
 		// calculate the date (just use the time the unit test was setup...)

@@ -31,11 +31,7 @@ require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
 abstract class DataDesignTest extends TestCase {
 	use TestCaseTrait;
 
-	/**
-	 * invalid id to use for an INT UNSIGNED field (maximum allowed INT UNSIGTNED in mySQL) + 1
-	 * @see https://dev.mysql.com/doc/refman/5.6/en/integer-types.html mySQL Integer Types
-	 * @var int INVALID_KEY
-	 **/
+
 	const INVALID_KEY = 4294967296;
 
 	/**
@@ -49,7 +45,7 @@ abstract class DataDesignTest extends TestCase {
 	 *
 	 * @return QueryDataSet assembled schema for PHPUnit
 	 **/
-	public final function getDataSet() {
+	public final function getDataSet() : QueryDataSet {
 		$dataset = new QueryDataSet($this->getConnection());
 
 		// add all the tables for the project here
@@ -68,7 +64,7 @@ abstract class DataDesignTest extends TestCase {
 	 * @see https://github.com/sebastianbergmann/dbunit/issues/37 TRUNCATE fails on tables which have foreign key constraints
 	 * @return Composite array containing delete and insert commands
 	 **/
-	public final function getSetUpOperation() {
+	public final function getSetUpOperation() : Composite {
 		return new Composite([
 			Factory::DELETE_ALL(),
 			Factory::INSERT()
@@ -80,7 +76,7 @@ abstract class DataDesignTest extends TestCase {
 	 *
 	 * @return Operation delete command for the database
 	 **/
-	public final function getTearDownOperation() {
+	public final function getTearDownOperation() : Operation {
 		return(Factory::DELETE_ALL());
 	}
 
@@ -90,7 +86,7 @@ abstract class DataDesignTest extends TestCase {
 	 * @see <https://phpunit.de/manual/current/en/database.html#database.configuration-of-a-phpunit-database-testcase>
 	 * @return Connection PHPUnit database connection interface
 	 **/
-	public final function getConnection() {
+	public final function getConnection() : Connection {
 		// if the connection hasn't been established, create it
 		if($this->connection === null) {
 			// connect to mySQL and provide the interface to PHPUnit
