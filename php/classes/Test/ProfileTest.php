@@ -85,6 +85,7 @@ class ProfileTest extends DataDesignTest {
 
 		$profileId = generateUuidV4();
 		$profile = new Profile($profileId, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE, $this->VALID_SALT);
+		$profile->insert($this->getPDO());
 
 		//var_dump($profile);
 

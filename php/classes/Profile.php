@@ -1,6 +1,9 @@
 <?php
 
 namespace Edu\Cnm\DataDesign;
+require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
+use Ramsey\Uuid\Uuid;
+
 
 /**
  * Cross Section of a Twitter Profile
@@ -12,9 +15,10 @@ namespace Edu\Cnm\DataDesign;
  * @version 4.0.0
  **/
 class Profile implements \JsonSerializable {
+	use ValidateUuid;
 	/**
 	 * id for this Profile; this is the primary key
-	 * @var int $profileId
+	 * @var Uuid $profileId
 	 **/
 	private $profileId;
 
@@ -318,7 +322,6 @@ class Profile implements \JsonSerializable {
 	 * @param string $newProfileSalt
 	 * @throws \InvalidArgumentException if the salt is not secure
 	 * @throws \RangeException if the salt is not 64 characters
-	 * @throws \TypeError if profile salt is not a string
 	 */
 	public function setProfileSalt(string $newProfileSalt): void {
 		//enforce that the salt is properly formatted
@@ -344,13 +347,12 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function insert(\PDO $pdo): void {
 
 
 		// create query template
-		$query = "INSERT INTO profile(profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt) VALUES (:profileActivationToken, :profileAtHandle, :profileEmail, :profileHash, :profilePhone, :profileSalt)";
+		$query = "INSERT INTO profile(profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt) VALUES (:profileId, :profileActivationToken, :profileAtHandle, :profileEmail, :profileHash, :profilePhone, :profileSalt)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
@@ -367,7 +369,6 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function delete(\PDO $pdo): void {
 		// enforce the profileId is not null (i.e., don't delete a profile that does not exist)
@@ -390,13 +391,12 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function update(\PDO $pdo): void {
 
 
 		// create query template
-		$query = "UPDATE profile SET profileActivationToken = :profileActivationToken, profileAtHandle = :profileAtHandle, profileEmail = :profileEmail, profileHash = :profileHash, profilePhone = :profilePhone, profileSalt = :profileSalt WHERE profileId = :profileId";
+		$query = "UPDATE profile SET profileId = :profileId, profileActivationToken = :profileActivationToken, profileAtHandle = :profileAtHandle, profileEmail = :profileEmail, profileHash = :profileHash, profilePhone = :profilePhone, profileSalt = :profileSalt WHERE profileId = :profileId";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
