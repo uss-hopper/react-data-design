@@ -12,7 +12,7 @@ CREATE TABLE profile (
 -- this creates the attribute for the primary key
 -- auto_increment tells mySQL to number them {1, 2, 3, ...}
 -- not null means the attribute is required!
-	profileId INT UNSIGNED AUTO_INCREMENT NOT NULL,
+	profileId BINARY(16) NOT NULL,
 	profileActivationToken CHAR(32),
 	profileAtHandle VARCHAR(32) NOT NULL,
 -- to make sure duplicate data cannot exist, create a unique index
@@ -30,9 +30,9 @@ CREATE TABLE profile (
 -- create the tweet entity
 CREATE TABLE tweet (
 	-- this is for yet another primary key...
-	tweetId INT UNSIGNED AUTO_INCREMENT NOT NULL,
+	tweetId BINARY(16) NOT NULL,
 	-- this is for a foreign key; auto_incremented is omitted by design
-	tweetProfileId INT UNSIGNED NOT NULL,
+	tweetProfileId BINARY(16) NOT NULL,
 	tweetContent VARCHAR(140) NOT NULL,
 	-- notice dates don't need a size parameter
 	tweetDate DATETIME NOT NULL,
@@ -47,8 +47,8 @@ CREATE TABLE tweet (
 -- create the like entity (a weak entity from an m-to-n for profile --> tweet)
 CREATE TABLE `like` (
 	-- these are not auto_increment because they're still foreign keys
-	likeProfileId INT UNSIGNED NOT NULL,
-	likeTweetId INT UNSIGNED NOT NULL,
+	likeProfileId BINARY(16) NOT NULL,
+	likeTweetId BINARY(16) NOT NULL,
 	likeDate DATETIME NOT NULL,
 	-- index the foreign keys
 	INDEX(likeProfileId),
