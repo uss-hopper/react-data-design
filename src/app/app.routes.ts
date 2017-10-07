@@ -16,8 +16,7 @@ import {SignInService} from "./services/sign-in.service";
 import {SignUpService} from "./services/sign-up.service";
 import {TweetService} from "./services/tweet.service";
 
-//import all needed interceptors
-
+//import all needed Interceptors
 import {APP_BASE_HREF} from "@angular/common";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {DeepDiveInterceptor} from "./services/deep.dive.interceptor";
@@ -35,12 +34,12 @@ export const routes: Routes = [
 const services : any[] = [LikeService, ProfileService, SignInService,  SignUpService, TweetService];
 
 // an array of misc providers
-const interceptors : any[] = [
+const provides : any[] = [
 	{provide: APP_BASE_HREF, useValue: window["_base_href"]},
 	{provide: HTTP_INTERCEPTORS, useClass: DeepDiveInterceptor, multi: true},
 
 ];
 
-export const appRoutingProviders: any[] = [interceptors, services];
+export const appRoutingProviders: any[] = [provides, services];
 
 export const routing = RouterModule.forRoot(routes);

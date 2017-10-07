@@ -3,6 +3,8 @@ namespace Edu\Cnm\DataDesign;
 
 require_once("autoload.php");
 
+use Ramsey\Uuid\Uuid;
+
 /**
  * Small Cross Section of a Twitter like Message
  *
@@ -14,6 +16,7 @@ require_once("autoload.php");
  **/
 class Tweet implements \JsonSerializable {
 	use ValidateDate;
+	use ValidateUuid;
 	/**
 	 * id for this Tweet; this is the primary key
 	 * @var int $tweetId
@@ -38,8 +41,8 @@ class Tweet implements \JsonSerializable {
 	/**
 	 * constructor for this Tweet
 	 *
-	 * @param int|null $newTweetId id of this Tweet or null if a new Tweet
-	 * @param int $newTweetProfileId id of the Profile that sent this Tweet
+	 * @param string|Uuid $newTweetId id of this Tweet or null if a new Tweet
+	 * @param string|Uuid $newTweetProfileId id of the Profile that sent this Tweet
 	 * @param string $newTweetContent string containing actual tweet data
 	 * @param \DateTime|string|null $newTweetDate date and time Tweet was sent or null if set to current date and time
 	 * @throws \InvalidArgumentException if data types are not valid
@@ -48,7 +51,7 @@ class Tweet implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
-	public function __construct(?int $newTweetId, int $newTweetProfileId, string $newTweetContent, $newTweetDate = null) {
+	public function __construct($newTweetId, $newTweetProfileId, string $newTweetContent, $newTweetDate = null) {
 		try {
 			$this->setTweetId($newTweetId);
 			$this->setTweetProfileId($newTweetProfileId);
@@ -78,20 +81,16 @@ class Tweet implements \JsonSerializable {
 	 * @throws \RangeException if $newTweetId is not positive
 	 * @throws \TypeError if $newTweetId is not an integer
 	 **/
-	public function setTweetId(?int $newTweetId) : void {
-		//if tweet id is null immediately return it
-		if($newTweetId === null) {
-			$this->tweetId = null;
-			return;
-		}
-
-		// verify the tweet id is positive
-		if($newTweetId <= 0) {
-			throw(new \RangeException("tweet id is not positive"));
+	public function setTweetId( $newTweetId) : void {
+		try {
+			$uuid = self::validateUuid($newTweetId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 
 		// convert and store the tweet id
-		$this->tweetId = $newTweetId;
+		$this->tweetId = $uuid;
 	}
 
 	/**
@@ -110,15 +109,16 @@ class Tweet implements \JsonSerializable {
 	 * @throws \RangeException if $newProfileId is not positive
 	 * @throws \TypeError if $newProfileId is not an integer
 	 **/
-	public function setTweetProfileId(int $newTweetProfileId) : void {
-
-		// verify the profile id is positive
-		if($newTweetProfileId <= 0) {
-			throw(new \RangeException("tweet profile id is not positive"));
+	public function setTweetProfileId( $newTweetProfileId) : void {
+		try {
+			$uuid = self::validateUuid($newTweetProfileId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 
 		// convert and store the profile id
-		$this->tweetProfileId = $newTweetProfileId;
+		$this->tweetProfileId = $uuid;
 	}
 
 	/**
@@ -207,7 +207,9 @@ class Tweet implements \JsonSerializable {
 
 		// bind the member variables to the place holders in the template
 		$formattedDate = $this->tweetDate->format("Y-m-d H:i:s.u");
-		$parameters = ["tweetProfileId" => $this->tweetProfileId, "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate];
+		$formattedTweetId = $this->tweetId->getBytes();
+		$formattedtweetProfileId = $this->tweetProfileId->getBytes();
+		$parameters = ["tweetId" => $formattedTweetId, "tweetProfileId" => $formattedtweetProfileId, "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate];
 		$statement->execute($parameters);
 
 		// update the null tweetId with what mySQL just gave us
@@ -255,8 +257,10 @@ class Tweet implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
+		$formattedTweetId = $this->tweetId->getBytes();
+		$formattedProfileId = $this->tweetProfileId->getBytes();
 		$formattedDate = $this->tweetDate->format("Y-m-d H:i:s.u");
-		$parameters = ["tweetProfileId" => $this->tweetProfileId, "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate, "tweetId" => $this->tweetId];
+		$parameters = ["tweetProfileId" => $formattedProfileId, "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate, "tweetId" => $formattedTweetId];
 		$statement->execute($parameters);
 	}
 
@@ -264,15 +268,17 @@ class Tweet implements \JsonSerializable {
 	 * gets the Tweet by tweetId
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param int $tweetId tweet id to search for
+	 * @param string $tweetId tweet id to search for
 	 * @return Tweet|null Tweet found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getTweetByTweetId(\PDO $pdo, int $tweetId) : ?Tweet {
+	public static function getTweetByTweetId(\PDO $pdo, string $tweetId) : ?Tweet {
 		// sanitize the tweetId before searching
-		if($tweetId <= 0) {
-			throw(new \PDOException("tweet id is not positive"));
+		try {
+			$tweetId = self::validateUuid($tweetId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
 		// create query template
@@ -280,7 +286,7 @@ class Tweet implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		// bind the tweet id to the place holder in the template
-		$parameters = ["tweetId" => $tweetId];
+		$parameters = ["tweetId" => $tweetId->getBytes()];
 		$statement->execute($parameters);
 
 		// grab the tweet from mySQL
@@ -302,16 +308,19 @@ class Tweet implements \JsonSerializable {
 	 * gets the Tweet by profile id
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param int $tweetProfileId profile id to search by
+	 * @param string $tweetProfileId profile id to search by
 	 * @return \SplFixedArray SplFixedArray of Tweets found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getTweetByTweetProfileId(\PDO $pdo, int $tweetProfileId) : \SPLFixedArray {
-		// sanitize the profile id before searching
-		if($tweetProfileId <= 0) {
-			throw(new \RangeException("tweet profile id must be positive"));
+	public static function getTweetByTweetProfileId(\PDO $pdo, string  $tweetProfileId) : \SPLFixedArray {
+
+		try {
+			$tweetProfileId = self::validateUuid($tweetProfileId->getBytes());
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
+
 		// create query template
 		$query = "SELECT tweetId, tweetProfileId, tweetContent, tweetDate FROM tweet WHERE tweetProfileId = :tweetProfileId";
 		$statement = $pdo->prepare($query);
