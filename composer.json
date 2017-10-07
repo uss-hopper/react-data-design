@@ -1,10 +1,13 @@
 {
 	"require": {
+		"apigen/apigen": "dev-master",
 		"guzzlehttp/guzzle": "@stable",
-		"phpdocumentor/phpdocumentor": "@stable",
+		"phpdocumentor/reflection-docblock": "@stable",
 		"phpunit/dbunit": "@stable",
 		"phpunit/phpunit": "@stable",
-		"swiftmailer/swiftmailer": "@stable"
+		"swiftmailer/swiftmailer": "@stable",
+		"ramsey/uuid": "@stable",
+		"roave/better-reflection": "dev-master#a402048"
 	},
 
 	"scripts":{

@@ -99,11 +99,11 @@ class Profile implements \JsonSerializable {
 	/**
 	 * mutator method for profile id
 	 *
-	 * @param int|null $newProfileId value of new profile id
+	 * @param  $newProfileId value of new profile id
 	 * @throws \RangeException if $newProfileId is not positive
 	 * @throws \TypeError if $newProfileId is not an integer
 	 **/
-	public function setProfileId(?int $newProfileId): void {
+	public function setProfileId( $newProfileId): void {
 
 		try {
 			$uuid = self::validateUuid($newProfileId);
@@ -393,10 +393,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function update(\PDO $pdo): void {
-		// enforce the profileId is not null (i.e., don't update a profile that does not exist)
-		if($this->profileId === null) {
-			throw(new \PDOException("unable to delete a profile that does not exist"));
-		}
+
 
 		// create query template
 		$query = "UPDATE profile SET profileActivationToken = :profileActivationToken, profileAtHandle = :profileAtHandle, profileEmail = :profileEmail, profileHash = :profileHash, profilePhone = :profilePhone, profileSalt = :profileSalt WHERE profileId = :profileId";
