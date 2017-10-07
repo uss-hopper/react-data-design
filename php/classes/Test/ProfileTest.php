@@ -6,6 +6,8 @@ use Edu\Cnm\DataDesign\Profile;
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
 
+// grab the uuid generator
+require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
 /**
  * Full PHPUnit test for the Profile class
@@ -180,7 +182,7 @@ class ProfileTest extends DataDesignTest {
 	 **/
 	public function testGetInvalidProfileByProfileId() : void {
 		// grab a profile id that exceeds the maximum allowable profile id
-		$fakeProfileId = generateUuid4();
+		$fakeProfileId = generateUuidV4();
 		$profile = Profile::getProfileByProfileId($this->getPDO(), $fakeProfileId );
 		$this->assertNull($profile);
 	}

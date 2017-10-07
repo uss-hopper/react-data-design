@@ -6,6 +6,9 @@ use Edu\Cnm\DataDesign\{Profile, Tweet};
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
 
+// grab the uuid generator
+require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
+
 /**
  * Full PHPUnit test for the Tweet class
  *
@@ -75,7 +78,7 @@ class TweetTest extends DataDesignTest {
 
 
 		// create and insert a Profile to own the test Tweet
-		$this->profile = new Profile(null, null,"@handle", "test@phpunit.de",$this->VALID_PROFILE_HASH, "+12125551212", $this->VALID_PROFILE_SALT);
+		$this->profile = new Profile(generateUuidV4(), null,"@handle", "test@phpunit.de",$this->VALID_PROFILE_HASH, "+12125551212", $this->VALID_PROFILE_SALT);
 		$this->profile->insert($this->getPDO());
 
 		// calculate the date (just use the time the unit test was setup...)
@@ -101,27 +104,18 @@ class TweetTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("tweet");
 
 		// create a new Tweet and insert to into mySQL
-		$tweet = new Tweet(null, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
+		$tweetId = generateUuidV4();
+		$tweet = new Tweet($tweetId, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
 		$tweet->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoTweet = Tweet::getTweetByTweetId($this->getPDO(), $tweet->getTweetId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
+		$this->assertEquals($pdoTweet->getTweetId(), $tweetId);
 		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
 		//format the date too seconds since the beginning of time to avoid round off error
 		$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
-	}
-
-	/**
-	 * test inserting a Tweet that already exists
-	 *
-	 * @expectedException \PDOException
-	 **/
-	public function testInsertInvalidTweet() : void {
-		// create a Tweet with a non null tweet id and watch it fail
-		$tweet = new Tweet(DataDesignTest::INVALID_KEY, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
-		$tweet->insert($this->getPDO());
 	}
 
 	/**
@@ -132,7 +126,8 @@ class TweetTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("tweet");
 
 		// create a new Tweet and insert to into mySQL
-		$tweet = new Tweet(null, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
+		$tweetId = generateUuidV4();
+		$tweet = new Tweet($tweetId, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
 		$tweet->insert($this->getPDO());
 
 		// edit the Tweet and update it in mySQL
@@ -141,6 +136,7 @@ class TweetTest extends DataDesignTest {
 
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoTweet = Tweet::getTweetByTweetId($this->getPDO(), $tweet->getTweetId());
+		$this->assertEquals($pdoTweet->getTweetId(), $tweetId);
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
 		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT2);
@@ -148,16 +144,6 @@ class TweetTest extends DataDesignTest {
 		$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
 	}
 
-	/**
-	 * test updating a Tweet that does not exist
-	 *
-	 * @expectedException \PDOException
-	 **/
-	public function testUpdateInvalidTweet() : void {
-		// create a Tweet with a non null tweet id and watch it fail
-		$tweet = new Tweet(null, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
-		$tweet->update($this->getPDO());
-	}
 
 	/**
 	 * test creating a Tweet and then deleting it
@@ -167,7 +153,8 @@ class TweetTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("tweet");
 
 		// create a new Tweet and insert to into mySQL
-		$tweet = new Tweet(null, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
+		$tweetId = generateUuidV4();
+		$tweet = new Tweet($tweetId, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
 		$tweet->insert($this->getPDO());
 
 		// delete the Tweet from mySQL
@@ -180,23 +167,14 @@ class TweetTest extends DataDesignTest {
 		$this->assertEquals($numRows, $this->getConnection()->getRowCount("tweet"));
 	}
 
-	/**
-	 * test deleting a Tweet that does not exist
-	 *
-	 * @expectedException \PDOException
-	 **/
-	public function testDeleteInvalidTweet() : void {
-		// create a Tweet and try to delete it without actually inserting it
-		$tweet = new Tweet(null, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
-		$tweet->delete($this->getPDO());
-	}
+
 
 	/**
 	 * test grabbing a Tweet that does not exist
 	 **/
 	public function testGetInvalidTweetByTweetId() : void {
 		// grab a profile id that exceeds the maximum allowable profile id
-		$tweet = Tweet::getTweetByTweetId($this->getPDO(), DataDesignTest::INVALID_KEY);
+		$tweet = Tweet::getTweetByTweetId($this->getPDO(), generateUuidV4());
 		$this->assertNull($tweet);
 	}
 
@@ -208,7 +186,8 @@ class TweetTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("tweet");
 
 		// create a new Tweet and insert to into mySQL
-		$tweet = new Tweet(null, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
+		$tweetId = generateUuidV4();
+		$tweet = new Tweet($tweetId, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
 		$tweet->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
@@ -219,6 +198,7 @@ class TweetTest extends DataDesignTest {
 
 		// grab the result from the array and validate it
 		$pdoTweet = $results[0];
+		$this->assertEquals($pdoTweet->getTweetId(), $tweetId);
 		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
 		//format the date too seconds since the beginning of time to avoid round off error
@@ -230,7 +210,7 @@ class TweetTest extends DataDesignTest {
 	 **/
 	public function testGetInvalidTweetByTweetProfileId() : void {
 		// grab a profile id that exceeds the maximum allowable profile id
-		$tweet = Tweet::getTweetByTweetProfileId($this->getPDO(), DataDesignTest::INVALID_KEY);
+		$tweet = Tweet::getTweetByTweetProfileId($this->getPDO(), generateUuidV4());
 		$this->assertCount(0, $tweet);
 	}
 
@@ -242,7 +222,8 @@ class TweetTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("tweet");
 
 		// create a new Tweet and insert to into mySQL
-		$tweet = new Tweet(null, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
+		$tweetId = generateUuidV4();
+		$tweet = new Tweet($tweetId, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
 		$tweet->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
@@ -255,6 +236,7 @@ class TweetTest extends DataDesignTest {
 
 		// grab the result from the array and validate it
 		$pdoTweet = $results[0];
+		$this->assertEquals($pdoTweet->getTweetId(), $tweetId);
 		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
 		//format the date too seconds since the beginning of time to avoid round off error
@@ -278,8 +260,9 @@ class TweetTest extends DataDesignTest {
 		//count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("tweet");
 
-		//create a new Tweet and insert it into the database
-		$tweet = new Tweet(null, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
+		// create a new Tweet and insert to into mySQL
+		$tweetId = generateUuidV4();
+		$tweet = new Tweet($tweetId, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
 		$tweet->insert($this->getPDO());
 
 		// grab the tweet from the database and see if it matches expectations
@@ -292,7 +275,7 @@ class TweetTest extends DataDesignTest {
 
 		//use the first result to make sure that the inserted tweet meets expectations
 		$pdoTweet = $results[0];
-		$this->assertEquals($pdoTweet->getTweetId(), $tweet->getTweetId());
+		$this->assertEquals($pdoTweet->getTweetId(), $tweetId);
 		$this->assertEquals($pdoTweet->getTweetProfileId(), $tweet->getTweetProfileId());
 		$this->assertEquals($pdoTweet->getTweetContent(), $tweet->getTweetContent());
 		$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
@@ -307,7 +290,8 @@ class TweetTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("tweet");
 
 		// create a new Tweet and insert to into mySQL
-		$tweet = new Tweet(null, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
+		$tweetId = generateUuidV4();
+		$tweet = new Tweet($tweetId, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
 		$tweet->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
@@ -318,6 +302,7 @@ class TweetTest extends DataDesignTest {
 
 		// grab the result from the array and validate it
 		$pdoTweet = $results[0];
+		$this->assertEquals($pdoTweet->getTweetId(), $tweetId);
 		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
 		//format the date too seconds since the beginning of time to avoid round off error
