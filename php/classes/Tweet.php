@@ -2,6 +2,7 @@
 namespace Edu\Cnm\DataDesign;
 
 require_once("autoload.php");
+require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
 use Ramsey\Uuid\Uuid;
 
@@ -19,12 +20,12 @@ class Tweet implements \JsonSerializable {
 	use ValidateUuid;
 	/**
 	 * id for this Tweet; this is the primary key
-	 * @var int $tweetId
+	 * @var Uuid $tweetId
 	 **/
 	private $tweetId;
 	/**
 	 * id of the Profile that sent this Tweet; this is a foreign key
-	 * @var int $tweetProfileId
+	 * @var Uuid $tweetProfileId
 	 **/
 	private $tweetProfileId;
 	/**
@@ -68,16 +69,16 @@ class Tweet implements \JsonSerializable {
 	/**
 	 * accessor method for tweet id
 	 *
-	 * @return int|null value of tweet id
+	 * @return Uuid value of tweet id
 	 **/
-	public function getTweetId() : int {
+	public function getTweetId() : Uuid {
 		return($this->tweetId);
 	}
 
 	/**
 	 * mutator method for tweet id
 	 *
-	 * @param int|null $newTweetId new value of tweet id
+	 * @param Uuid/string $newTweetId new value of tweet id
 	 * @throws \RangeException if $newTweetId is not positive
 	 * @throws \TypeError if $newTweetId is not an integer
 	 **/
@@ -96,16 +97,16 @@ class Tweet implements \JsonSerializable {
 	/**
 	 * accessor method for tweet profile id
 	 *
-	 * @return int value of tweet profile id
+	 * @return Uuid value of tweet profile id
 	 **/
-	public function getTweetProfileId() : int{
+	public function getTweetProfileId() : Uuid{
 		return($this->tweetProfileId);
 	}
 
 	/**
 	 * mutator method for tweet profile id
 	 *
-	 * @param int $newTweetProfileId new value of tweet profile id
+	 * @param string | Uuid $newTweetProfileId new value of tweet profile id
 	 * @throws \RangeException if $newProfileId is not positive
 	 * @throws \TypeError if $newProfileId is not an integer
 	 **/
@@ -193,27 +194,17 @@ class Tweet implements \JsonSerializable {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function insert(\PDO $pdo) : void {
-		// enforce the tweetId is null (i.e., don't insert a tweet that already exists)
-		if($this->tweetId !== null) {
-			throw(new \PDOException("not a new tweet"));
-		}
 
 		// create query template
-		$query = "INSERT INTO tweet(tweetProfileId, tweetContent, tweetDate) VALUES(:tweetProfileId, :tweetContent, :tweetDate)";
+		$query = "INSERT INTO tweet(tweetId,tweetProfileId, tweetContent, tweetDate) VALUES(:tweetId, :tweetProfileId, :tweetContent, :tweetDate)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
 		$formattedDate = $this->tweetDate->format("Y-m-d H:i:s.u");
-		$formattedTweetId = $this->tweetId->getBytes();
-		$formattedtweetProfileId = $this->tweetProfileId->getBytes();
-		$parameters = ["tweetId" => $formattedTweetId, "tweetProfileId" => $formattedtweetProfileId, "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate];
+		$parameters = ["tweetId" => $this->tweetId->getBytes(), "tweetProfileId" => $this->tweetProfileId->getBytes(), "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate];
 		$statement->execute($parameters);
-
-		// update the null tweetId with what mySQL just gave us
-		$this->tweetId = intval($pdo->lastInsertId());
 	}
 
 
@@ -225,10 +216,6 @@ class Tweet implements \JsonSerializable {
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function delete(\PDO $pdo) : void {
-		// enforce the tweetId is not null (i.e., don't delete a tweet that hasn't been inserted)
-		if($this->tweetId === null) {
-			throw(new \PDOException("unable to delete a tweet that does not exist"));
-		}
 
 		// create query template
 		$query = "DELETE FROM tweet WHERE tweetId = :tweetId";
@@ -247,10 +234,6 @@ class Tweet implements \JsonSerializable {
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function update(\PDO $pdo) : void {
-		// enforce the tweetId is not null (i.e., don't update a tweet that hasn't been inserted)
-		if($this->tweetId === null) {
-			throw(new \PDOException("unable to update a tweet that does not exist"));
-		}
 
 		// create query template
 		$query = "UPDATE tweet SET tweetProfileId = :tweetProfileId, tweetContent = :tweetContent, tweetDate = :tweetDate WHERE tweetId = :tweetId";
@@ -316,7 +299,7 @@ class Tweet implements \JsonSerializable {
 	public static function getTweetByTweetProfileId(\PDO $pdo, string  $tweetProfileId) : \SPLFixedArray {
 
 		try {
-			$tweetProfileId = self::validateUuid($tweetProfileId->getBytes());
+			$tweetProfileId = self::validateUuid($tweetProfileId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
@@ -388,65 +371,6 @@ class Tweet implements \JsonSerializable {
 		return($tweets);
 	}
 
-
-	/**
-	 * gets an array of tweets based on its date
-	 * (this is an optional get by method and has only been added for when specific edge cases arise in capstone projects)
-	 *
-	 * @param \PDO $pdo connection object
-	 * @param \DateTime $sunriseTweetDate beginning date to search for
-	 * @param \DateTime $sunsetTweetDate ending date to search for
-	 * @return \SplFixedArray of tweets found
-	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError when variables are not the correct data type
-	 * @throws \InvalidArgumentException if either sun dates are in the wrong format
-	 */
-	public static function getTweetByTweetDate (\PDO $pdo, \DateTime $sunriseTweetDate, \DateTime $sunsetTweetDate ) : \SplFixedArray {
-		//enforce both date are present
-		if((empty ($sunriseTweetDate) === true) || (empty($sunsetTweetDate) === true)) {
-			throw (new \InvalidArgumentException("dates are empty of insecure"));
-		}
-
-		//ensure both dates are in the correct format and are secure
-		try {
-			$sunriseTweetDate = self::validateDateTime($sunriseTweetDate);
-			$sunsetTweetDate = self::validateDateTime($sunsetTweetDate);
-
-		} catch(\InvalidArgumentException | \RangeException $exception) {
-			$exceptionType = get_class($exception);
-			throw(new $exceptionType($exception->getMessage(), 0, $exception));
-		}
-
-		//create query template
-		$query = "SELECT tweetId, tweetProfileId, tweetContent, tweetDate from tweet WHERE tweetDate >= :sunriseTweetDate AND tweetDate <= :sunsetTweetDate";
-		$statement = $pdo->prepare($query);
-
-
-		//format the dates so that mySQL can use them
-		$formattedSunriseDate = $sunriseTweetDate->format("Y-m-d H:i:s.u");
-		$formattedSunsetDate = $sunsetTweetDate->format("Y-m-d H:i:s.u");
-
-		$parameters = ["sunriseTweetDate" => $formattedSunriseDate, "sunsetTweetDate" => $formattedSunsetDate];
-		$statement->execute($parameters);
-
-
-		//build an array of tweets
-		$tweets = new \SplFixedArray($statement->rowCount());
-		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-
-		while(($row = $statement->fetch())  !== false) {
-			try {
-
-				$tweet = new Tweet($row["tweetId"], $row["tweetProfileId"],$row["tweetContent"], $row["tweetDate"]);
-				$tweets[$tweets->key()] = $tweet;
-				$tweets->next();
-			} catch(\Exception $exception) {
-				throw (new \PDOException($exception->getMessage(),0, $exception));
-			}
-		}
-		return($tweets);
-	}
-
 	/**
 	 * gets all Tweets
 	 *
@@ -484,6 +408,10 @@ class Tweet implements \JsonSerializable {
 	 **/
 	public function jsonSerialize() {
 		$fields = get_object_vars($this);
+
+		$fields["tweetId"] = $this->tweetId;
+		$fields["tweetProfileId"] = $this->tweetProfileId;
+
 		//format the date so that the front end can consume it
 		$fields["tweetDate"] = round(floatval($this->tweetDate->format("U.u")) * 1000);
 		return($fields);
