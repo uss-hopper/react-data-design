@@ -6,6 +6,7 @@
 		"phpunit/dbunit": "@stable",
 		"phpunit/phpunit": "@stable",
 		"swiftmailer/swiftmailer": "@stable",
+		"lcobucci/jwt": "3.2",
 		"ramsey/uuid": "@stable",
 		"roave/better-reflection": "dev-master#a402048"
 	},
