@@ -80,7 +80,7 @@ class Tweet implements \JsonSerializable {
 	 *
 	 * @param Uuid/string $newTweetId new value of tweet id
 	 * @throws \RangeException if $newTweetId is not positive
-	 * @throws \TypeError if $newTweetId is not an integer
+	 * @throws \TypeError if $newTweetId is not a uuid or string
 	 **/
 	public function setTweetId( $newTweetId) : void {
 		try {
@@ -108,7 +108,7 @@ class Tweet implements \JsonSerializable {
 	 *
 	 * @param string | Uuid $newTweetProfileId new value of tweet profile id
 	 * @throws \RangeException if $newProfileId is not positive
-	 * @throws \TypeError if $newProfileId is not an integer
+	 * @throws \TypeError if $newTweetProfileId is not an integer
 	 **/
 	public function setTweetProfileId( $newTweetProfileId) : void {
 		try {
@@ -194,6 +194,7 @@ class Tweet implements \JsonSerializable {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function insert(\PDO $pdo) : void {
 
@@ -241,7 +242,7 @@ class Tweet implements \JsonSerializable {
 
 
 		$formattedDate = $this->tweetDate->format("Y-m-d H:i:s.u");
-		$parameters = ["tweetProfileId" => $this->tweetId->getBytes(), "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate, "tweetId" => $this->tweetId->getBytes()];
+		$parameters = ["tweetId" => $this->tweetId->getBytes(),"tweetProfileId" => $this->tweetId->getBytes(), "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate];
 		$statement->execute($parameters);
 	}
 
@@ -252,7 +253,7 @@ class Tweet implements \JsonSerializable {
 	 * @param string $tweetId tweet id to search for
 	 * @return Tweet|null Tweet found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError when variables are not the correct data type
+	 * @throws \TypeError when a variable are not the correct data type
 	 **/
 	public static function getTweetByTweetId(\PDO $pdo, string $tweetId) : ?Tweet {
 		// sanitize the tweetId before searching

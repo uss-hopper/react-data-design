@@ -71,6 +71,7 @@ class Profile implements \JsonSerializable {
 	 * @param string $newProfileSalt string containing passowrd salt
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
+	 * @throws \TypeError if a data type violates a data hint
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
@@ -104,6 +105,7 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @param  Uuid| string $newProfileId value of new profile id
 	 * @throws \RangeException if $newProfileId is not positive
+	 * @throws \TypeError if the profile Id is not
 	 **/
 	public function setProfileId( $newProfileId): void {
 
@@ -320,6 +322,7 @@ class Profile implements \JsonSerializable {
 	 * @param string $newProfileSalt
 	 * @throws \InvalidArgumentException if the salt is not secure
 	 * @throws \RangeException if the salt is not 64 characters
+	 * @throws \TypeError if the profile salt is not a string
 	 */
 	public function setProfileSalt(string $newProfileSalt): void {
 		//enforce that the salt is properly formatted
@@ -345,6 +348,7 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function insert(\PDO $pdo): void {
 
@@ -365,6 +369,7 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function delete(\PDO $pdo): void {
 		// enforce the profileId is not null (i.e., don't delete a profile that does not exist)
@@ -396,8 +401,8 @@ class Profile implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$formattedProfileId = $this->profileId->getBytes();
-		$parameters = ["profileId" => $formattedProfileId, "profileActivationToken" => $this->profileActivationToken, "profileAtHandle" => $this->profileAtHandle, "profileEmail" => $this->profileEmail, "profileHash" => $this->profileHash, "profilePhone" => $this->profilePhone, "profileSalt" => $this->profileSalt];
+
+		$parameters = ["profileId" => $this->profileId->getBytes(), "profileActivationToken" => $this->profileActivationToken, "profileAtHandle" => $this->profileAtHandle, "profileEmail" => $this->profileEmail, "profileHash" => $this->profileHash, "profilePhone" => $this->profilePhone, "profileSalt" => $this->profileSalt];
 		$statement->execute($parameters);
 	}
 
@@ -408,6 +413,7 @@ class Profile implements \JsonSerializable {
 	 * @param string $profileId profile Id to search for
 	 * @return Profile|null Profile or null if not found
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
 	 **/
 	public static function getProfileByProfileId(\PDO $pdo, string $profileId):?Profile {
 		// sanitize the profile id before searching
