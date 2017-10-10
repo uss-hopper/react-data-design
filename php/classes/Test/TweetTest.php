@@ -198,6 +198,8 @@ class TweetTest extends DataDesignTest {
 
 		// grab the result from the array and validate it
 		$pdoTweet = $results[0];
+
+		var_dump($tweet->getTweetDate(), $pdoTweet->getTweetDate());
 		$this->assertEquals($pdoTweet->getTweetId(), $tweetId);
 		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
