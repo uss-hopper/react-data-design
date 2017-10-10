@@ -117,11 +117,9 @@ class ProfileTest extends DataDesignTest {
 		$profile->setProfileAtHandle($this->VALID_ATHANDLE2);
 		$profile->update($this->getPDO());
 
-		var_dump($profile);
-
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId());
-		 var_dump($pdoProfile);
+
 
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("profile"));
 		$this->assertEquals($pdoProfile->getProfileId(), $profileId);

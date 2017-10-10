@@ -72,7 +72,7 @@ class Like implements \JsonSerializable {
 	/**
 	 * mutator method for profile id
 	 *
-	 * @param int $newProfileId new value of profile id
+	 * @param string  $newProfileId new value of profile id
 	 * @throws \RangeException if $newProfileId is not positive
 	 * @throws \TypeError if $newProfileId is not an integer
 	 **/
@@ -99,11 +99,11 @@ class Like implements \JsonSerializable {
 	/**
 	 * mutator method for tweet id
 	 *
-	 * @param Uuid $newLikeTweetId new value of tweet id
+	 * @param string  $newLikeTweetId new value of tweet id
 	 * @throws \RangeException if $newTweetId is not positive
 	 * @throws \TypeError if $newTweetId is not an integer
 	 **/
-	public function setLikeTweetId(Uuid $newLikeTweetId) : void {
+	public function setLikeTweetId( $newLikeTweetId) : void {
 		try {
 			$uuid = self::validateUuid($newLikeTweetId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -216,7 +216,7 @@ class Like implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		// bind the tweet id and profile id to the place holder in the template
-		$parameters = ["likeProfileId" => $likeProfileId, "likeTweetId" => $likeTweetId];
+		$parameters = ["likeProfileId" => $likeProfileId->getBytes(), "likeTweetId" => $likeTweetId->getBytes()];
 		$statement->execute($parameters);
 
 		// grab the like from mySQL
@@ -254,7 +254,7 @@ class Like implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$parameters = ["likeProfileId" => $likeProfileId];
+		$parameters = ["likeProfileId" => $likeProfileId->getBytes()];
 		$statement->execute($parameters);
 
 		// build an array of likes
@@ -293,7 +293,7 @@ class Like implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$parameters = ["likeTweetId" => $likeTweetId];
+		$parameters = ["likeTweetId" => $likeTweetId->getBytes()];
 		$statement->execute($parameters);
 
 		// build the array of likes

@@ -35,7 +35,7 @@ CREATE TABLE tweet (
 	tweetProfileId BINARY(16) NOT NULL,
 	tweetContent VARCHAR(140) NOT NULL,
 	-- notice dates don't need a size parameter
-	tweetDate DATETIME NOT NULL,
+	tweetDate DATETIME(6) NOT NULL,
 	-- this creates an index before making a foreign key
 	INDEX(tweetProfileId),
 	-- this creates the actual foreign key relation
@@ -49,7 +49,7 @@ CREATE TABLE `like` (
 	-- these are not auto_increment because they're still foreign keys
 	likeProfileId BINARY(16) NOT NULL,
 	likeTweetId BINARY(16) NOT NULL,
-	likeDate DATETIME NOT NULL,
+	likeDate DATETIME(6) NOT NULL,
 	-- index the foreign keys
 	INDEX(likeProfileId),
 	INDEX(likeTweetId),

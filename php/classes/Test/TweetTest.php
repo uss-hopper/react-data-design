@@ -192,7 +192,6 @@ class TweetTest extends DataDesignTest {
 
 		// grab the data from mySQL and enforce the fields match our expectations
 		$results = Tweet::getTweetByTweetProfileId($this->getPDO(), $tweet->getTweetProfileId());
-		var_dump($results);
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
 		$this->assertCount(1, $results);
 		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Tweet", $results);
