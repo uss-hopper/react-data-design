@@ -192,6 +192,7 @@ class TweetTest extends DataDesignTest {
 
 		// grab the data from mySQL and enforce the fields match our expectations
 		$results = Tweet::getTweetByTweetProfileId($this->getPDO(), $tweet->getTweetProfileId());
+		var_dump($results);
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
 		$this->assertCount(1, $results);
 		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Tweet", $results);
@@ -252,35 +253,6 @@ class TweetTest extends DataDesignTest {
 		$this->assertCount(0, $tweet);
 	}
 
-	/**
-	 * test grabbing a valid Tweet by sunset and sunrise date
-	 *
-	 */
-	public function testGetValidTweetBySunDate() : void {
-		//count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("tweet");
-
-		// create a new Tweet and insert to into mySQL
-		$tweetId = generateUuidV4();
-		$tweet = new Tweet($tweetId, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
-		$tweet->insert($this->getPDO());
-
-		// grab the tweet from the database and see if it matches expectations
-		$results = Tweet::getTweetByTweetDate($this->getPDO(), $this->VALID_SUNRISEDATE, $this->VALID_SUNSETDATE);
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
-		$this->assertCount(1,$results);
-
-		//enforce that no other objects are bleeding into the test
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Tweet", $results);
-
-		//use the first result to make sure that the inserted tweet meets expectations
-		$pdoTweet = $results[0];
-		$this->assertEquals($pdoTweet->getTweetId(), $tweetId);
-		$this->assertEquals($pdoTweet->getTweetProfileId(), $tweet->getTweetProfileId());
-		$this->assertEquals($pdoTweet->getTweetContent(), $tweet->getTweetContent());
-		$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
-
-	}
 
 	/**
 	 * test grabbing all Tweets

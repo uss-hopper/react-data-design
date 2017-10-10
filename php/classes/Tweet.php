@@ -222,7 +222,7 @@ class Tweet implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holder in the template
-		$parameters = ["tweetId" => $this->tweetId];
+		$parameters = ["tweetId" => $this->tweetId->getBytes()];
 		$statement->execute($parameters);
 	}
 
@@ -308,7 +308,7 @@ class Tweet implements \JsonSerializable {
 		$query = "SELECT tweetId, tweetProfileId, tweetContent, tweetDate FROM tweet WHERE tweetProfileId = :tweetProfileId";
 		$statement = $pdo->prepare($query);
 		// bind the tweet profile id to the place holder in the template
-		$parameters = ["tweetProfileId" => $tweetProfileId];
+		$parameters = ["tweetProfileId" => $tweetProfileId->getBytes()];
 		$statement->execute($parameters);
 		// build an array of tweets
 		$tweets = new \SplFixedArray($statement->rowCount());
