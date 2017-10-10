@@ -43,6 +43,7 @@ class Like implements \JsonSerializable {
 	 * @param \DateTime|null $newLikeDate date the tweet was liked (or null for current time)
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
+	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception is thrown
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
@@ -72,13 +73,13 @@ class Like implements \JsonSerializable {
 	/**
 	 * mutator method for profile id
 	 *
-	 * @param string  $newProfileId new value of profile id
+	 * @param string  $newLikeProfileId new value of profile id
 	 * @throws \RangeException if $newProfileId is not positive
 	 * @throws \TypeError if $newProfileId is not an integer
 	 **/
-	public function setLikeProfileId( $newProfileId) : void {
+	public function setLikeProfileId($newLikeProfileId) : void {
 		try {
-			$uuid = self::validateUuid($newProfileId);
+			$uuid = self::validateUuid($newLikeProfileId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
@@ -101,7 +102,7 @@ class Like implements \JsonSerializable {
 	 *
 	 * @param string  $newLikeTweetId new value of tweet id
 	 * @throws \RangeException if $newTweetId is not positive
-	 * @throws \TypeError if $newTweetId is not an integer
+	 * @throws \TypeError if $newLikeTweetId is not an integer
 	 **/
 	public function setLikeTweetId( $newLikeTweetId) : void {
 		try {
