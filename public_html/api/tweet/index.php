@@ -65,7 +65,12 @@ try {
 				$reply->data = $tweet;
 			}
 		} else if(empty($tweetProfileId) === false) {
-			$tweet = Tweet::getTweetByTweetProfileId($pdo, $tweetProfileId)->toArray();
+
+			//enforce the end user has a JWT token
+			validateJwtHeader();
+
+			// if the user is logged in grab all the tweets by that user based  on who is logged in
+			$tweet = Tweet::getTweetByTweetProfileId($pdo, $_SESSION["profile"]->getProfileId())->toArray();
 			if($tweet !== null) {
 				$reply->data = $tweet;
 			}
@@ -108,6 +113,9 @@ try {
 				throw(new RuntimeException("Tweet does not exist", 404));
 			}
 
+			//enforce the end user has a JWT token
+			validateJwtHeader();
+
 			//enforce the user is signed in and only trying to edit their own tweet
 			if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $tweet->getTweetProfileId()) {
 				throw(new \InvalidArgumentException("You are not allowed to edit this tweet", 403));
@@ -123,6 +131,9 @@ try {
 
 		} else if($method === "POST") {
 
+
+			//enforce the end user has a JWT token
+			validateJwtHeader();
 
 			// enforce the user is signed in
 			if(empty($_SESSION["profile"]) === true) {
@@ -147,6 +158,9 @@ try {
 		if($tweet === null) {
 			throw(new RuntimeException("Tweet does not exist", 404));
 		}
+
+		//enforce the end user has a JWT token
+		validateJwtHeader();
 
 		//enforce the user is signed in and only trying to edit their own tweet
 		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $tweet->getTweetProfileId()) {

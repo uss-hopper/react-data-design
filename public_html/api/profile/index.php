@@ -4,6 +4,7 @@
 require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
 require_once(dirname(__DIR__, 3) . "/php/classes/autoload.php");
 require_once(dirname(__DIR__, 3) . "/php/lib/xsrf.php");
+require_once(dirname(__DIR__, 3) . "/php/lib/jwt.php");
 require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
 
 use Edu\Cnm\DataDesign\ {
@@ -30,8 +31,6 @@ try {
 	//grab the mySQL connection
 	$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
 
-	$_SESSION = Profile::getProfileByProfileId($pdo, 1);
-
 	//determine which HTTP method was used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
 
@@ -53,7 +52,6 @@ try {
 		//gets a post by content
 		if(empty($id) === false) {
 			$profile = Profile::getProfileByProfileId($pdo, $id);
-
 			if($profile !== null) {
 				$reply->data = $profile;
 			}
@@ -71,6 +69,12 @@ try {
 		}
 	} elseif($method === "PUT") {
 
+		//enforce that the XSRF token is present in the header
+		verifyXsrf();
+
+		//enforce the end user has a JWT token
+		validateJwtHeader();
+
 		//enforce the user is signed in and only trying to edit their own profile
 		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $id) {
 			throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
@@ -87,9 +91,6 @@ try {
 		}
 
 		if(empty($requestObject->newPassword) === true) {
-
-			//enforce that the XSRF token is present in the header
-			verifyXsrf();
 
 			//profile at handle
 			if(empty($requestObject->profileAtHandle) === true) {
@@ -151,6 +152,9 @@ try {
 
 		//verify the XSRF Token
 		verifyXsrf();
+
+		//enforce the end user has a JWT token
+		validateJwtHeader();
 
 		$profile = Profile::getProfileByProfileId($pdo, $id);
 		if($profile === null) {
