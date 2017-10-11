@@ -372,18 +372,14 @@ class Profile implements \JsonSerializable {
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function delete(\PDO $pdo): void {
-		// enforce the profileId is not null (i.e., don't delete a profile that does not exist)
-		if($this->profileId === null) {
-			throw(new \PDOException("unable to delete a profile that does not exist"));
-		}
 
 		// create query template
 		$query = "DELETE FROM profile WHERE profileId = :profileId";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$formattedProfileId = $this->profileId->getBytes();
-		$parameters = ["profileId" => $formattedProfileId ];
+		$formattedProfileId =
+		$parameters = ["profileId" => $this->profileId->getBytes()];
 		$statement->execute($parameters);
 	}
 

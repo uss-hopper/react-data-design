@@ -2,7 +2,6 @@
 	"require": {
 		"apigen/apigen": "dev-master",
 		"guzzlehttp/guzzle": "@stable",
-		"phpdocumentor/reflection-docblock": "@stable",
 		"phpunit/dbunit": "@stable",
 		"phpunit/phpunit": "@stable",
 		"swiftmailer/swiftmailer": "@stable",
@@ -12,7 +11,7 @@
 	},
 
 	"scripts":{
-		"phpdoc": "./vendor/bin/phpdoc -t doc -d ./php/classes",
+		"apigen": "./vendor/bin/apigen generate ./php/classes/*.php --destination doc",
 		"phpunit" : "./vendor/bin/phpunit -c ./php/classes/Test --coverage-html coverage"
 	}
 }

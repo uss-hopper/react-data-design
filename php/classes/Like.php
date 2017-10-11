@@ -161,9 +161,8 @@ class Like implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$formattedTweetId = $this->likeTweetId->getBytes();
 		$formattedDate = $this->likeDate->format("Y-m-d H:i:s.u");
-		$parameters = ["likeProfileId" => $this->likeProfileId->getBytes(), "likeTweetId" => $formattedTweetId, "likeDate" => $formattedDate];
+		$parameters = ["likeProfileId" => $this->likeProfileId->getBytes(), "likeTweetId" => $this->likeTweetId->getBytes(), "likeDate" => $formattedDate];
 		$statement->execute($parameters);
 	}
 
@@ -179,13 +178,8 @@ class Like implements \JsonSerializable {
 		$query = "DELETE FROM `like` WHERE likeProfileId = :likeProfileId AND likeTweetId = :likeTweetId";
 		$statement = $pdo->prepare($query);
 
-
-
-		// bind the member variables to the place holders in the template
-		$formattedProfileId = $this->likeProfileId->getBytes();
-		$formattedTweetId = $this->likeTweetId->getBytes();
-
-		$parameters = ["likeProfileId" => $formattedProfileId, "likeTweetId" => $formattedTweetId];
+		//bind the member variables to the placeholders in the template
+		$parameters = ["likeProfileId" => $this->likeProfileId->getBytes(), "likeTweetId" => $this->likeTweetId->getBytes()];
 		$statement->execute($parameters);
 	}
 
