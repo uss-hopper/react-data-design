@@ -12,6 +12,7 @@
 
 	"scripts":{
 		"apigen": "./vendor/bin/apigen generate ./php/classes/*.php --destination doc",
-		"phpunit" : "./vendor/bin/phpunit -c ./php/classes/Test --coverage-html coverage"
+		"phpunit" : "./vendor/bin/phpunit -c ./php/classes/Test --coverage-html coverage",
+		"apiUnit" : "./vendor/bin/phpunit -c ./php/classes/ApiTest --coverage-html coverage"
 	}
 }

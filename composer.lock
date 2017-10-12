@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f4c6a6f624451651cb43811884d657d",
+    "content-hash": "f2a7263adbd8792b0093349e511256c3",
     "packages": [
         {
             "name": "apigen/apigen",
@@ -3748,7 +3748,6 @@
     "stability-flags": {
         "apigen/apigen": 20,
         "guzzlehttp/guzzle": 0,
-        "phpdocumentor/reflection-docblock": 0,
         "phpunit/dbunit": 0,
         "phpunit/phpunit": 0,
         "swiftmailer/swiftmailer": 0,
