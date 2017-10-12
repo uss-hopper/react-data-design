@@ -456,6 +456,7 @@ class Profile implements \JsonSerializable {
 		// sanitize the email before searching
 		$profileEmail = trim($profileEmail);
 		$profileEmail = filter_var($profileEmail, FILTER_VALIDATE_EMAIL);
+
 		if(empty($profileEmail) === true) {
 			throw(new \PDOException("not a valid email"));
 		}

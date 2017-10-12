@@ -34,6 +34,8 @@ class TweetApiTest extends DataDesignApiTest {
 	public final function setUp() : void {
 		parent::setUp();
 
+		var_dump($this->testProfile);
+
 		$this->newTweet = (object) ["tweetContent" => bin2hex(random_bytes(12))];
 
 		// create needed DateTime for testTweet
@@ -42,9 +44,6 @@ class TweetApiTest extends DataDesignApiTest {
 		// create the actual object to use for testing
 		$this->testTweet = new Tweet(generateUuidV4(), $this->testProfile->getProfileId(), bin2hex(random_bytes(12)), $tweetDate);
 		$this->testTweet->insert($this->pdo);
-
-
-
 	}
 
 
@@ -57,14 +56,19 @@ class TweetApiTest extends DataDesignApiTest {
 	 */
 	public function validGetTweetByTweetId() : void {
 		//make a ajax call to the restEndpoint in order  to get a tweet by tweetId
-		$reply = $this->guzzle->get($this->postApiEndPoint . "35", ["headers" =>
-				["X-XSRF-TOKEN" => $this->xsrfToken->getValue(), "X-JWT-TOKEN" => $this->jwtToken->getValue()]]
+		$reply = $this->guzzle->get($this->postApiEndPoint . $this->testTweet->getTweetId() , ["headers" =>
+				["X-XSRF-TOKEN" => $this->xsrfToken->getValue()]]
 		);
 		//decode the reply object for later use
 		$replyObject = json_decode($reply->getBody());
+
+		var_dump($replyObject);
 		//enforce that the ajax call was successful and the headers are returned successfully
 		$this->assertEquals($reply->getStatusCode(), 200);
 		$this->assertEquals($replyObject->status, 200);
+
+
+
 	}
 	/**
 	 * @test invalid test for grabbing a tweet by tweet Id using an incorrect JWT

@@ -242,7 +242,7 @@ class Tweet implements \JsonSerializable {
 
 
 		$formattedDate = $this->tweetDate->format("Y-m-d H:i:s.u");
-		$parameters = ["tweetId" => $this->tweetId->getBytes(),"tweetProfileId" => $this->tweetId->getBytes(), "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate];
+		$parameters = ["tweetId" => $this->tweetId->getBytes(),"tweetProfileId" => $this->tweetProfileId->getBytes(), "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate];
 		$statement->execute($parameters);
 	}
 

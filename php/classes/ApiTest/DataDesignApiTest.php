@@ -65,10 +65,11 @@ abstract class DataDesignApiTest extends TestCase {
 
 		// create a valid salt and hash to create a valid profile object
 		$salt = bin2hex(random_bytes(32));
-		$hash = hash_pbkdf2("sha12", $this->testProfilePassword, $salt, 262144 );
+		$hash = hash_pbkdf2("sha512", $this->testProfilePassword, $salt, 262144 );
 
 		$this->testProfile = new Profile(generateUuidV4(), null, "@athandle", "email@email.com", $hash, "505-867-5309",$salt);
 		$this->testProfile->insert($this->pdo);
+
 	}
 
 
@@ -78,19 +79,22 @@ abstract class DataDesignApiTest extends TestCase {
 	 */
 	public function signIn() {
 
+
+		var_dump($this->testProfile->getProfileEmail());
+
 		$requestObject = (object) ["profileEmail" => $this->testProfile->getProfileEmail(), "profilePassword" => $this->testProfilePassword];
+
+		//var_dump($requestObject);
 
 		$this->guzzle->get("https://bootcamp-coders.cnm.edu");
 
 
 		$reply = $this->guzzle->post(
-			"https://bootcamp-coders.cnm.edu/~gkephart/ng4-bootcamp/public_html/api/sign-in/",
+			"https://bootcamp-coders.cnm.edu/~gkephart/ddc-twitter/public_html/api/sign-in/",
 			["body" => json_encode($requestObject), "headers" => ["X-XSRF-TOKEN" => $this->xsrfToken->getValue()]]);
 
 
-
 		$replyObject = json_decode($reply->getBody());
-
 
 		//enforce that the ajax call was successful and the headers are returned successfully
 		$this->assertEquals($reply->getStatusCode(), 200);
