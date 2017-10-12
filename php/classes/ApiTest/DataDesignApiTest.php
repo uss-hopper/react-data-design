@@ -33,25 +33,25 @@ abstract class DataDesignApiTest extends TestCase {
 
 	/**
 	 * JWT token used for authentication
-	 * @var string JWT
+	 * @var string $jwtToken
 	 */
 	protected $jwtToken = "";
 
 	/**
 	 * a fake profile that will be used to own the test
-	 * @var Profile testProfile
+	 * @var Profile $testProfile
 	 */
 	protected $testProfile = null;
 
 	/**
 	 * a pdo Object to help with mundane database procedures
-	 * @var \PDO pdo
+	 * @var \PDO $pdo
 	 */
 	protected $pdo = null;
 
 	/**
 	 * the password used to create the test profile
-	 * @var string testProfilePassword
+	 * @var string $testProfilePassword
 	 */
 	protected $testProfilePassword = "password";
 

@@ -1,5 +1,7 @@
 <?php
 namespace Edu\Cnm\DataDesign\ApiTest;
+use Edu\Cnm\DataDesign\Tweet;
+
 require_once(dirname(__DIR__) . "/autoload.php");
 /**
  * Test to insure that the new JWT implementation is bug free and efficient cross checking against the Tweet Api
@@ -9,16 +11,46 @@ require_once(dirname(__DIR__) . "/autoload.php");
 class TweetApiTest extends DataDesignApiTest {
 	/**
 	 * Api endpoint to test against
+	* @var string $postApiEndPoint
 	 */
 	protected $postApiEndPoint = "https://bootcamp-coders.cnm.edu/~gkephart/ng4-bootcamp/public_html/api/tweet/";
+
 	/**
-	 * helper method to create a valid object to send to the API
-	 *
-	 * @return object valid object created
+	 * tweet object to use to validate that the API is returning tweets correctly
+	 * @var Tweet $testTweet
 	 */
-	public function createValidObject() : object {
-		return (object) ["tweetContent" => bin2hex(random_bytes(12))];
+	protected $testTweet = null;
+
+	/**
+	 * tweet object that will be used to help test Post Put and Delete.
+	 * @var \stdClass $newTweet
+	 */
+	protected $newTweet = null;
+
+
+	/**
+	 * create dependent object before running each test
+	 */
+	public final function setUp() : void {
+		parent::setUp();
+
+		$this->newTweet = (object) ["tweetContent" => bin2hex(random_bytes(12))];
+
+		// create needed DateTime for testTweet
+		$tweetDate = new \DateTime();
+
+		// create the actual object to use for testing
+		$this->testTweet = new Tweet(generateUuidV4(), $this->testProfile->getProfileId(), bin2hex(random_bytes(12)), $tweetDate);
+		$this->testTweet->insert($this->pdo);
+
+
+
 	}
+
+
+
+
+
 	/**
 	 * @test method to test get tweetByTweetId this will run through all of the test case for validateJwtToken.
 	 *
