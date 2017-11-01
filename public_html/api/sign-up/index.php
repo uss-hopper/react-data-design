@@ -2,6 +2,7 @@
 require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/classes/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
+require_once dirname(__DIR__, 3) . "/php/lib/uuid.php";
 require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
 use Edu\Cnm\DataDesign\Profile;
 
@@ -69,7 +70,7 @@ try {
 		$profileActivationToken = bin2hex(random_bytes(16));
 
 		//create the profile object and prepare to insert into the database
-		$profile = new Profile(null, $profileActivationToken, $requestObject->profileAtHandle, $requestObject->profileEmail, $hash, $requestObject->profilePhone, $salt);
+		$profile = new Profile(generateUuidV4(), $profileActivationToken, $requestObject->profileAtHandle, $requestObject->profileEmail, $hash, $requestObject->profilePhone, $salt);
 
 		//insert the profile into the database
 		$profile->insert($pdo);
@@ -155,12 +156,11 @@ EOF;
 	} else {
 		throw (new InvalidArgumentException("invalid http request"));
 	}
-} catch(\Exception $exception) {
+} catch(\Exception |\TypeError $exception) {
 	$reply->status = $exception->getCode();
 	$reply->message = $exception->getMessage();
-} catch(\TypeError $typeError) {
-	$reply->status = $typeError->getCode();
-	$reply->message = $typeError->getMessage();
+	$reply->trace = $exception->getTraceAsString();
 }
+
 header("Content-type: application/json");
 echo json_encode($reply);

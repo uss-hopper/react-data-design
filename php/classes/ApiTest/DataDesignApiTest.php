@@ -58,18 +58,18 @@ abstract class DataDesignApiTest extends TestCase {
 
 	/**
 	 * create a mock profile to make testing stream lined and easy.
-	 * TODO: I might have to pass the pdo object as parameter into the method
+	 * @param \PDO $pdo database connection object
+	 *
 	 */
 
-	public function createProfile() : void {
+	public function createProfile( \PDO $pdo) : void {
 
 		// create a valid salt and hash to create a valid profile object
 		$salt = bin2hex(random_bytes(32));
 		$hash = hash_pbkdf2("sha512", $this->testProfilePassword, $salt, 262144 );
 
 		$this->testProfile = new Profile(generateUuidV4(), null, "@athandle", "email@email.com", $hash, "505-867-5309",$salt);
-		$this->testProfile->insert($this->pdo);
-
+		$this->testProfile->insert($pdo);
 	}
 
 
@@ -78,9 +78,6 @@ abstract class DataDesignApiTest extends TestCase {
 	 * TODO: I might have to manage the scope of profileEmail in a more forceful way.
 	 */
 	public function signIn() {
-
-
-		var_dump($this->testProfile->getProfileEmail());
 
 		$requestObject = (object) ["profileEmail" => $this->testProfile->getProfileEmail(), "profilePassword" => $this->testProfilePassword];
 
@@ -94,11 +91,9 @@ abstract class DataDesignApiTest extends TestCase {
 			["body" => json_encode($requestObject), "headers" => ["X-XSRF-TOKEN" => $this->xsrfToken->getValue()]]);
 
 
-		$replyObject = json_decode($reply->getBody());
-
 		//enforce that the ajax call was successful and the headers are returned successfully
 		$this->assertEquals($reply->getStatusCode(), 200);
-		$this->assertEquals($replyObject->status, 200);
+		//$this->assertEquals($replyObject->status, 200);
 
 
 
@@ -107,12 +102,9 @@ abstract class DataDesignApiTest extends TestCase {
 	/**
 	 * setup method for testing my implementation of JWT.
 	 */
-	public function setUp() {
+	public function setCookies() {
 
-	// create the connection to the database.
-		$this->pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
-
-		$this->createProfile();
+		$this->createProfile($this->pdo);
 
 
 		// get an XSRF token by visiting the main site
@@ -131,19 +123,20 @@ abstract class DataDesignApiTest extends TestCase {
 
 		//grab the (jwt) cookie from the cookieJar and save it for later
 		$this->jwtToken = $this->cookieJar->getCookieByName("JWT-TOKEN");
-
-
-
-
 	}
 
 	/**
 	 * tear down method to end the session
 	 */
-	public final function tearDown() {
+	public function logoutForTearDown() {
 		$this->guzzle->get("https://bootcamp-coders.cnm.edu/~gkephart/ng4-bootcamp/public_html/api/sign-out/");
 
 		// delete the test profile to keep to keep tests dry
 		$this->testProfile->delete($this->pdo);
+	}
+
+
+	public function getPdoObject() : \PDO {
+		return connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
 	}
 }

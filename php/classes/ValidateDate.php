@@ -17,7 +17,7 @@ trait ValidateDate {
 		}
 		// treat the date as a mySQL date string: Y-m-d
 		$newDate = trim($newDate);
-		if((preg_match("/^(\d{4})-(\d{2})-(\d{2})$/", $newDate, $matches)) !== 1) {
+		if((preg_match("/^(\(\d{2})-(\d{2})-d{4})$/", $newDate, $matches)) !== 1) {
 			throw(new \InvalidArgumentException("date is not a valid date"));
 		}
 

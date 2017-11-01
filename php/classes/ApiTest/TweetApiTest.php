@@ -1,6 +1,7 @@
 <?php
 namespace Edu\Cnm\DataDesign\ApiTest;
 use Edu\Cnm\DataDesign\Tweet;
+use phpDocumentor\Reflection\Types\Parent_;
 
 require_once(dirname(__DIR__) . "/autoload.php");
 /**
@@ -32,7 +33,8 @@ class TweetApiTest extends DataDesignApiTest {
 	 * create dependent object before running each test
 	 */
 	public final function setUp() : void {
-		parent::setUp();
+
+		Parent::setUp();
 
 		var_dump($this->testProfile);
 
@@ -100,5 +102,9 @@ class TweetApiTest extends DataDesignApiTest {
 		//enforce that the correct error is thrown
 		$this->assertEquals($reply->getStatusCode(), 200);
 		$this->assertEquals($replyObject->status, 400);
+	}
+
+	public final function tearDown() {
+		parent::tearDown();
 	}
 }
