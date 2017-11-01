@@ -1,5 +1,6 @@
 <?php
 namespace Edu\Cnm\DataDesign\ApiTest;
+use Edu\Cnm\DataDesign\Profile;
 use Edu\Cnm\DataDesign\Tweet;
 use phpDocumentor\Reflection\Types\Parent_;
 
@@ -30,14 +31,21 @@ class TweetApiTest extends DataDesignApiTest {
 
 
 	/**
-	 * create dependent object before running each test
+	 * pdo object to help with any needed database operations.
+	 * @var \PDO $pdo
 	 */
-	public final function setUp() : void {
+	protected $pdo = null;
 
-		Parent::setUp();
 
-		var_dump($this->testProfile);
+	/**
+	 * profile that will be interacting with the tweet API
+	 * @var Profile $testProfile
+	 */
+	protected $testProfile = null;
 
+
+	public function createTweet() {
+		// create a tweet object for testing
 		$this->newTweet = (object) ["tweetContent" => bin2hex(random_bytes(12))];
 
 		// create needed DateTime for testTweet
@@ -49,8 +57,27 @@ class TweetApiTest extends DataDesignApiTest {
 	}
 
 
+	/**
+	 * create dependent object before running each test
+	 */
+	public final function setUp() : void {
+
+		//setup guzzle and grab needed cookies
+		$this->setCookies();
+
+		//established pdo connection
+		$this->pdo = $this->getPdoObject();
+
+		// created profile for the test.
+		$this->testProfile = $this->createProfile($this->pdo);
+
+		$this->signIn($this->testProfile);
+
+		$this->createTweet();
 
 
+		var_dump($this->jwtToken, $this->xsrfToken);
+	}
 
 	/**
 	 * @test method to test get tweetByTweetId this will run through all of the test case for validateJwtToken.
