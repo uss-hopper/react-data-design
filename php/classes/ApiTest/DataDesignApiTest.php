@@ -34,7 +34,7 @@ abstract class DataDesignApiTest extends TestCase {
 
 	/**
 	 * JWT token used for authentication
-	 * @var string $jwtToken
+	 * @var  $jwtToken
 	 */
 	protected $jwtToken = "";
 
@@ -70,41 +70,5 @@ abstract class DataDesignApiTest extends TestCase {
 		var_dump($this->jwtToken);
 
 
-	}
-
-	/**
-	 * setup method for testing my implementation of JWT.
-	 *
-	 */
-	public function setCookies() {
-
-
-		// get an XSRF token by visiting the main site
-		$this->guzzle = new Client(["cookies" => true]);
-		$this->guzzle->get("https://bootcamp-coders.cnm.edu/");
-
-		//put the cookies into the cookie jar
-		$this->cookieJar = $this->guzzle->getConfig("cookies");
-
-		//grab the (xsrf) cookie from  the cookie jar to eat a little know then the rest later
-		$this->xsrfToken = $this->cookieJar->getCookieByName("XSRF-TOKEN");
-
-	}
-
-	/**
-	 * tear down method to end the session
-	 * @param Profile $profile profile that needs to be deleted.
-	 * @param \PDO $pdo database connection object
-	 */
-	public function logoutForTearDown(Profile $profile, \PDO $pdo) {
-		$this->guzzle->get("https://bootcamp-coders.cnm.edu/~gkephart/ng4-bootcamp/public_html/api/sign-out/");
-
-		// delete the test profile to keep to keep tests dry
-		$profile->delete($pdo);
-	}
-
-
-	public function getPdoObject() : \PDO {
-		return connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
 	}
 }

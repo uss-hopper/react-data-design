@@ -3,6 +3,7 @@
 require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/classes/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
+require_once(dirname(__DIR__, 3) . "/php/lib/uuid.php");
 require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
 
 use Edu\Cnm\DataDesign\{
@@ -43,7 +44,7 @@ try {
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
 
 	//sanitize input
-	$id = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
+	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 	$tweetProfileId = filter_input(INPUT_GET, "tweetProfileId", FILTER_VALIDATE_INT);
 	$tweetContent = filter_input(INPUT_GET, "tweetContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
@@ -66,9 +67,6 @@ try {
 			}
 		} else if(empty($tweetProfileId) === false) {
 
-			//enforce the end user has a JWT token
-			validateJwtHeader();
-
 			// if the user is logged in grab all the tweets by that user based  on who is logged in
 			$tweet = Tweet::getTweetByTweetProfileId($pdo, $_SESSION["profile"]->getProfileId())->toArray();
 			if($tweet !== null) {
@@ -81,6 +79,9 @@ try {
 			}
 		} else {
 			$tweets = Tweet::getAllTweets($pdo)->toArray();
+			if ($tweets === null) {
+				echo "go fuck yourself";
+			}
 			if($tweets !== null) {
 				$reply->data = $tweets;
 			}
@@ -114,15 +115,15 @@ try {
 			}
 
 			//enforce the end user has a JWT token
-			validateJwtHeader();
+			//validateJwtHeader();
 
 			//enforce the user is signed in and only trying to edit their own tweet
-			if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $tweet->getTweetProfileId()) {
+			if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $tweet->getTweetProfileId()->toString()) {
 				throw(new \InvalidArgumentException("You are not allowed to edit this tweet", 403));
 			}
 
 			// update all attributes
-			$tweet->setTweetDate($requestObject->tweetDate);
+			//$tweet->setTweetDate($requestObject->tweetDate);
 			$tweet->setTweetContent($requestObject->tweetContent);
 			$tweet->update($pdo);
 
@@ -133,7 +134,7 @@ try {
 
 
 			//enforce the end user has a JWT token
-			validateJwtHeader();
+			//validateJwtHeader();
 
 			// enforce the user is signed in
 			if(empty($_SESSION["profile"]) === true) {
@@ -141,7 +142,7 @@ try {
 			}
 
 			// create new tweet and insert into the database
-			$tweet = new Tweet(null, $_SESSION["profile"]->getProfileId(), $requestObject->tweetContent, null);
+			$tweet = new Tweet(generateUuidV4(), $_SESSION["profile"]->getProfileId(), $requestObject->tweetContent, null);
 			$tweet->insert($pdo);
 
 			// update reply
@@ -160,10 +161,10 @@ try {
 		}
 
 		//enforce the end user has a JWT token
-		validateJwtHeader();
+		//validateJwtHeader();
 
 		//enforce the user is signed in and only trying to edit their own tweet
-		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $tweet->getTweetProfileId()) {
+		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $tweet->getTweetProfileId()->toString()) {
 			throw(new \InvalidArgumentException("You are not allowed to delete this tweet", 403));
 		}
 

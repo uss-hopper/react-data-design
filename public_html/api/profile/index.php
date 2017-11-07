@@ -4,7 +4,7 @@
 require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
 require_once(dirname(__DIR__, 3) . "/php/classes/autoload.php");
 require_once(dirname(__DIR__, 3) . "/php/lib/xsrf.php");
-require_once(dirname(__DIR__, 3) . "/php/lib/jwt.php");
+require_once(dirname(__DIR__, 3) . "/php/lib/uuid.php");
 require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
 
 use Edu\Cnm\DataDesign\ {
@@ -35,7 +35,7 @@ try {
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
 
 	// sanitize input
-	$id = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
+	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$profileAtHandle = filter_input(INPUT_GET, "profileAtHandle", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$profileEmail = filter_input(INPUT_GET, "profileEmail", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
@@ -73,10 +73,10 @@ try {
 		verifyXsrf();
 
 		//enforce the end user has a JWT token
-		validateJwtHeader();
+		//validateJwtHeader();
 
 		//enforce the user is signed in and only trying to edit their own profile
-		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $id) {
+		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $id) {
 			throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
 		}
 
@@ -90,63 +90,30 @@ try {
 			throw(new RuntimeException("Profile does not exist", 404));
 		}
 
-		if(empty($requestObject->newPassword) === true) {
 
-			//profile at handle
-			if(empty($requestObject->profileAtHandle) === true) {
-				throw(new \InvalidArgumentException ("No profile at handle", 405));
-			}
-
-			//profile email is a required field
-			if(empty($requestObject->profileEmail) === true) {
-				throw(new \InvalidArgumentException ("No profile email present", 405));
-			}
-
-			//profile phone # | if null use the profile phone that is in the database
-			if(empty($requestObject->profilePhone) === true) {
-				$requestObject->ProfilePhone = $profile->getProfilePhone();
-			}
-
-			$profile->setProfileAtHandle($requestObject->profileAtHandle);
-			$profile->setProfileEmail($requestObject->profileEmail);
-			$profile->setProfilePhone($requestObject->profilePhone);
-			$profile->update($pdo);
-
-			// update reply
-			$reply->message = "Profile information updated";
-
+		//profile at handle
+		if(empty($requestObject->profileAtHandle) === true) {
+			throw(new \InvalidArgumentException ("No profile at handle", 405));
 		}
 
-		/**
-		 * update the password if requested
-		 * thanks sprout-swap @author:<solomon.leyba@gmail.com>
-		 **/
-		//enforce that current password new password and confirm password is present
-		if(empty($requestObject->ProfilePassword) === false && empty($requestObject->profileConfirmPassword) === false && empty($requestObject->ConfirmPassword) === false) {
-
-			//make sure the new password and confirm password exist
-			if($requestObject->newProfilePassword !== $requestObject->profileConfirmPassword) {
-				throw(new RuntimeException("New passwords do not match", 401));
-			}
-
-			//hash the previous password
-			$currentPasswordHash = hash_pbkdf2("sha512", $requestObject->currentProfilePassword, $profile->getProfileSalt(), 262144);
-
-			//make sure the hash given by the end user matches what is in the database
-			if($currentPasswordHash !== $profile->getProfileHash()) {
-				throw(new \RuntimeException("Old password is incorrect", 401));
-			}
-
-			// salt and hash the new password and update the profile object
-			$newPasswordSalt = bin2hex(random_bytes(16));
-			$newPasswordHash = hash_pbkdf2("sha512", $requestObject->newProfilePassword, $newPasswordSalt, 262144);
-			$profile->setProfileHash($newPasswordHash);
-			$profile->setProfileSalt($newPasswordSalt);
+		//profile email is a required field
+		if(empty($requestObject->profileEmail) === true) {
+			throw(new \InvalidArgumentException ("No profile email present", 405));
 		}
 
-		//preform the actual update to the database and update the message
+		//profile phone # | if null use the profile phone that is in the database
+		if(empty($requestObject->profilePhone) === true) {
+			$requestObject->ProfilePhone = $profile->getProfilePhone();
+		}
+
+		$profile->setProfileAtHandle($requestObject->profileAtHandle);
+		$profile->setProfileEmail($requestObject->profileEmail);
+		$profile->setProfilePhone($requestObject->profilePhone);
 		$profile->update($pdo);
-		$reply->message = "profile password successfully updated";
+
+		// update reply
+		$reply->message = "Profile information updated";
+
 
 	} elseif($method === "DELETE") {
 
@@ -154,7 +121,7 @@ try {
 		verifyXsrf();
 
 		//enforce the end user has a JWT token
-		validateJwtHeader();
+		//validateJwtHeader();
 
 		$profile = Profile::getProfileByProfileId($pdo, $id);
 		if($profile === null) {
@@ -162,7 +129,7 @@ try {
 		}
 
 		//enforce the user is signed in and only trying to edit their own profile
-		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $profile->getProfileId()) {
+		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $profile->getProfileId()) {
 			throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
 		}
 
@@ -173,8 +140,8 @@ try {
 	} else {
 		throw (new InvalidArgumentException("Invalid HTTP request", 400));
 	}
- // catch any exceptions that were thrown and update the status and message state variable fields
-} catch(\Exception | \TypeError $exception ) {
+	// catch any exceptions that were thrown and update the status and message state variable fields
+} catch(\Exception | \TypeError $exception) {
 	$reply->status = $exception->getCode();
 	$reply->message = $exception->getMessage();
 }

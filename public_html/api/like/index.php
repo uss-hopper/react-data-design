@@ -36,9 +36,8 @@ try {
 
 
 	//sanitize the search parameters
-	$likeProfileId = filter_input(INPUT_GET, "LikeProfileId", FILTER_VALIDATE_INT);
-	$likeTweetId = filter_input(INPUT_GET, "likeTweetId", FILTER_VALIDATE_INT);
-
+	$likeProfileId = $id = filter_input(INPUT_GET, "likeProfileId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
+	$likeTweetId = $id = filter_input(INPUT_GET, "likeTweetId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 
 	if($method === "GET") {
 		//set XSRF cookie
@@ -85,7 +84,7 @@ try {
 		}
 
 		if(empty($requestObject->likeDate) === true) {
-			$requestObject->LikeDate = null;
+			$requestObject->LikeDate =  date("y-m-d H:i:s");
 		}
 
 
@@ -95,14 +94,14 @@ try {
 			verifyXsrf();
 
 			//enforce the end user has a JWT token
-			validateJwtHeader();
+			//validateJwtHeader();
 
 			// enforce the user is signed in
 			if(empty($_SESSION["profile"]) === true) {
 				throw(new \InvalidArgumentException("you must be logged in too like posts", 403));
 			}
 
-			$like = new Like($requestObject->likeProfileId, $requestObject->likeTweetId, $requestObject->likeDate);
+			$like = new Like($requestObject->likeProfileId, $requestObject->likeTweetId);
 			$like->insert($pdo);
 			$reply->message = "liked tweet successful";
 
@@ -113,7 +112,7 @@ try {
 			verifyXsrf();
 
 			//enforce the end user has a JWT token
-			validateJwtHeader();
+			//validateJwtHeader();
 
 			//grab the like by its composite key
 			$like = Like::getLikeByLikeTweetIdAndLikeProfileId($pdo, $requestObject->likeProfileId, $requestObject->likeTweetId);

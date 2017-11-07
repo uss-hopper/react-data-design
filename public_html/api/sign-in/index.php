@@ -37,9 +37,6 @@ try {
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
 
-
-
-		var_dump($requestObject);
 		//check to make sure the password and email field is not empty.s
 		if(empty($requestObject->profileEmail) === true) {
 			throw(new \InvalidArgumentException("Wrong email address.", 401));
@@ -74,8 +71,12 @@ try {
 
 		//grab profile from database and put into a session
 		$profile = Profile::getProfileByProfileId($pdo, $profile->getProfileId());
+
+		$profile->getProfileId()->toString();
+		var_dump($profile->getProfileId());
 		$_SESSION["profile"] = $profile;
 
+		/*
 		// create the Auth payload
 		$authObject = (object) [
 			"profileId" =>$profile->getProfileId(),
@@ -84,6 +85,8 @@ try {
 
 		// create and set th JWT TOKEN
 		setJwtAndAuthHeader("auth",$authObject);
+
+		*/
 
 		$reply->message = "Sign in was successful.";
 	} else {
