@@ -1,6 +1,9 @@
 <?php
 
 namespace Edu\Cnm\DataDesign;
+require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
+use Ramsey\Uuid\Uuid;
+
 
 /**
  * Cross Section of a Twitter Profile
@@ -12,9 +15,10 @@ namespace Edu\Cnm\DataDesign;
  * @version 4.0.0
  **/
 class Profile implements \JsonSerializable {
+	use ValidateUuid;
 	/**
 	 * id for this Profile; this is the primary key
-	 * @var int $profileId
+	 * @var Uuid $profileId
 	 **/
 	private $profileId;
 
@@ -58,7 +62,7 @@ class Profile implements \JsonSerializable {
 	/**
 	 * constructor for this Profile
 	 *
-	 * @param int|null $newProfileId id of this Profile or null if a new Profile
+	 * @param string|Uuid $newProfileId id of this Profile or null if a new Profile
 	 * @param string $newProfileActivationToken activation token to safe guard against malicious accounts
 	 * @param string $newProfileAtHandle string containing newAtHandle
 	 * @param string $newProfileEmail string containing email
@@ -67,11 +71,11 @@ class Profile implements \JsonSerializable {
 	 * @param string $newProfileSalt string containing passowrd salt
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
-	 * @throws \TypeError if data types violate type hints
+	 * @throws \TypeError if a data type violates a data hint
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
-	public function __construct(?int $newProfileId, ?string $newProfileActivationToken, string $newProfileAtHandle, string $newProfileEmail, string $newProfileHash, ?string $newProfilePhone, string $newProfileSalt) {
+	public function __construct($newProfileId, ?string $newProfileActivationToken, string $newProfileAtHandle, string $newProfileEmail, string $newProfileHash, ?string $newProfilePhone, string $newProfileSalt) {
 		try {
 			$this->setProfileId($newProfileId);
 			$this->setProfileActivationToken($newProfileActivationToken);
@@ -90,32 +94,30 @@ class Profile implements \JsonSerializable {
 	/**
 	 * accessor method for profile id
 	 *
-	 * @return int value of profile id (or null if new Profile)
+	 * @return Uuid value of profile id (or null if new Profile)
 	 **/
-	public function getProfileId(): int {
+	public function getProfileId(): Uuid {
 		return ($this->profileId);
 	}
 
 	/**
 	 * mutator method for profile id
 	 *
-	 * @param int|null $newProfileId value of new profile id
+	 * @param  Uuid| string $newProfileId value of new profile id
 	 * @throws \RangeException if $newProfileId is not positive
-	 * @throws \TypeError if $newProfileId is not an integer
+	 * @throws \TypeError if the profile Id is not
 	 **/
-	public function setProfileId(?int $newProfileId): void {
-		if($newProfileId === null) {
-			$this->profileId = null;
-			return;
-		}
+	public function setProfileId( $newProfileId): void {
 
-		// verify the profile id is positive
-		if($newProfileId <= 0) {
-			throw(new \RangeException("profile id is not positive"));
+		try {
+			$uuid = self::validateUuid($newProfileId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 
 		// convert and store the profile id
-		$this->profileId = $newProfileId;
+		$this->profileId = $uuid;
 
 
 	}
@@ -320,7 +322,7 @@ class Profile implements \JsonSerializable {
 	 * @param string $newProfileSalt
 	 * @throws \InvalidArgumentException if the salt is not secure
 	 * @throws \RangeException if the salt is not 64 characters
-	 * @throws \TypeError if profile salt is not a string
+	 * @throws \TypeError if the profile salt is not a string
 	 */
 	public function setProfileSalt(string $newProfileSalt): void {
 		//enforce that the salt is properly formatted
@@ -349,21 +351,17 @@ class Profile implements \JsonSerializable {
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function insert(\PDO $pdo): void {
-		// enforce the profileId is null (i.e., don't insert a profile that already exists)
-		if($this->profileId !== null) {
-			throw(new \PDOException("not a new profile"));
-		}
+
 
 		// create query template
-		$query = "INSERT INTO profile(profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt) VALUES (:profileActivationToken, :profileAtHandle, :profileEmail, :profileHash, :profilePhone, :profileSalt)";
+		$query = "INSERT INTO profile(profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt) VALUES (:profileId, :profileActivationToken, :profileAtHandle, :profileEmail, :profileHash, :profilePhone, :profileSalt)";
 		$statement = $pdo->prepare($query);
 
-		// bind the member variables to the place holders in the template
-		$parameters = ["profileActivationToken" => $this->profileActivationToken, "profileAtHandle" => $this->profileAtHandle, "profileEmail" => $this->profileEmail, "profileHash" => $this->profileHash, "profilePhone" => $this->profilePhone, "profileSalt" => $this->profileSalt];
+
+		$parameters = ["profileId" => $this->profileId->getBytes(), "profileActivationToken" => $this->profileActivationToken, "profileAtHandle" => $this->profileAtHandle, "profileEmail" => $this->profileEmail, "profileHash" => $this->profileHash,"profilePhone" => $this->profilePhone, "profileSalt" => $this->profileSalt];
 		$statement->execute($parameters);
 
-		// update the null profileId with what mySQL just gave us
-		$this->profileId = intval($pdo->lastInsertId());
+
 	}
 
 	/**
@@ -374,17 +372,14 @@ class Profile implements \JsonSerializable {
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function delete(\PDO $pdo): void {
-		// enforce the profileId is not null (i.e., don't delete a profile that does not exist)
-		if($this->profileId === null) {
-			throw(new \PDOException("unable to delete a profile that does not exist"));
-		}
 
 		// create query template
 		$query = "DELETE FROM profile WHERE profileId = :profileId";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$parameters = ["profileId" => $this->profileId];
+		$formattedProfileId =
+		$parameters = ["profileId" => $this->profileId->getBytes()];
 		$statement->execute($parameters);
 	}
 
@@ -393,20 +388,17 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function update(\PDO $pdo): void {
-		// enforce the profileId is not null (i.e., don't update a profile that does not exist)
-		if($this->profileId === null) {
-			throw(new \PDOException("unable to delete a profile that does not exist"));
-		}
+
 
 		// create query template
-		$query = "UPDATE profile SET profileActivationToken = :profileActivationToken, profileAtHandle = :profileAtHandle, profileEmail = :profileEmail, profileHash = :profileHash, profilePhone = :profilePhone, profileSalt = :profileSalt WHERE profileId = :profileId";
+		$query = "UPDATE profile SET profileId = :profileId, profileActivationToken = :profileActivationToken, profileAtHandle = :profileAtHandle, profileEmail = :profileEmail, profileHash = :profileHash, profilePhone = :profilePhone, profileSalt = :profileSalt WHERE profileId = :profileId";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$parameters = ["profileId" => $this->profileId, "profileActivationToken" => $this->profileActivationToken, "profileAtHandle" => $this->profileAtHandle, "profileEmail" => $this->profileEmail, "profileHash" => $this->profileHash, "profilePhone" => $this->profilePhone, "profileSalt" => $this->profileSalt];
+
+		$parameters = ["profileId" => $this->profileId->getBytes(), "profileActivationToken" => $this->profileActivationToken, "profileAtHandle" => $this->profileAtHandle, "profileEmail" => $this->profileEmail, "profileHash" => $this->profileHash, "profilePhone" => $this->profilePhone, "profileSalt" => $this->profileSalt];
 		$statement->execute($parameters);
 	}
 
@@ -414,23 +406,26 @@ class Profile implements \JsonSerializable {
 	 * gets the Profile by profile id
 	 *
 	 * @param \PDO $pdo $pdo PDO connection object
-	 * @param int $profileId profile id to search for
+	 * @param string $profileId profile Id to search for
 	 * @return Profile|null Profile or null if not found
 	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError when variables are not the correct data type
+	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	public static function getProfileByProfileId(\PDO $pdo, int $profileId):?Profile {
+	public static function getProfileByProfileId(\PDO $pdo, string $profileId):?Profile {
 		// sanitize the profile id before searching
-		if($profileId <= 0) {
-			throw(new \PDOException("profile id is not postive"));
+		try {
+			$profileId = self::validateUuid($profileId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
+
 
 		// create query template
 		$query = "SELECT profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt FROM profile WHERE profileId = :profileId";
 		$statement = $pdo->prepare($query);
 
 		// bind the profile id to the place holder in the template
-		$parameters = ["profileId" => $profileId];
+		$parameters = ["profileId" => $profileId->getBytes()];
 		$statement->execute($parameters);
 
 		// grab the Profile from mySQL
@@ -461,6 +456,7 @@ class Profile implements \JsonSerializable {
 		// sanitize the email before searching
 		$profileEmail = trim($profileEmail);
 		$profileEmail = filter_var($profileEmail, FILTER_VALIDATE_EMAIL);
+
 		if(empty($profileEmail) === true) {
 			throw(new \PDOException("not a valid email"));
 		}
@@ -577,9 +573,12 @@ class Profile implements \JsonSerializable {
 		 *
 		 * @return array resulting state variables to serialize
 		 **/
-		public
-		function jsonSerialize() {
-			return (get_object_vars($this));
+		public function jsonSerialize() {
+			$fields = get_object_vars($this);
+			$fields["profileId"] = $this->profileId->toString();
+			unset($fields["profileHash"]);
+			unset($fields["profileSalt"]);
+			return ($fields);
 
 		}
 	}

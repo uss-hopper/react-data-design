@@ -3,6 +3,9 @@
 namespace Edu\Cnm\DataDesign;
 require_once("autoload.php");
 
+require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
+use Ramsey\Uuid\Uuid;
+
 /**
  * Cross Section of a Twitter Like
  *
@@ -14,15 +17,16 @@ require_once("autoload.php");
  **/
 class Like implements \JsonSerializable {
 	use ValidateDate;
+	use ValidateUuid;
 
 	/**
 	 * id of the Tweet being liked; this is a component of a composite primary key (and a foreign key)
-	 * @var int $likeTweetId
+	 * @var Uuid $likeTweetId
 	 **/
 	private $likeTweetId;
 	/**
 	 * id of the Profile who liked; this is a component of a composite primary key (and a foreign key)
-	 * @var int $likeProfileId
+	 * @var Uuid $likeProfileId
 	 **/
 	private $likeProfileId;
 	/**
@@ -34,14 +38,16 @@ class Like implements \JsonSerializable {
 	/**
 	 * constructor for this Like
 	 *
-	 * @param int $newLikeProfileId id of the parent Profile
-	 * @param int $newLikeTweetId id of the parent Tweet
+	 * @param string|Uuid $newLikeProfileId id of the parent Profile
+	 * @param string|Uuid $newLikeTweetId id of the parent Tweet
 	 * @param \DateTime|null $newLikeDate date the tweet was liked (or null for current time)
-	 * @throws \Exception if some other exception occurs
+	 * @throws \InvalidArgumentException if data types are not valid
+	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
 	 * @throws \TypeError if data types violate type hints
+	 * @throws \Exception if some other exception is thrown
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
-	public function __construct(int $newLikeProfileId, int $newLikeTweetId, $newLikeDate = null) {
+	public function __construct( $newLikeProfileId,  $newLikeTweetId, $newLikeDate = null) {
 		// use the mutator methods to do the work for us!
 		try {
 			$this->setLikeProfileId($newLikeProfileId);
@@ -58,53 +64,56 @@ class Like implements \JsonSerializable {
 	/**
 	 * accessor method for profile id
 	 *
-	 * @return int value of profile id
+	 * @return Uuid value of profile id
 	 **/
-	public function getLikeProfileId() : int {
+	public function getLikeProfileId() : Uuid {
 		return ($this->likeProfileId);
 	}
 
 	/**
 	 * mutator method for profile id
 	 *
-	 * @param int $newProfileId new value of profile id
+	 * @param string  $newLikeProfileId new value of profile id
 	 * @throws \RangeException if $newProfileId is not positive
 	 * @throws \TypeError if $newProfileId is not an integer
 	 **/
-	public function setLikeProfileId(int $newProfileId) : void {
-		// verify the profile id is positive
-		if($newProfileId <= 0) {
-			throw(new \RangeException("profile id is not positive"));
+	public function setLikeProfileId($newLikeProfileId) : void {
+		try {
+			$uuid = self::validateUuid($newLikeProfileId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-
 		// convert and store the profile id
-		$this->likeProfileId = $newProfileId;
+		$this->likeProfileId = $uuid;
 	}
 
 	/**
 	 * accessor method for tweet id
 	 *
-	 * @return int value of tweet id
+	 * @return uuid value of tweet id
 	 **/
-	public function getLikeTweetId() : int {
+	public function getLikeTweetId() : Uuid{
 		return ($this->likeTweetId);
 	}
 
 	/**
 	 * mutator method for tweet id
 	 *
-	 * @param int $newLikeTweetId new value of tweet id
+	 * @param string  $newLikeTweetId new value of tweet id
 	 * @throws \RangeException if $newTweetId is not positive
-	 * @throws \TypeError if $newTweetId is not an integer
+	 * @throws \TypeError if $newLikeTweetId is not an integer
 	 **/
-	public function setLikeTweetId(int $newLikeTweetId) : void {
-		// verify the tweet id is positive
-		if($newLikeTweetId <= 0) {
-			throw(new \RangeException("tweet id is not positive"));
+	public function setLikeTweetId( $newLikeTweetId) : void {
+		try {
+			$uuid = self::validateUuid($newLikeTweetId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 
 		// convert and store the profile id
-		$this->likeTweetId = $newLikeTweetId;
+		$this->likeTweetId = $uuid;
 	}
 
 	/**
@@ -145,21 +154,15 @@ class Like implements \JsonSerializable {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function insert(\PDO $pdo) : void {
-		// ensure the object exists before inserting
-		if($this->likeProfileId === null || $this->likeTweetId === null) {
-			throw(new \PDOException("not a valid like"));
-		}
-
 		// create query template
 		$query = "INSERT INTO `like`(likeProfileId, likeTweetId, likeDate) VALUES(:likeProfileId, :likeTweetId, :likeDate)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
 		$formattedDate = $this->likeDate->format("Y-m-d H:i:s.u");
-		$parameters = ["likeProfileId" => $this->likeProfileId, "likeTweetId" => $this->likeTweetId, "likeDate" => $formattedDate];
+		$parameters = ["likeProfileId" => $this->likeProfileId->getBytes(), "likeTweetId" => $this->likeTweetId->getBytes(), "likeDate" => $formattedDate];
 		$statement->execute($parameters);
 	}
 
@@ -168,20 +171,15 @@ class Like implements \JsonSerializable {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function delete(\PDO $pdo) : void {
-		// ensure the object exists before deleting
-		if($this->likeProfileId === null || $this->likeTweetId === null) {
-			throw(new \PDOException("not a valid like"));
-		}
 
 		// create query template
 		$query = "DELETE FROM `like` WHERE likeProfileId = :likeProfileId AND likeTweetId = :likeTweetId";
 		$statement = $pdo->prepare($query);
 
-		// bind the member variables to the place holders in the template
-		$parameters = ["likeProfileId" => $this->likeProfileId, "likeTweetId" => $this->likeTweetId];
+		//bind the member variables to the placeholders in the template
+		$parameters = ["likeProfileId" => $this->likeProfileId->getBytes(), "likeTweetId" => $this->likeTweetId->getBytes()];
 		$statement->execute($parameters);
 	}
 
@@ -189,17 +187,23 @@ class Like implements \JsonSerializable {
 	 * gets the Like by tweet id and profile id
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param int $likeProfileId profile id to search for
-	 * @param int $likeTweetId tweet id to search for
+	 * @param string $likeProfileId profile id to search for
+	 * @param string $likeTweetId tweet id to search for
 	 * @return Like|null Like found or null if not found
 	 */
-	public static function getLikeByLikeTweetIdAndLikeProfileId(\PDO $pdo, int $likeProfileId, int $likeTweetId) : ?Like {
-		// sanitize the tweet id and profile id before searching
-		if($likeProfileId <= 0) {
-			throw(new \PDOException("profile id is not positive"));
+	public static function getLikeByLikeTweetIdAndLikeProfileId(\PDO $pdo, string $likeProfileId, string $likeTweetId) : ?Like {
+
+		//
+		try {
+			$likeProfileId = self::validateUuid($likeProfileId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		if($likeTweetId <= 0) {
-			throw(new \PDOException("tweet id is not positive"));
+
+		try {
+			$likeTweetId = self::validateUuid($likeTweetId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
 		// create query template
@@ -207,7 +211,7 @@ class Like implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		// bind the tweet id and profile id to the place holder in the template
-		$parameters = ["likeProfileId" => $likeProfileId, "likeTweetId" => $likeTweetId];
+		$parameters = ["likeProfileId" => $likeProfileId->getBytes(), "likeTweetId" => $likeTweetId->getBytes()];
 		$statement->execute($parameters);
 
 		// grab the like from mySQL
@@ -229,15 +233,15 @@ class Like implements \JsonSerializable {
 	 * gets the Like by profile id
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param int $likeProfileId profile id to search for
+	 * @param string $likeProfileId profile id to search for
 	 * @return \SplFixedArray SplFixedArray of Likes found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getLikeByLikeProfileId(\PDO $pdo, int $likeProfileId) : \SPLFixedArray {
-		// sanitize the profile id
-		if($likeProfileId <= 0) {
-			throw(new \PDOException("profile id is not positive"));
+	public static function getLikeByLikeProfileId(\PDO $pdo, string $likeProfileId) : \SPLFixedArray {
+		try {
+			$likeProfileId = self::validateUuid($likeProfileId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
 		// create query template
@@ -245,7 +249,7 @@ class Like implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$parameters = ["likeProfileId" => $likeProfileId];
+		$parameters = ["likeProfileId" => $likeProfileId->getBytes()];
 		$statement->execute($parameters);
 
 		// build an array of likes
@@ -268,16 +272,15 @@ class Like implements \JsonSerializable {
 	 * gets the Like by tweet it id
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param int $likeTweetId tweet id to search for
+	 * @param string $likeTweetId tweet id to search for
 	 * @return \SplFixedArray array of Likes found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getLikeByLikeTweetId(\PDO $pdo, int $likeTweetId) : \SplFixedArray {
-		// sanitize the tweet id
-		$likeTweetId = filter_var($likeTweetId, FILTER_VALIDATE_INT);
-		if($likeTweetId <= 0) {
-			throw(new \PDOException("tweet id is not positive"));
+	public static function getLikeByLikeTweetId(\PDO $pdo, string $likeTweetId) : \SplFixedArray {
+		try {
+			$likeTweetId = self::validateUuid($likeTweetId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
 		// create query template
@@ -285,7 +288,7 @@ class Like implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$parameters = ["likeTweetId" => $likeTweetId];
+		$parameters = ["likeTweetId" => $likeTweetId->getBytes()];
 		$statement->execute($parameters);
 
 		// build the array of likes
@@ -311,8 +314,13 @@ class Like implements \JsonSerializable {
 	 **/
 	public function jsonSerialize() {
 		$fields = get_object_vars($this);
+
+
 		//format the date so that the front end can consume it
+		$fields["likeProfileId"] = $this->likeProfileId;
+		$fields["likeTweetId"] = $this->likeTweetId;
 		$fields["likeDate"] = round(floatval($this->likeDate->format("U.u")) * 1000);
+
 		return ($fields);
 	}
 }
