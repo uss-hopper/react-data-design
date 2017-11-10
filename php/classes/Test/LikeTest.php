@@ -6,6 +6,9 @@ use Edu\Cnm\DataDesign\{Like, Profile, Tweet};
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
 
+// grab the uuid generator
+require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
+
 /**
  * Full PHPUnit test for the Like class
  *
@@ -48,6 +51,12 @@ class LikeTest extends DataDesignTest {
 	 */
 	protected $VALID_SALT;
 
+	/**
+	 * valid activationToken to create the profile object to own the test
+	 * @var string $VALID_ACTIVATION
+	 */
+	protected $VALID_ACTIVATION;
+
 
 
 
@@ -65,11 +74,11 @@ class LikeTest extends DataDesignTest {
 		$this->VALID_ACTIVATION = bin2hex(random_bytes(16));
 
 		// create and insert the mocked profile
-		$this->profile = new Profile(null, null,"@phpunit", "test@phpunit.de",$this->VALID_HASH, "+12125551212", $this->VALID_SALT);
+		$this->profile = new Profile(generateUuidV4(), null,"@phpunit", "test@phpunit.de",$this->VALID_HASH, "+12125551212", $this->VALID_SALT);
 		$this->profile->insert($this->getPDO());
 
 		// create the and insert the mocked tweet
-		$this->tweet = new Tweet(null, $this->profile->getProfileId(), "PHPUnit like test passing");
+		$this->tweet = new Tweet(generateUuidV4(), $this->profile->getProfileId(), "PHPUnit like test passing");
 		$this->tweet->insert($this->getPDO());
 
 		// calculate the date (just use the time the unit test was setup...)
@@ -95,18 +104,6 @@ class LikeTest extends DataDesignTest {
 		//format the date too seconds since the beginning of time to avoid round off error
 		$this->assertEquals($pdoLike->getLikeDate()->getTimeStamp(), $this->VALID_LIKEDATE->getTimestamp());
 	}
-
-	/**
-	 * test creating Like that makes no sense
-	 *
-	 * @expectedException \TypeError
-	 **/
-	public function testInsertInvalidLike() : void {
-		// create a like without foreign keys and watch it fail
-		$like = new like(null, null, null);
-		$like->insert($this->getPDO());
-	}
-
 	/**
 	 * test creating a Like and then deleting it
 	 **/
@@ -154,7 +151,7 @@ class LikeTest extends DataDesignTest {
 	 **/
 	public function testGetInvalidLikeByTweetIdAndProfileId() {
 		// grab a tweet id and profile id that exceeds the maximum allowable tweet id and profile id
-		$like = Like::getLikeByLikeTweetIdAndLikeProfileId($this->getPDO(), DataDesignTest::INVALID_KEY, DataDesignTest::INVALID_KEY);
+		$like = Like::getLikeByLikeTweetIdAndLikeProfileId($this->getPDO(), generateUuidV4(), generateUuidV4());
 		$this->assertNull($like);
 	}
 
@@ -189,7 +186,7 @@ class LikeTest extends DataDesignTest {
 	 **/
 	public function testGetInvalidLikeByTweetId() : void {
 		// grab a tweet id that exceeds the maximum allowable tweet id
-		$like = Like::getLikeByLikeTweetId($this->getPDO(), DataDesignTest::INVALID_KEY);
+		$like = Like::getLikeByLikeTweetId($this->getPDO(), generateUuidV4());
 		$this->assertCount(0, $like);
 	}
 
@@ -226,7 +223,7 @@ class LikeTest extends DataDesignTest {
 	 **/
 	public function testGetInvalidLikeByProfileId() : void {
 		// grab a tweet id that exceeds the maximum allowable profile id
-		$like = Like::getLikeByLikeProfileId($this->getPDO(), DataDesignTest::INVALID_KEY);
+		$like = Like::getLikeByLikeProfileId($this->getPDO(), generateUuidV4());
 		$this->assertCount(0, $like);
 	}
 }
