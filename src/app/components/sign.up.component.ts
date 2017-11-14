@@ -7,8 +7,8 @@ import {Component, ViewChild,} from "@angular/core";
 import {Observable} from "rxjs/Observable"
 import {Router} from "@angular/router";
 import {Status} from "../classes/status";
-import {SignUpService} from "../services/sign-up.service";
-import {SignUp} from "../classes/sign-up";
+import {SignUpService} from "../services/sign.up.service";
+import {SignUp} from "../classes/sign.up";
 import {setTimeout} from "timers";
 
 //declare $ for good old jquery

@@ -2,18 +2,18 @@
 import {RouterModule, Routes} from "@angular/router";
 
 //import all needed components
-import {CreateTweetComponent} from "./components/create-tweet.component";
-import {HomeComponent} from "./components/home-component";
-import {ListTweetsComponent} from "./components/list-tweets.component";
-import {MainNavComponent} from "./components/main-nav";
+import {CreateTweetComponent} from "./components/create.tweet.component";
+import {HomeComponent} from "./components/home.component";
+import {ListTweetsComponent} from "./components/list.tweets.component";
+import {MainNavComponent} from "./components/main.nav";
 import {SignInComponent} from "./components/signin.component";
-import {SignUpComponent} from "./components/sign-up.component";
+import {SignUpComponent} from "./components/sign.up.component";
 
 // import all needed Services
 import {LikeService} from "./services/like.service";
 import {ProfileService} from "./services/profile.service";
-import {SignInService} from "./services/sign-in.service";
-import {SignUpService} from "./services/sign-up.service";
+import {SignInService} from "./services/sign.in.service";
+import {SignUpService} from "./services/sign.up.service";
 import {TweetService} from "./services/tweet.service";
 
 //import all needed Interceptors
