@@ -24,9 +24,9 @@ body.sfooter > * {
 	flex: 1 0 auto;
 }
 
-footer{
-	background: black;
-	padding-top: 1vh;
+.main-footer{
+	padding-top: .5vh;
+	padding-bottom: .5vh;
 }
 
 nav{

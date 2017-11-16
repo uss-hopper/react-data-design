@@ -1,12 +1,17 @@
-	<div class="col-md-push-1 col-md-6">
-	<div class="panel panel-default" *ngFor="let tweet of tweets;">
-
-		<div class="panel-heading">Post by Bob Dole, on {{tweet.tweetDate |
-			date:"medium"}}
-			<button type="button"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i></button>
+<div class="col-lg-10">
+	<div class="card "  style="width: 40rem;" *ngFor="let tweet of tweets;">
+		<div class="card-header">
+			{{tweet.tweetDate | date:"medium"}}
 		</div>
-		<div class="panel-body">
-			{{ tweet.tweetContent }}
+		<div class="card-body">
+			<blockquote class="block-quote mb-0">
+				<p> {{ tweet.tweetContent }} </p>
+				<footer class="blockquote-footer"> placeholder
+					<button type="button"><i class=" btn-sm fa fa-thumbs-o-up" aria-hidden="true"></i></button>
+				</footer>
+			</blockquote>
+
 		</div>
 	</div>
 </div>
+
