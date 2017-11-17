@@ -23,11 +23,11 @@ module.exports = {
 			},
 			{
 				test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
-				loader: "file-loader?name=/assets/[name].[hash].[ext]"
+				loader: "url-loader?name=/assets/[name].[hash].[ext]"
 			},
 			{
 				test: /\.css$/,
-				loader: ExtractTextPlugin.extract({ fallback: "style-loader", use: "css-loader?minimize=true" })
+				loader: ExtractTextPlugin.extract({ fallbackLoader: "style-loader", loader: "css-loader?minimize=true" })
 			},
 			{
 				test: /\.ts$/,
@@ -44,13 +44,14 @@ module.exports = {
 		new webpack.ProvidePlugin({
 			$: "jquery",
 			jQuery: "jquery",
-			"window.jQuery": "jquery"
+			"window.jQuery": "jquery",
+			Popper: ['popper.js', 'default']
 		}),
 
 		new HtmlWebpackPlugin({
 			inject: "head",
-			filename: helpers.root("public_html") + "/index.php",
-			template: helpers.root("webpack") + "/index.php"
+			filename: helpers.root("public_html") + "/index.html",
+			template: helpers.root("webpack") + "/index.html"
 		})
 	]
 };

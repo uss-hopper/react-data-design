@@ -1,0 +1,34 @@
+body{
+	background: rgb(231,235, 240);  /* fallback for old browsers */
+
+
+
+	background-size: cover;
+
+	margin: 0 auto;
+}
+
+head { display: flex}
+
+body {
+	width: 100%;
+}
+
+body.sfooter > * {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+.sfooter-content{
+	flex: 1 0 auto;
+}
+
+.main-footer{
+	padding-top: .5vh;
+	padding-bottom: .5vh;
+}
+
+nav{
+	background-color: black;
+}

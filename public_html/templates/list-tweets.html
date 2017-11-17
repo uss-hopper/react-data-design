@@ -1,0 +1,22 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-lg-10">
+			<div class="card" *ngFor="let tweet of tweets;">
+				<div class="card-header">
+					{{tweet.tweetDate | date:"medium"}}
+				</div>
+				<div class="card-body">
+					<blockquote class="block-quote mb-0">
+						<p> {{ tweet.tweetContent }} </p>
+						<footer class="blockquote-footer"> placeholder
+							<button type="button"><i class=" btn-sm fa fa-thumbs-o-up" aria-hidden="true"></i></button>
+						</footer>
+					</blockquote>
+
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+</div>

@@ -1,14 +1,18 @@
 {
 	"require": {
+		"apigen/apigen": "dev-master",
 		"guzzlehttp/guzzle": "@stable",
-		"phpdocumentor/phpdocumentor": "@stable",
 		"phpunit/dbunit": "@stable",
 		"phpunit/phpunit": "@stable",
-		"swiftmailer/swiftmailer": "@stable"
+		"swiftmailer/swiftmailer": "@stable",
+		"lcobucci/jwt": "3.2",
+		"ramsey/uuid": "@stable",
+		"roave/better-reflection": "dev-master#a402048"
 	},
 
 	"scripts":{
-		"phpdoc": "./vendor/bin/phpdoc -t doc -d ./php/classes",
-		"phpunit" : "./vendor/bin/phpunit -c ./php/classes/Test --coverage-html coverage"
+		"apigen": "./vendor/bin/apigen generate ./php/classes/*.php --destination doc",
+		"phpunit" : "./vendor/bin/phpunit -c ./php/classes/Test --coverage-html coverage",
+		"apiUnit" : "./vendor/bin/phpunit -c ./php/classes/ApiTest --coverage-html coverage"
 	}
 }

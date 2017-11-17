@@ -71,19 +71,32 @@ try {
 
 		//grab profile from database and put into a session
 		$profile = Profile::getProfileByProfileId($pdo, $profile->getProfileId());
+
+		$profile->getProfileId()->toString();
+		var_dump($profile->getProfileId());
 		$_SESSION["profile"] = $profile;
+
+		/*
+		// create the Auth payload
+		$authObject = (object) [
+			"profileId" =>$profile->getProfileId(),
+			"profileAtHandle" => $profile->getProfileAtHandle()
+		];
+
+		// create and set th JWT TOKEN
+		setJwtAndAuthHeader("auth",$authObject);
+
+		*/
+
 		$reply->message = "Sign in was successful.";
 	} else {
 		throw(new \InvalidArgumentException("Invalid HTTP method request."));
 	}
 
 	// if an exception is thrown update the
-} catch(Exception $exception) {
+} catch(Exception | TypeError $exception) {
 	$reply->status = $exception->getCode();
 	$reply->message = $exception->getMessage();
-} catch(TypeError $typeError) {
-	$reply->status = $typeError->getCode();
-	$reply->message = $typeError->getMessage();
 }
 header("Content-type: application/json");
 echo json_encode($reply);

@@ -1,0 +1,13 @@
+<phpunit>
+	<testsuites>
+		<testsuite name="Twitter Data Design API">
+		<!--	<file>SignUpApiTest.php</file> -->
+			<file>TweetApiTest.php</file>
+		</testsuite>
+	</testsuites>
+	<filter>
+		<whitelist processUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">..</directory>
+		</whitelist>
+	</filter>
+</phpunit>
