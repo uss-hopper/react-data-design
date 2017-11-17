@@ -4,6 +4,7 @@ import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {AppComponent} from "./app.component";
 import {allAppComponents, appRoutingProviders, routing} from "./app.routes";
+import {SessionService} from "./services/session.service";
 
 
 const moduleDeclarations = [AppComponent];
@@ -14,4 +15,12 @@ const moduleDeclarations = [AppComponent];
 	bootstrap:    [AppComponent],
 	providers:    [appRoutingProviders]
 })
-export class AppModule {}
+export class AppModule {
+	constructor(protected sessionService: SessionService) {
+		this.run();
+	}
+
+	run() : void {
+		this.sessionService.setSession().subscribe();
+	}
+}
