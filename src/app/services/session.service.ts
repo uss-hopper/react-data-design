@@ -7,7 +7,7 @@ export class SessionService {
 
 	constructor(protected http:HttpClient) {}
 
-	private sessionUrl = "apis/session/";
+	private sessionUrl = "api/session/";
 
 	setSession() : Observable<HttpResponse<any>> {
 		return (this.http.head(this.sessionUrl)

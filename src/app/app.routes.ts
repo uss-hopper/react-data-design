@@ -25,7 +25,7 @@ import {DeepDiveInterceptor} from "./services/deep.dive.interceptor";
 
 
 //an array of the components that will be passed off to the module
-export const allAppComponents = [ CreateTweetComponent, HomeComponent, ListTweetsComponent,MainNavComponent, SignInComponent, SignUpComponent, SessionService];
+export const allAppComponents = [ CreateTweetComponent, HomeComponent, ListTweetsComponent,MainNavComponent, SignInComponent, SignUpComponent];
 
 //an array of routes that will be passed of to the module
 export const routes: Routes = [
@@ -33,7 +33,7 @@ export const routes: Routes = [
 ];
 
 // an array of services
-const services : any[] = [LikeService, ProfileService, SignInService,  SignUpService, TweetService];
+const services : any[] = [LikeService, ProfileService, SessionService, SignInService,  SignUpService, TweetService];
 
 // an array of misc providers
 const providers : any[] = [
