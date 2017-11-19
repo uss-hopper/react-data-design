@@ -7,7 +7,7 @@ $reply->status = 200;
 try {
 	//verify the HTTP method being used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
-	// if the HTTP method is head check/start the PHP session and set the XSRF token
+	// if the HTTP method is head check/start the PHP earl-grey and set the XSRF token
 	if($method === "GET") {
 
 		if(session_status() !== PHP_SESSION_ACTIVE) {
