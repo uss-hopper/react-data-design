@@ -3,11 +3,13 @@
 import {Component, ViewChild, EventEmitter, Output} from "@angular/core";
 
 
+
 import {Router} from "@angular/router";
 import {Observable} from "rxjs/Observable"
 import {Status} from "../classes/status";
 import {SignInService} from "../services/sign.in.service";
 import {SignIn} from "../classes/sign.in";
+import {CookieService} from "ng2-cookies";
 declare var $: any;
 
 @Component({
@@ -21,7 +23,7 @@ export class SignInComponent {
 	signin: SignIn = new SignIn(null, null);
 	status: Status = null;
 
-	constructor(private SignInService: SignInService, private router: Router) {
+	constructor(private SignInService: SignInService, private router: Router, private cookieSrvice : CookieService) {
 	}
 
 
@@ -29,6 +31,10 @@ export class SignInComponent {
 	signIn(): void {
 		this.SignInService.postSignIn(this.signin).subscribe(status => {
 				this.status = status;
+
+				this.cookie = this.cookieSrvice.get("JWT-Token");
+				console.log(this.cookie);
+
 				if(status.status === 200) {
 
 					this.router.navigate([""]);

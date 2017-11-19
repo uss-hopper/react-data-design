@@ -16,6 +16,9 @@ const JwtHelper = JwtModule.forRoot({
 		tokenGetter: () => {
 			return localStorage.getItem("access_token");
 		},
+
+		skipWhenExpired:true,
+
 		whitelistedDomains: ["localhost:7878", "https://bootcamp-coders.cnm.edu/"]
 	}
 });
