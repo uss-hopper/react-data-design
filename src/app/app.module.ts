@@ -19,7 +19,7 @@ const JwtHelper = JwtModule.forRoot({
 
 		skipWhenExpired:true,
 
-		whitelistedDomains: ["localhost:7878", "https://bootcamp-coders.cnm.edu/"]
+		whitelistedDomains: ["localhost:7272", "https://bootcamp-coders.cnm.edu/"]
 	}
 });
 

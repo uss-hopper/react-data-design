@@ -10,6 +10,8 @@ import {SignInComponent} from "./components/signin.component";
 import {SignUpComponent} from "./components/sign.up.component";
 
 // import all needed Services
+
+import {CookieService} from "ng2-cookies";
 import {LikeService} from "./services/like.service";
 import {ProfileService} from "./services/profile.service";
 import {SessionService} from "./services/session.service";
@@ -24,6 +26,7 @@ import {DeepDiveInterceptor} from "./services/deep.dive.interceptor";
 
 
 
+
 //an array of the components that will be passed off to the module
 export const allAppComponents = [ CreateTweetComponent, HomeComponent, ListTweetsComponent,MainNavComponent, SignInComponent, SignUpComponent];
 
@@ -33,7 +36,7 @@ export const routes: Routes = [
 ];
 
 // an array of services
-const services : any[] = [LikeService, ProfileService, SessionService, SignInService,  SignUpService, TweetService];
+const services : any[] = [CookieService,LikeService, ProfileService, SessionService, SignInService,  SignUpService, TweetService];
 
 // an array of misc providers
 const providers : any[] = [
