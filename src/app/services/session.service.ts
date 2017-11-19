@@ -1,16 +1,19 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpResponse} from "@angular/common/http";
-import {Observable} from "rxjs/Observable";
+import {HttpClient, HttpEvent} from "@angular/common/http";
+import {Status} from "../classes/status";
 
 @Injectable()
+
+
 export class SessionService {
 
-	constructor(protected http:HttpClient) {}
 
-	private sessionUrl = "api/session/";
+	 constructor(protected http:HttpClient) {}
 
-	setSession() : Observable<HttpResponse<any>> {
-		return (this.http.head(this.sessionUrl)
-			.map((response : HttpResponse<any>) => response));
+	 private sessionUrl = "api/earl/";
+
+	 setSession() {
+		 this.http.get<Status>(this.sessionUrl);
 	}
+
 }

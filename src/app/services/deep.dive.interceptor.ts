@@ -27,12 +27,12 @@ export class DeepDiveInterceptor implements HttpInterceptor {
 		// hand off to the next interceptor
 		return(next.handle(request).map((event: HttpEvent<any>) => {
 			// if this is an HTTP Response, from Angular...
-			if(event instanceof HttpResponse) {
+			if(event instanceof HttpResponse && event.body !== null) {
 				// create an event to return (by default, return the same event)
 				let dataEvent = event;
 
 				// if the API is successful...
-				if(event.status === 200) {
+				if(event.status === 200 ) {
 
 					// extract the data or message from the response body
 					let body = event.body;
