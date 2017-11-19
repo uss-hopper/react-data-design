@@ -24,7 +24,7 @@ export class SignInComponent {
 	status: Status = null;
 	cookie: any = {};
 
-	constructor(private SignInService: SignInService, private router: Router, private cookieService : CookieService) {
+	constructor(private SignInService: SignInService, private router: Router, private cookieService : CookieService){
 	}
 
 
@@ -35,7 +35,7 @@ export class SignInComponent {
 
 				if(status.status === 200) {
 
-					this.cookie = this.cookieService.get("JWT-Token");
+					this.cookie = this.cookieService.getAll();
 					console.log(this.cookie);
 
 					this.router.navigate([""]);

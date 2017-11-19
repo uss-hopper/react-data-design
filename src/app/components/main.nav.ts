@@ -10,9 +10,9 @@ import {Status} from "../classes/status";
 export class MainNavComponent {
 	status: Status = null;
 
-	constructor(signInService : SignInService) {}
+	constructor(private signInService : SignInService) {}
 	logOut() : void{
-		this.signInService.logOut();
+		this.signInService.signOut();
 }
 
 }

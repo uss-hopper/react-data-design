@@ -3,6 +3,7 @@ require_once dirname(__DIR__,3 ) .  "/php/lib/xsrf.php";
 
 $reply = new stdClass();
 $reply->status = 200;
+$reply->data = null;
 
 try {
 	//verify the HTTP method being used

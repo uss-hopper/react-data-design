@@ -1,4 +1,4 @@
-import {NgModule} from "@angular/core";
+import {NgModule, OnInit} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
@@ -29,12 +29,13 @@ const JwtHelper = JwtModule.forRoot({
 	bootstrap:    [AppComponent],
 	providers:    [appRoutingProviders]
 })
-export class AppModule {
+export class AppModule implements OnInit{
 	constructor(protected sessionService: SessionService) {
-
-
-		this.run();
 	}
+
+	ngOnInit(): void{
+		this.run();
+}
 
 	run() : void {
 		this.sessionService.setSession();
