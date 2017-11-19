@@ -22,8 +22,9 @@ export class SignInComponent {
 
 	signin: SignIn = new SignIn(null, null);
 	status: Status = null;
+	cookie: any = {};
 
-	constructor(private SignInService: SignInService, private router: Router, private cookieSrvice : CookieService) {
+	constructor(private SignInService: SignInService, private router: Router, private cookieService : CookieService) {
 	}
 
 
@@ -32,10 +33,10 @@ export class SignInComponent {
 		this.SignInService.postSignIn(this.signin).subscribe(status => {
 				this.status = status;
 
-				this.cookie = this.cookieSrvice.get("JWT-Token");
-				console.log(this.cookie);
-
 				if(status.status === 200) {
+
+					this.cookie = this.cookieService.get("JWT-Token");
+					console.log(this.cookie);
 
 					this.router.navigate([""]);
 					//location.reload(true);

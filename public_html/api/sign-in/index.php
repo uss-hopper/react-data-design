@@ -1,6 +1,7 @@
 <?php
 require_once dirname(__DIR__, 3) . "/php/classes/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
+require_once dirname(__DIR__, 3) . "/php/lib/jwt.php";
 require_once ("/etc/apache2/capstone-mysql/encrypted-config.php");
 use Edu\Cnm\DataDesign\Profile;
 
@@ -66,18 +67,16 @@ try {
 
 		//verify hash is correct
 		if($hash !== $profile->getProfileHash()) {
-			throw(new \InvalidArgumentException("Password or email is incorrect."));
+			throw(new \InvalidArgumentException("Password or email is incorrect.", 401));
 		}
 
 		//grab profile from database and put into a session
 		$profile = Profile::getProfileByProfileId($pdo, $profile->getProfileId());
 
-		$profile->getProfileId()->toString();
-		var_dump($profile->getProfileId());
 		$_SESSION["profile"] = $profile;
 
-		/*
-		// create the Auth payload
+
+		//create the Auth payload
 		$authObject = (object) [
 			"profileId" =>$profile->getProfileId(),
 			"profileAtHandle" => $profile->getProfileAtHandle()
@@ -86,11 +85,11 @@ try {
 		// create and set th JWT TOKEN
 		setJwtAndAuthHeader("auth",$authObject);
 
-		*/
+
 
 		$reply->message = "Sign in was successful.";
 	} else {
-		throw(new \InvalidArgumentException("Invalid HTTP method request."));
+		throw(new \InvalidArgumentException("Invalid HTTP method request", 418));
 	}
 
 	// if an exception is thrown update the

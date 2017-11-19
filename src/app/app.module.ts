@@ -30,7 +30,7 @@ const JwtHelper = JwtModule.forRoot({
 	providers:    [appRoutingProviders]
 })
 export class AppModule {
-	constructor(protected sessionService: SessionService, protected helper: JwtModuleHelper) {
+	constructor(protected sessionService: SessionService) {
 
 
 		this.run();
