@@ -1,11 +1,12 @@
-import {NgModule, OnInit} from "@angular/core";
+import {NgModule} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {AppComponent} from "./app.component";
 import {allAppComponents, appRoutingProviders, routing} from "./app.routes";
-import {SessionService} from "./services/session.service";
 import {JwtModule} from "@auth0/angular-jwt";
+import {SessionService} from "./services/session.service";
+import {Status} from "./classes/status";
 
 
 const moduleDeclarations = [AppComponent];
@@ -16,9 +17,7 @@ const JwtHelper = JwtModule.forRoot({
 		tokenGetter: () => {
 			return localStorage.getItem("access_token");
 		},
-
 		skipWhenExpired:true,
-
 		whitelistedDomains: ["localhost:7272", "https://bootcamp-coders.cnm.edu/"]
 	}
 });
@@ -29,16 +28,12 @@ const JwtHelper = JwtModule.forRoot({
 	bootstrap:    [AppComponent],
 	providers:    [appRoutingProviders]
 })
-export class AppModule implements OnInit{
-	constructor(protected sessionService: SessionService) {
-	}
+export class AppModule {
 
-	ngOnInit(): void{
-		this.run();
-}
+	status : Status = null;
 
-	run() : void {
-		this.sessionService.setSession();
-
+	constructor(private sessionService : SessionService ) {
+		this.sessionService.setSession()
+			.subscribe(status => this.status = status);
 	}
 }
