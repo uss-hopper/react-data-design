@@ -22,7 +22,7 @@ export class SignInComponent {
 
 	signin: SignIn = new SignIn(null, null);
 	status: Status = null;
-	cookie: any = {};
+	//cookie: any = {};
 
 	constructor(private SignInService: SignInService, private router: Router, private cookieService : CookieService) {
 	}
@@ -35,8 +35,10 @@ export class SignInComponent {
 
 				if(status.status === 200) {
 
-					this.cookie = this.cookieService.get("JWT-TOKEN");
+					let cookie = this.cookieService.get("JWT-TOKEN");
+					localStorage.setItem("jwt-token", cookie);
 
+					console.log(localStorage.getItem("jwt-token"));
 
 
 					this.router.navigate([""]);

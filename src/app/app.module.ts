@@ -15,7 +15,7 @@ const moduleDeclarations = [AppComponent];
 const JwtHelper = JwtModule.forRoot({
 	config: {
 		tokenGetter: () => {
-			return localStorage.getItem("jwt-token");
+			return sessionStorage.getItem("jwt-token");
 		},
 		skipWhenExpired:true,
 		whitelistedDomains: ["localhost:7272", "https://bootcamp-coders.cnm.edu/"]
