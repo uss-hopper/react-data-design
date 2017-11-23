@@ -26,7 +26,7 @@ export class TweetService {
 
 	// call to the tweet API and create the tweet in question
 	createTweet(tweet : Tweet) : Observable<Status> {
-		return(this.http.put<Status>(this.tweetUrl, tweet));
+		return(this.http.post<Status>(this.tweetUrl, tweet));
 	}
 
 	// call to the tweet API and get a tweet object based on its Id

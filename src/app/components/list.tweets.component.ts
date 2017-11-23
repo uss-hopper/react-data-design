@@ -4,8 +4,6 @@ import {Status} from "../classes/status";
 import {Tweet} from "../classes/tweet";
 import {ProfileService} from "../services/profile.service";
 import {Profile} from "../classes/profile";
-import {Params} from "@angular/router";
-import {subscribeToResult} from "rxjs/util/subscribeToResult";
 
 
 @Component({
@@ -41,12 +39,10 @@ export class ListTweetsComponent implements OnInit{
 	listTweets(): void {
 		this.tweetService.getAllTweets()
 			.subscribe(tweets => this.tweets = tweets);
-
-		for (this.tweet of this.tweets) {
-
-				console.log("fuck you tom wu");
-
-		}
+	}
+	createTweet(): void  {
+		this.tweetService.createTweet(this.tweet)
+			.subscribe(status => this.status = status);
 	}
 
 

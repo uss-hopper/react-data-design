@@ -1,16 +1,14 @@
-<div class="container-fluid">
-	<div class="row">
-		<form id="createTweetForm" class="form-inline" name="createTweetForm" (submit)="createTweet();" novalidate>
-			<div class="form-group">
-				<label class="control-label" for="tweetContent" type="text" aria-hidden="true"></label>
-				<div class="col-sm-9">
-					<input id="tweetContent" name="tweetContent" class="form-control" [(ngModel)]=tweet.tweetContent>
-				</div>
+<div class="row">
+	<form id="createTweetForm" class="form-inline" name="createTweetForm" (keyup.enter)="createTweet();" novalidate>
+		<div class="form-group">
+			<label class="control-label" for="tweetContent" type="text" aria-hidden="true"></label>
+			<div class="col-sm-9">
+				<input id="tweetContent" name="tweetContent" class="form-control" [(ngModel)]=tweet.tweetContent>
 			</div>
+		</div>
 
-			<div class="col-sm-3">
-				<button name="submit" id="submit" type="submit" class="btn btn-success">Submit</button>
-			</div>
-		</form>
-	</div>
+		<div class="col-sm-3">
+			<button name="submit" id="submit" type="submit" class="btn btn-success">Submit</button>
+		</div>
+	</form>
 </div>

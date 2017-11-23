@@ -36,9 +36,7 @@ export class SignInComponent {
 				if(status.status === 200) {
 
 					this.cookie = this.cookieService.get("JWT-TOKEN");
-					 storage = window.localStorage;
 
-					 storage.setItem("jwt-token");
 
 
 					this.router.navigate([""]);

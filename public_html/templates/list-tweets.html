@@ -1,6 +1,15 @@
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-lg-10">
+
+		<div class="col-lg-8">
+		<div class="input-group input-group-lg" (keyup.enter)="createTweet();" novalidate>
+			<label class="control-label" for="tweetContent" type="text" aria-hidden="true"></label>
+			<span class="input-group-addon fa fa-twitter" id="basic-addon1"></span>
+			<input id="tweetContent" name="tweetContent" class="form-control" [(ngModel)]=tweet.tweetContent>
+		</div>
+		</div>
+
+		<div class=" col-lg-8">
 			<div class="card" *ngFor="let tweet of tweets;">
 				<div class="card-header">
 					{{tweet.tweetDate | date:"medium"}}
