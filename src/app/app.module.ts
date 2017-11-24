@@ -14,10 +14,12 @@ const moduleDeclarations = [AppComponent];
 const JwtHelper = JwtModule.forRoot({
 	config: {
 		tokenGetter: () => {
-			return sessionStorage.getItem("jwt-token");
+			return localStorage.getItem("jwt-token");
 		},
 		skipWhenExpired:true,
-		whitelistedDomains: ["localhost:7272", "https://bootcamp-coders.cnm.edu/"]
+		whitelistedDomains: ["localhost:7272", "https://bootcamp-coders.cnm.edu/"],
+		headerName:"X-JWT-TOKEN",
+		authScheme: ""
 	}
 });
 

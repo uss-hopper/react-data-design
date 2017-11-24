@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {SessionService} from "./services/session.service";
 import {Status} from "./classes/status";
 
@@ -6,14 +6,14 @@ import {Status} from "./classes/status";
 	selector: "data-design-app",
 	templateUrl: "./templates/data-design-app.html"
 })
-
 export class AppComponent{
 
 
 
+	status : Status = null;
 
-
-
-
-
+	constructor(protected sessionService : SessionService) {
+		this.sessionService.setSession()
+			.subscribe(status => this.status = status);
+	}
 }

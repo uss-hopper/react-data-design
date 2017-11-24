@@ -5,6 +5,7 @@ require_once dirname(__DIR__, 3) . "/php/classes/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/php/lib/uuid.php";
 require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
+require_once dirname(__DIR__, 3) . "/php/lib/jwt.php";
 
 use Edu\Cnm\DataDesign\{
 	Tweet,
@@ -138,13 +139,15 @@ try {
 		} else if($method === "POST") {
 
 
-			//enforce the end user has a JWT token
-			//validateJwtHeader();
+
 
 			// enforce the user is signed in
 			if(empty($_SESSION["profile"]) === true) {
 				throw(new \InvalidArgumentException("you must be logged in to post tweets", 403));
 			}
+
+			//enforce the end user has a JWT token
+			validateJwtHeader();
 
 			// create new tweet and insert into the database
 			$tweet = new Tweet(generateUuidV4(), $_SESSION["profile"]->getProfileId(), $requestObject->tweetContent, null);

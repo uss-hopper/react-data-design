@@ -73,17 +73,20 @@ function jwtValidator() {
 function validateJwtHeader () : \Lcobucci\JWT\Token   {
 	//if  the JWT does not exist in the cookie jar throw an exception
 	$headers = array_change_key_case(apache_request_headers(), CASE_UPPER);
+
 	if(array_key_exists("X-JWT-TOKEN", $headers) === false) {
 		throw new InvalidArgumentException("invalid JWT token", 400);
 	}
 
 	//enforce the session has needed content
 	if(empty( $_SESSION["signature"]) === true ) {
-		throw new InvalidArgumentException("not logged in", 400);
+		throw new InvalidArgumentException("not logged in", 401);
 	}
 
 	//grab the string representation of the Token from the header then parse it into an object
 	$headerJwt = $headers["X-JWT-TOKEN"];
+
+
 	$headerJwt = (new Parser())->parse($headerJwt);
 
 	/**
@@ -111,14 +114,14 @@ function verifiedAndValidatedSignature ( \Lcobucci\JWT\Token  $headerJwt) : void
 	$validator = new ValidationData();
 	$validator->setId(session_id());
 	if($headerJwt->validate($validator) !== true) {
-		throw (new InvalidArgumentException("not authorized to preform task", 400));
+		throw (new InvalidArgumentException("not authorized to preform task", 402));
 	}
 
 	//verify that the JWT was signed by the server
 	$signer = new Sha512();
 
 	if($headerJwt->verify($signer, $_SESSION["signature"]) !== true) {
-		throw (new InvalidArgumentException("not authorized to preform task", 400));
+		throw (new InvalidArgumentException("not authorized to preform task", 403));
 	}
 }
 
