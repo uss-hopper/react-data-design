@@ -4,6 +4,8 @@ import {Status} from "../classes/status";
 import {Tweet} from "../classes/tweet";
 import {ProfileService} from "../services/profile.service";
 import {Profile} from "../classes/profile";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms"
+
 
 
 @Component({
@@ -13,22 +15,28 @@ import {Profile} from "../classes/profile";
 
 export class ListTweetsComponent implements OnInit{
 
-	//declare needed state variables for latter use
-	status: Status = null;
-
-	tweet: Tweet = new Tweet(null,null,null,null);
-	tweets: Tweet[] = [];
+	createTweetForm: FormGroup;
 
 
 	profile: Profile = new Profile(null,null,null,null,null);
 
+	//declare needed state variables for latter use
+	status: Status = null;
+
+	tweet: Tweet = new Tweet(null,null,null,null);
+
+	tweets: Tweet[] = [];
 
 
-	constructor(private tweetService: TweetService, private profileService: ProfileService) {}
+	constructor(private tweetService: TweetService, private profileService: ProfileService, private formBuilder: FormBuilder) {}
 
 	//life cycling before my eyes
 	ngOnInit() : void {
-		this.listTweets()
+		this.listTweets();
+
+		this.createTweetForm = this.formBuilder.group({
+			tweetContent: ["",[Validators.maxLength(140), Validators.required], [Validators.minLength(1), Validators.required()]]
+		});
 	}
 
 	getTweetProfile(): void {
@@ -42,7 +50,13 @@ export class ListTweetsComponent implements OnInit{
 	}
 	createTweet(): void  {
 		this.tweetService.createTweet(this.tweet)
-			.subscribe(status => this.status = status);
+			.subscribe(status =>{
+				this.status = status;
+				if(this.status.status ===200) {
+					this.createTweetForm().reset();
+					this.listTweets();
+				}
+			});
 	}
 
 
