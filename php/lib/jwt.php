@@ -45,7 +45,7 @@ function setJwtAndAuthHeader(string $value, stdClass $content): void {
 	// add the JWT to the header
 	setcookie("JWT-TOKEN", $token, 0, "/");
 
-	$_SESSION["JWT-TOKEN"] = $token->__toString();
+
 
 }
 
@@ -86,12 +86,14 @@ function validateJwtHeader () : \Lcobucci\JWT\Token   {
 	$headerJwt = $headers["X-JWT-TOKEN"];
 	$headerJwt = (new Parser())->parse($headerJwt);
 
+	/**
 	//enforce that the JWT payload in the session matches the payload from header
 	if ($_SESSION["JWT-TOKEN"] !== $headerJwt->__toString()) {
 		$_COOKIE = [];
 		$_SESSION = [];
 		throw (new InvalidArgumentException("please log in again", 400));
 	}
+	**/
 
 	return $headerJwt;
 }

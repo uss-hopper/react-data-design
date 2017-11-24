@@ -5,7 +5,6 @@ import {HttpClientModule} from "@angular/common/http";
 import {AppComponent} from "./app.component";
 import {allAppComponents, appRoutingProviders, routing} from "./app.routes";
 import {JwtModule} from "@auth0/angular-jwt";
-import {SessionService} from "./services/session.service";
 import {Status} from "./classes/status";
 
 
@@ -28,12 +27,4 @@ const JwtHelper = JwtModule.forRoot({
 	bootstrap:    [AppComponent],
 	providers:    [appRoutingProviders]
 })
-export class AppModule {
-
-	status : Status = null;
-
-	constructor(private sessionService : SessionService ) {
-		this.sessionService.setSession()
-			.subscribe(status => this.status = status);
-	}
-}
+export class AppModule {}
