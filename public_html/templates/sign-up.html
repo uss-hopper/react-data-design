@@ -40,8 +40,8 @@
 					</div>
 
 					<div class="alert alert-danger" *ngIf="signUpForm.controls.email?.invalid && signUpForm.controls.email?.touched">
-						<p *ngIf="signUpForm.controls.email?.errors.maxlength">Twitter Handle is to long</p>
-						<p *ngIf="signUpForm.controls.email?.errors.required">Valid Email Address is required</p>
+						<p *ngIf="signUpForm.controls.email?.errors.maxlength">email is to long</p>
+						<p *ngIf="signUpForm.controls.email?.errors.required">valid email address is required</p>
 					</div>
 
 

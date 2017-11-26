@@ -49,11 +49,12 @@ export class SignUpComponent implements OnInit{
 
 	createSignUp(): void {
 
-		let signUp =  new SignUp(this.signUpForm.value.atHandle, this.signUpForm.value.profileEmail, this.signUpForm.value.password, this.signUpForm.value.passwordConfirm, this.signUpForm.value.phoneNumber);
+		let signUp =  new SignUp(this.signUpForm.value.atHandle, this.signUpForm.value.email, this.signUpForm.value.password, this.signUpForm.value.passwordConfirm, this.signUpForm.value.phoneNumber);
 
 		this.signUpService.createProfile(signUp)
 			.subscribe(status => {
 				this.status = status;
+
 				if(this.status.status === 200) {
 					alert(status.message);
 					setTimeout(function() {
