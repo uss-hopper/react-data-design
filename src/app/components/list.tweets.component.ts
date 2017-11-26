@@ -4,7 +4,8 @@ import {Status} from "../classes/status";
 import {Tweet} from "../classes/tweet";
 import {ProfileService} from "../services/profile.service";
 import {Profile} from "../classes/profile";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms"
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+
 
 
 

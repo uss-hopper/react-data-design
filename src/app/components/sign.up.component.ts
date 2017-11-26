@@ -3,13 +3,14 @@
  */
 
 //import needed modules for the sign-up component
-import {Component, ViewChild,} from "@angular/core";
+import {Component, OnInit, ViewChild,} from "@angular/core";
 import {Observable} from "rxjs/Observable"
 import {Router} from "@angular/router";
 import {Status} from "../classes/status";
 import {SignUpService} from "../services/sign.up.service";
 import {SignUp} from "../classes/sign.up";
 import {setTimeout} from "timers";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 //declare $ for good old jquery
 declare let $: any;
@@ -20,24 +21,40 @@ declare let $: any;
 	templateUrl: "./templates/sign-up.html",
 	selector: "sign-up"
 })
-export class SignUpComponent {
+export class SignUpComponent implements OnInit{
 
 	//
-	@ViewChild("signUpForm") signUpForm: any;
+	@ViewChild("signUpForm") signUpView: any;
+	signUpForm : FormGroup;
+
 	signUp: SignUp = new SignUp(null, null, null, null, null);
 	status: Status = null;
 
-	constructor(private signUpService: SignUpService, private router: Router) {
+
+	constructor(private formBuilder : FormBuilder, private router: Router, private signUpService: SignUpService) {
+		console.log("Valor Morgalus")
 	}
 
+	ngOnInit()  : void {
+		this.signUpForm = this.formBuilder.group({
+			atHandle: ["", [Validators.maxLength(32), Validators.required]],
+			email: ["", [Validators.maxLength(128), Validators.required]],
+			phoneNumber: ["", [Validators.maxLength(32)]],
+			password:["", [Validators.maxLength(48), Validators.required]],
+			passwordConfirm:["", [Validators.maxLength(48), Validators.required]]
+
+		});
+
+}
+
 	createSignUp(): void {
-		this.signUpService.createProfile(this.signUp)
 
+		let signUp =  new SignUp(this.signUpForm.value.atHandle, this.signUpForm.value.profileEmail, this.signUpForm.value.password, this.signUpForm.value.passwordConfirm, this.signUpForm.value.phoneNumber);
+
+		this.signUpService.createProfile(signUp)
 			.subscribe(status => {
-				console.log(this.signUp);
-
-				console.log(this.status);
-				if(status.status === 200) {
+				this.status = status;
+				if(this.status.status === 200) {
 					alert(status.message);
 					setTimeout(function() {
 						$("#signUp-modal").modal('hide');
