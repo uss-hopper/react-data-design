@@ -17,13 +17,13 @@ export class ListTweetsComponent implements OnInit{
 
 	createTweetForm: FormGroup;
 
+	tweet : Tweet = new Tweet (null, null, null, null);
+
 
 	profile: Profile = new Profile(null,null,null,null,null);
 
 	//declare needed state variables for latter use
 	status: Status = null;
-
-	tweet: Tweet = new Tweet(null,null,null,null);
 
 	tweets: Tweet[] = [];
 
@@ -35,7 +35,7 @@ export class ListTweetsComponent implements OnInit{
 		this.listTweets();
 
 		this.createTweetForm = this.formBuilder.group({
-			tweetContent: ["",[Validators.maxLength(140), Validators.required], [Validators.minLength(1), Validators.required()]]
+			tweetContent: ["",[Validators.maxLength(140), Validators.minLength(1), Validators.required]]
 		});
 	}
 
@@ -49,11 +49,15 @@ export class ListTweetsComponent implements OnInit{
 			.subscribe(tweets => this.tweets = tweets);
 	}
 	createTweet(): void  {
-		this.tweetService.createTweet(this.tweet)
+
+		let tweet = new Tweet(null, null, this.createTweetForm.value.tweetContent, null);
+
+		this.tweetService.createTweet(tweet)
 			.subscribe(status =>{
 				this.status = status;
 				if(this.status.status ===200) {
-					this.createTweetForm().reset();
+					this.createTweetForm.reset();
+					alert(this.status.message);
 					this.listTweets();
 				}
 			});

@@ -2,11 +2,18 @@
 	<div class="row">
 
 		<div class="col-lg-8">
-		<div class="input-group input-group-lg" (keyup.enter)="createTweet();" novalidate>
-			<label class="control-label" for="tweetContent" type="text" aria-hidden="true"></label>
-			<span class="input-group-addon fa fa-twitter" id="basic-addon1"></span>
-			<input id="tweetContent" name="tweetContent" class="form-control" [(ngModel)]=tweet.tweetContent>
+			<div class="input-group input-group-lg" [formGroup]="createTweetForm" (keyup.enter)="createTweet();"
+				  novalidate>
+				<label class="control-label" for="tweetContent" type="text" aria-hidden="true"></label>
+				<span class="input-group-addon fa fa-twitter" id="basic-addon1"></span>
+				<input id="tweetContent" type="text" name="tweetContent" formControlName="tweetContent"
+						 class="form-control">
+			</div>
 		</div>
+		<div class="col-lg-4">
+			<div *ngIf="createTweetForm.controls.tweetContent?.invalid && createTweetForm.controls.tweetContent?.touched" class="alert alert-danger">
+				<p *ngIf="createTweetForm.controls.tweetContent?.errors.maxlength">Tweet is way to long</p>
+			</div>
 		</div>
 
 		<div class=" col-lg-8">
