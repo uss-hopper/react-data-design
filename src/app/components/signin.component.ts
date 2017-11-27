@@ -35,12 +35,6 @@ export class SignInComponent {
 
 				if(status.status === 200) {
 
-					let cookie = this.cookieService.get("JWT-TOKEN");
-					localStorage.setItem("jwt-token", cookie);
-
-					console.log(localStorage.getItem("jwt-token"));
-
-
 					this.router.navigate([""]);
 					//location.reload(true);
 					this.signInForm.reset();

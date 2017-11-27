@@ -5,6 +5,8 @@ import {Tweet} from "../classes/tweet";
 import {ProfileService} from "../services/profile.service";
 import {Profile} from "../classes/profile";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {LikeService} from "../services/like.service";
+import {Like} from "../classes/like";
 
 
 
@@ -29,7 +31,7 @@ export class ListTweetsComponent implements OnInit{
 	tweets: Tweet[] = [];
 
 
-	constructor(private tweetService: TweetService, private profileService: ProfileService, private formBuilder: FormBuilder) {}
+	constructor(  private formBuilder: FormBuilder, private profileService: ProfileService, private likeService : LikeService, private tweetService: TweetService ) {}
 
 	//life cycling before my eyes
 	ngOnInit() : void {
@@ -63,6 +65,22 @@ export class ListTweetsComponent implements OnInit{
 				}
 			});
 	}
+
+	/*
+	createLike(profileId : string, tweetId : string) : void {
+
+		//let like : Like = new Like(profileId, tweetId);
+
+		this.likeService.createLike(like)
+			.subscribe(
+			status => {
+				this.status = status;
+				if(this.status.status === 200) {
+					console.log("success");
+				}
+			});
+
+	} */
 
 
 }

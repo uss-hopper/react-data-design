@@ -43,10 +43,7 @@ function setJwtAndAuthHeader(string $value, stdClass $content): void {
 		->getToken();
 
 	// add the JWT to the header
-	setcookie("JWT-TOKEN", $token, 0, "/");
-
-
-
+	header("X-JWT-TOKEN: $token");
 }
 
 /**
