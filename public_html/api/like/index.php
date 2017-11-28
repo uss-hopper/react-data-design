@@ -2,13 +2,13 @@
 
 require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/classes/autoload.php";
+require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
 require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/php/lib/jwt.php";
+require_once dirname(__DIR__, 3) . "/php/lib/uuid.php";
 
-require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
 
 use Edu\Cnm\DataDesign\{
-	Profile,
 	Like
 };
 
@@ -101,6 +101,8 @@ try {
 				throw(new \InvalidArgumentException("you must be logged in too like posts", 403));
 			}
 
+			validateJwtHeader();
+
 			$like = new Like($requestObject->likeProfileId, $requestObject->likeTweetId);
 			$like->insert($pdo);
 			$reply->message = "liked tweet successful";
@@ -124,6 +126,8 @@ try {
 			if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $like->getLikeProfileId()) {
 				throw(new \InvalidArgumentException("You are not allowed to delete this tweet", 403));
 			}
+
+			validateJwtHeader();
 
 			//preform the actual delete
 			$like->delete($pdo);

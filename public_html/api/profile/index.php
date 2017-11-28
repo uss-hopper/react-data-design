@@ -3,8 +3,10 @@
 
 require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
 require_once(dirname(__DIR__, 3) . "/php/classes/autoload.php");
+require_once(dirname(__DIR__, 3) . "/php/lib/jwt.php");
 require_once(dirname(__DIR__, 3) . "/php/lib/xsrf.php");
 require_once(dirname(__DIR__, 3) . "/php/lib/uuid.php");
+
 require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
 
 use Edu\Cnm\DataDesign\ {
@@ -41,7 +43,7 @@ try {
 
 
 	// make sure the id is valid for methods that require it
-	if(($method === "DELETE" || $method === "PUT") && (empty($id) === true || $id < 0)) {
+	if(($method === "DELETE" || $method === "PUT") && (empty($id) === true )) {
 		throw(new InvalidArgumentException("id cannot be empty or negative", 405));
 	}
 
@@ -79,6 +81,8 @@ try {
 		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $id) {
 			throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
 		}
+
+		validateJwtHeader();
 
 		//decode the response from the front end
 		$requestContent = file_get_contents("php://input");
@@ -129,9 +133,11 @@ try {
 		}
 
 		//enforce the user is signed in and only trying to edit their own profile
-		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $profile->getProfileId()) {
+		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $profile->getProfileId()->toString()) {
 			throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
 		}
+
+		validateJwtHeader();
 
 		//delete the post from the database
 		$profile->delete($pdo);

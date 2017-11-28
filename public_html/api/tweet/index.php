@@ -2,9 +2,9 @@
 
 require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/classes/autoload.php";
+require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
 require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/php/lib/uuid.php";
-require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
 require_once dirname(__DIR__, 3) . "/php/lib/jwt.php";
 
 use Edu\Cnm\DataDesign\{
@@ -108,7 +108,7 @@ try {
 
 		// make sure tweet date is accurate (optional field)
 		if(empty($requestObject->tweetDate) === true) {
-			$requestObject->tweetDate = date("y-m-d H:i:s");
+			$requestObject->tweetDate = null;
 		}
 
 		//perform the actual put or post
@@ -121,12 +121,14 @@ try {
 			}
 
 			//enforce the end user has a JWT token
-			//validateJwtHeader();
+
 
 			//enforce the user is signed in and only trying to edit their own tweet
 			if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $tweet->getTweetProfileId()->toString()) {
 				throw(new \InvalidArgumentException("You are not allowed to edit this tweet", 403));
 			}
+
+			validateJwtHeader();
 
 			// update all attributes
 			//$tweet->setTweetDate($requestObject->tweetDate);
@@ -168,13 +170,15 @@ try {
 			throw(new RuntimeException("Tweet does not exist", 404));
 		}
 
-		//enforce the end user has a JWT token
-		//validateJwtHeader();
+
 
 		//enforce the user is signed in and only trying to edit their own tweet
 		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $tweet->getTweetProfileId()->toString()) {
 			throw(new \InvalidArgumentException("You are not allowed to delete this tweet", 403));
 		}
+
+		//enforce the end user has a JWT token
+		validateJwtHeader();
 
 		// delete tweet
 		$tweet->delete($pdo);
