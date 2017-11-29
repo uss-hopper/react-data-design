@@ -11,6 +11,7 @@ import {SignUpComponent} from "./components/sign.up.component";
 
 // import all needed Services
 
+import {AuthService} from "./services/auth.service";
 import {CookieService} from "ng2-cookies";
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {LikeService} from "./services/like.service";
@@ -28,6 +29,8 @@ import {DeepDiveInterceptor} from "./services/deep.dive.interceptor";
 
 
 
+
+
 //an array of the components that will be passed off to the module
 export const allAppComponents = [ CreateTweetComponent, HomeComponent, ListTweetsComponent,MainNavComponent, SignInComponent, SignUpComponent];
 
@@ -37,7 +40,7 @@ export const routes: Routes = [
 ];
 
 // an array of services
-const services : any[] = [CookieService,JwtHelperService ,LikeService, ProfileService, SessionService, SignInService,  SignUpService, TweetService];
+const services : any[] = [AuthService,CookieService,JwtHelperService ,LikeService, ProfileService, SessionService, SignInService,  SignUpService, TweetService];
 
 // an array of misc providers
 const providers : any[] = [

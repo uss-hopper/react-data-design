@@ -1,23 +1,31 @@
 
 import { JwtHelperService } from '@auth0/angular-jwt';
 import {Injectable} from "@angular/core";
+import {HttpClient} from "@angular/common/http";
 
 
 @Injectable()
 
-export class AuthenticationService {
+export class AuthService {
 
-	token: string = this.jwtHelperService.tokenGetter();
 
-	constructor(private jwtHelperService: JwtHelperService) {}
+	private token : string = localStorage.getItem("jwt-token");
+
+
+
+	constructor(private jwtHelperService: JwtHelperService, private http: HttpClient) {}
+
+	//token : string = this.jwtHelperService.tokenGetter();
 
 	loggedIn() {
 
-		if (!this.token) {
+
+
+		if (this.token) {
 			return false;
 		}
 
-		const tokenExpired: boolean = this.jwtHelperService.isTokenExpired(token);
+		const tokenExpired: boolean = this.jwtHelperService.isTokenExpired(this.token);
 
 		return !tokenExpired
 	}

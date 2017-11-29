@@ -48,6 +48,8 @@ module.exports = {
 			Popper: ['popper.js', 'default']
 		}),
 
+		new webpack.ContextReplacementPlugin(/@angular(\\|\/)core(\\|\/)/, helpers.root("src")),
+
 		new HtmlWebpackPlugin({
 			inject: "head",
 			filename: helpers.root("public_html") + "/index.html",

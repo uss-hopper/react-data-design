@@ -1,4 +1,6 @@
 import {Component, OnInit} from "@angular/core";
+
+import {AuthService} from "../services/auth.service";
 import {TweetService} from "../services/tweet.service";
 import {Status} from "../classes/status";
 import {Tweet} from "../classes/tweet";
@@ -20,6 +22,8 @@ export class ListTweetsComponent implements OnInit{
 
 	createTweetForm: FormGroup;
 
+	like : Like = new Like(null, null);
+
 	tweet : Tweet = new Tweet (null, null, null, null);
 
 
@@ -31,7 +35,7 @@ export class ListTweetsComponent implements OnInit{
 	tweets: Tweet[] = [];
 
 
-	constructor(  private formBuilder: FormBuilder, private profileService: ProfileService, private likeService : LikeService, private tweetService: TweetService ) {}
+	constructor(  private authService : AuthService , private formBuilder: FormBuilder, private profileService: ProfileService, private likeService : LikeService, private tweetService: TweetService ) {}
 
 	//life cycling before my eyes
 	ngOnInit() : void {
@@ -66,12 +70,14 @@ export class ListTweetsComponent implements OnInit{
 			});
 	}
 
-	/*
-	createLike(profileId : string, tweetId : string) : void {
+
+	createLike(tweetId : string) : void {
 
 		//let like : Like = new Like(profileId, tweetId);
 
-		this.likeService.createLike(like)
+		console.log( this.authService.decodeJwt() );
+
+		this.likeService.createLike(this.like)
 			.subscribe(
 			status => {
 				this.status = status;
@@ -80,7 +86,7 @@ export class ListTweetsComponent implements OnInit{
 				}
 			});
 
-	} */
+	}
 
 
 }
