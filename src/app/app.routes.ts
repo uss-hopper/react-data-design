@@ -12,6 +12,7 @@ import {SignUpComponent} from "./components/sign.up.component";
 // import all needed Services
 
 import {CookieService} from "ng2-cookies";
+import {JwtHelperService} from "@auth0/angular-jwt";
 import {LikeService} from "./services/like.service";
 import {ProfileService} from "./services/profile.service";
 import {SessionService} from "./services/session.service";
@@ -36,7 +37,7 @@ export const routes: Routes = [
 ];
 
 // an array of services
-const services : any[] = [CookieService,LikeService, ProfileService, SessionService, SignInService,  SignUpService, TweetService];
+const services : any[] = [CookieService,JwtHelperService ,LikeService, ProfileService, SessionService, SignInService,  SignUpService, TweetService];
 
 // an array of misc providers
 const providers : any[] = [
