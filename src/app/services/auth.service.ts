@@ -41,6 +41,7 @@ export class AuthService {
 		console.log(authObject);
 
 		return authObject;
+
 	}
 
 }

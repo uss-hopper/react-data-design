@@ -24,16 +24,13 @@ declare let $: any;
 export class SignUpComponent implements OnInit{
 
 	//
-	@ViewChild("signUpForm") signUpView: any;
 	signUpForm : FormGroup;
 
 	signUp: SignUp = new SignUp(null, null, null, null, null);
 	status: Status = null;
 
 
-	constructor(private formBuilder : FormBuilder, private router: Router, private signUpService: SignUpService) {
-		console.log("Valor Morgalus")
-	}
+	constructor(private formBuilder : FormBuilder, private router: Router, private signUpService: SignUpService) {}
 
 	ngOnInit()  : void {
 		this.signUpForm = this.formBuilder.group({
