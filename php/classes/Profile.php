@@ -5,6 +5,7 @@ require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 
 
+
 /**
  * Cross Section of a Twitter Profile
  *
@@ -82,7 +83,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
-	public function __construct($newProfileId, ?string $newProfileActivationToken, string $newProfileAtHandle, string   $newProfileCloudinaryToken,string $newProfileEmail, string $newProfileHash, ?string $newProfilePhone, string $newProfileSalt) {
+	public function __construct($newProfileId, ?string $newProfileActivationToken, string $newProfileAtHandle, string $newProfileCloudinaryToken, string $newProfileEmail, string $newProfileHash, ?string $newProfilePhone, string $newProfileSalt) {
 		try {
 			$this->setProfileId($newProfileId);
 			$this->setProfileActivationToken($newProfileActivationToken);
@@ -92,7 +93,7 @@ class Profile implements \JsonSerializable {
 			$this->setProfileHash($newProfileHash);
 			$this->setProfilePhone($newProfilePhone);
 			$this->setProfileSalt($newProfileSalt);
-		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+		} catch(\InvalidArgumentException | \RangeException |\TypeError | \Exception $exception) {
 			//determine what exception type was thrown
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
@@ -207,7 +208,7 @@ class Profile implements \JsonSerializable {
 	public function getProfileCloudinaryToken() : string {
 		return($this->profileCloudinaryToken);
 	}
-	public function setImageCloudinaryToken(string $newImageCloudinaryToken) : void {
+	public function setProfileCloudinaryToken(string $newImageCloudinaryToken) : void {
 
 		if(ctype_xdigit($newImageCloudinaryToken) === false) {
 			throw(new\RangeException("user activation is not valid"));
@@ -218,7 +219,7 @@ class Profile implements \JsonSerializable {
 			throw(new \RangeException("image cloudinary content too large"));
 		}
 		// store the image cloudinary content
-		$this->imageCloudinary = $newImageCloudinaryToken;
+		$this->profileCloudinaryToken = $newImageCloudinaryToken;
 	}
 
 	/**
@@ -386,6 +387,8 @@ class Profile implements \JsonSerializable {
 		$query = "INSERT INTO profile(profileId, profileActivationToken, profileAtHandle, profileCloudinaryToken,  profileEmail, profileHash, profilePhone, profileSalt) VALUES (:profileId, :profileActivationToken, :profileAtHandle, :profileCloudinaryToken, :profileEmail, :profileHash, :profilePhone, :profileSalt)";
 		$statement = $pdo->prepare($query);
 
+		var_dump($this->profileCloudinaryToken);
+
 
 		$parameters = ["profileId" => $this->profileId->getBytes(), "profileActivationToken" => $this->profileActivationToken, "profileAtHandle" => $this->profileAtHandle, "profileCloudinaryToken" => $this->profileCloudinaryToken, "profileEmail" => $this->profileEmail, "profileHash" => $this->profileHash,"profilePhone" => $this->profilePhone, "profileSalt" => $this->profileSalt];
 		$statement->execute($parameters);
@@ -463,6 +466,8 @@ class Profile implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
+
+				var_dump($row);
 				$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileCloudinaryToken"],$row["profileEmail"], $row["profileHash"], $row["profilePhone"], $row["profileSalt"]);
 			}
 		} catch(\Exception $exception) {
