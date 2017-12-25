@@ -4,8 +4,8 @@
 -- never ever ever ever ever ever ever ever ever ever ever ever ever ever ever ever ever ever ever ever
 -- do this on live data!!!!
 DROP TABLE IF EXISTS `like`;
-DROP TABLE IF EXISTS tweet;
 DROP TABLE IF EXISTS image;
+DROP TABLE IF EXISTS tweet;
 DROP TABLE IF EXISTS profile;
 
 -- the CREATE TABLE function is a function that takes tons of arguments to layout the table's schema
@@ -16,7 +16,7 @@ CREATE TABLE profile (
 	profileId BINARY(16) NOT NULL,
 	profileActivationToken CHAR(32),
 	profileAtHandle VARCHAR(32) NOT NULL,
-	profileCloudinaryID VARCHAR(255),
+	profileCloudinaryToken VARCHAR(255),
 -- to make sure duplicate data cannot exist, create a unique index
 	profileEmail VARCHAR(128) NOT NULL,
 -- to make something optional, exclude the not null
@@ -50,7 +50,7 @@ CREATE TABLE tweet (
 CREATE TABLE image (
  	imageId BINARY(16) NOT NULL,
 	imageTweetId BINARY(16) NOT NULL,
-	imageCloudinayId VARCHAR(255) NOT NULL,
+	imageCloudinayToken VARCHAR(255) NOT NULL,
 	INDEX(imageId),
 	INDEX(imageTweetId),
 

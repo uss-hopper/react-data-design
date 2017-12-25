@@ -34,6 +34,12 @@ class Profile implements \JsonSerializable {
 	 **/
 	private $profileActivationToken;
 
+
+	/**
+	 * Cloudinary id for this Profile; this is a unique index
+	 * @var string $profileAtHandle
+	 **/
+	private $profileCloudinaryToken;
 	/**
 	 * email for this Profile; this is a unique index
 	 * @var string $profileEmail
@@ -65,6 +71,7 @@ class Profile implements \JsonSerializable {
 	 * @param string|Uuid $newProfileId id of this Profile or null if a new Profile
 	 * @param string $newProfileActivationToken activation token to safe guard against malicious accounts
 	 * @param string $newProfileAtHandle string containing newAtHandle
+	 * @param string $newProfileCloudinaryToken string containing newAtHandle can be null
 	 * @param string $newProfileEmail string containing email
 	 * @param string $newProfileHash string containing password hash
 	 * @param string $newProfilePhone string containing phone number
@@ -75,11 +82,12 @@ class Profile implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
-	public function __construct($newProfileId, ?string $newProfileActivationToken, string $newProfileAtHandle, string $newProfileEmail, string $newProfileHash, ?string $newProfilePhone, string $newProfileSalt) {
+	public function __construct($newProfileId, ?string $newProfileActivationToken, string $newProfileAtHandle, string   $newProfileCloudinaryToken,string $newProfileEmail, string $newProfileHash, ?string $newProfilePhone, string $newProfileSalt) {
 		try {
 			$this->setProfileId($newProfileId);
 			$this->setProfileActivationToken($newProfileActivationToken);
 			$this->setProfileAtHandle($newProfileAtHandle);
+			$this->setProfileCloudinaryToken($newProfileCloudinaryToken);
 			$this->setProfileEmail($newProfileEmail);
 			$this->setProfileHash($newProfileHash);
 			$this->setProfilePhone($newProfilePhone);
@@ -157,7 +165,6 @@ class Profile implements \JsonSerializable {
 		$this->profileActivationToken = $newProfileActivationToken;
 	}
 
-
 	/**
 	 * accessor method for at handle
 	 *
@@ -190,6 +197,28 @@ class Profile implements \JsonSerializable {
 
 		// store the at handle
 		$this->profileAtHandle = $newProfileAtHandle;
+	}
+
+	/**
+	 * accessor method for profile cloudinary token
+	 *
+	 * @return string value of the activation token
+	 */
+	public function getProfileCloudinaryToken() : string {
+		return($this->profileCloudinaryToken);
+	}
+	public function setImageCloudinaryToken(string $newImageCloudinaryToken) : void {
+
+		if(ctype_xdigit($newImageCloudinaryToken) === false) {
+			throw(new\RangeException("user activation is not valid"));
+		}
+
+		// verify the image cloudinary content will fit in the database
+		if(strlen($newImageCloudinaryToken) > 255) {
+			throw(new \RangeException("image cloudinary content too large"));
+		}
+		// store the image cloudinary content
+		$this->imageCloudinary = $newImageCloudinaryToken;
 	}
 
 	/**
@@ -354,11 +383,11 @@ class Profile implements \JsonSerializable {
 
 
 		// create query template
-		$query = "INSERT INTO profile(profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt) VALUES (:profileId, :profileActivationToken, :profileAtHandle, :profileEmail, :profileHash, :profilePhone, :profileSalt)";
+		$query = "INSERT INTO profile(profileId, profileActivationToken, profileAtHandle, profileCloudinaryToken,  profileEmail, profileHash, profilePhone, profileSalt) VALUES (:profileId, :profileActivationToken, :profileAtHandle, :profileCloudinaryToken, :profileEmail, :profileHash, :profilePhone, :profileSalt)";
 		$statement = $pdo->prepare($query);
 
 
-		$parameters = ["profileId" => $this->profileId->getBytes(), "profileActivationToken" => $this->profileActivationToken, "profileAtHandle" => $this->profileAtHandle, "profileEmail" => $this->profileEmail, "profileHash" => $this->profileHash,"profilePhone" => $this->profilePhone, "profileSalt" => $this->profileSalt];
+		$parameters = ["profileId" => $this->profileId->getBytes(), "profileActivationToken" => $this->profileActivationToken, "profileAtHandle" => $this->profileAtHandle, "profileCloudinaryToken" => $this->profileCloudinaryToken, "profileEmail" => $this->profileEmail, "profileHash" => $this->profileHash,"profilePhone" => $this->profilePhone, "profileSalt" => $this->profileSalt];
 		$statement->execute($parameters);
 
 
@@ -393,12 +422,12 @@ class Profile implements \JsonSerializable {
 
 
 		// create query template
-		$query = "UPDATE profile SET profileId = :profileId, profileActivationToken = :profileActivationToken, profileAtHandle = :profileAtHandle, profileEmail = :profileEmail, profileHash = :profileHash, profilePhone = :profilePhone, profileSalt = :profileSalt WHERE profileId = :profileId";
+		$query = "UPDATE profile SET profileId = :profileId, profileActivationToken = :profileActivationToken, profileAtHandle = :profileAtHandle, profileCloudinaryToken = :profileCloudinaryToken,profileEmail = :profileEmail, profileHash = :profileHash, profilePhone = :profilePhone, profileSalt = :profileSalt WHERE profileId = :profileId";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
 
-		$parameters = ["profileId" => $this->profileId->getBytes(), "profileActivationToken" => $this->profileActivationToken, "profileAtHandle" => $this->profileAtHandle, "profileEmail" => $this->profileEmail, "profileHash" => $this->profileHash, "profilePhone" => $this->profilePhone, "profileSalt" => $this->profileSalt];
+		$parameters = ["profileId" => $this->profileId->getBytes(), "profileActivationToken" => $this->profileActivationToken, "profileAtHandle" => $this->profileAtHandle, "profileCloudinaryToken" => $this->profileCloudinaryToken, "profileEmail" => $this->profileEmail, "profileHash" => $this->profileHash, "profilePhone" => $this->profilePhone, "profileSalt" => $this->profileSalt];
 		$statement->execute($parameters);
 	}
 
@@ -421,7 +450,7 @@ class Profile implements \JsonSerializable {
 
 
 		// create query template
-		$query = "SELECT profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt FROM profile WHERE profileId = :profileId";
+		$query = "SELECT profileId, profileActivationToken, profileAtHandle, profileCloudinaryToken, profileEmail, profileHash, profilePhone, profileSalt FROM profile WHERE profileId = :profileId";
 		$statement = $pdo->prepare($query);
 
 		// bind the profile id to the place holder in the template
@@ -434,7 +463,7 @@ class Profile implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileEmail"], $row["profileHash"], $row["profilePhone"], $row["profileSalt"]);
+				$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileCloudinaryToken"],$row["profileEmail"], $row["profileHash"], $row["profilePhone"], $row["profileSalt"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
@@ -462,7 +491,7 @@ class Profile implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "SELECT profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt FROM profile WHERE profileEmail = :profileEmail";
+		$query = "SELECT profileId, profileActivationToken, profileAtHandle, profileCloudinaryToken, profileEmail, profileHash, profilePhone, profileSalt FROM profile WHERE profileEmail = :profileEmail";
 		$statement = $pdo->prepare($query);
 
 		// bind the profile id to the place holder in the template
@@ -475,7 +504,7 @@ class Profile implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileEmail"], $row["profileHash"], $row["profilePhone"], $row["profileSalt"]);
+				$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileCloudinaryToken"], $row["profileEmail"], $row["profileHash"], $row["profilePhone"], $row["profileSalt"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
@@ -502,7 +531,7 @@ class Profile implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "SELECT  profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt FROM profile WHERE profileAtHandle = :profileAtHandle";
+		$query = "SELECT  profileId, profileActivationToken, profileAtHandle, profileCloudinaryToken, profileEmail, profileHash, profilePhone, profileSalt FROM profile WHERE profileAtHandle = :profileAtHandle";
 		$statement = $pdo->prepare($query);
 
 		// bind the profile at handle to the place holder in the template
@@ -517,7 +546,7 @@ class Profile implements \JsonSerializable {
 
 		while (($row = $statement->fetch()) !== false) {
 			try {
-				$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileEmail"], $row["profileHash"], $row["profilePhone"], $row["profileSalt"]);
+				$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileCloudinaryToken"], $row["profileEmail"], $row["profileHash"], $row["profilePhone"], $row["profileSalt"]);
 				$profiles[$profiles->key()] = $profile;
 				$profiles->next();
 			} catch(\Exception $exception) {
@@ -546,7 +575,7 @@ class Profile implements \JsonSerializable {
 			}
 
 			//create the query template
-			$query = "SELECT  profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt FROM profile WHERE profileActivationToken = :profileActivationToken";
+			$query = "SELECT  profileId, profileActivationToken, profileAtHandle, profileCloudinaryToken, profileEmail, profileHash, profilePhone, profileSalt FROM profile WHERE profileActivationToken = :profileActivationToken";
 			$statement = $pdo->prepare($query);
 
 			// bind the profile activation token to the placeholder in the template
@@ -559,7 +588,7 @@ class Profile implements \JsonSerializable {
 				$statement->setFetchMode(\PDO::FETCH_ASSOC);
 				$row = $statement->fetch();
 				if($row !== false) {
-					$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileEmail"], $row["profileHash"], $row["profilePhone"], $row["profileSalt"]);
+					$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileCloudinaryToken"], $row["profileEmail"], $row["profileHash"], $row["profilePhone"], $row["profileSalt"]);
 				}
 			} catch(\Exception $exception) {
 				// if the row couldn't be converted, rethrow it
@@ -576,6 +605,7 @@ class Profile implements \JsonSerializable {
 		public function jsonSerialize() {
 			$fields = get_object_vars($this);
 			$fields["profileId"] = $this->profileId->toString();
+			unset($fields["profileActivationToken"]);
 			unset($fields["profileHash"]);
 			unset($fields["profileSalt"]);
 			return ($fields);
