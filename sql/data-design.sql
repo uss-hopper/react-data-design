@@ -51,6 +51,7 @@ CREATE TABLE image (
  	imageId BINARY(16) NOT NULL,
 	imageTweetId BINARY(16) NOT NULL,
 	imageCloudinayToken VARCHAR(255) NOT NULL,
+	imageUrl VARCHAR(128) NOT NULL ,
 	INDEX(imageId),
 	INDEX(imageTweetId),
 
