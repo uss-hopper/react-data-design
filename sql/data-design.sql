@@ -27,7 +27,7 @@ CREATE TABLE profile (
 	UNIQUE(profileAtHandle),
 -- this officiates the primary key for the entity
 	PRIMARY KEY(profileId)
-);
+	) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 -- create the tweet entity
 CREATE TABLE tweet (
@@ -44,7 +44,7 @@ CREATE TABLE tweet (
 	FOREIGN KEY(tweetProfileId) REFERENCES profile(profileId),
 	-- and finally create the primary key
 	PRIMARY KEY(tweetId)
-);
+) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 -- create the tweetImage entity
 CREATE TABLE image (
@@ -57,7 +57,7 @@ CREATE TABLE image (
 
 	FOREIGN KEY(imageTweetId) REFERENCES tweet(tweetId),
 	PRIMARY KEY (imageId)
-);
+) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 -- create the like entity (a weak entity from an m-to-n for profile --> tweet)
 CREATE TABLE `like` (
@@ -73,4 +73,4 @@ CREATE TABLE `like` (
 	FOREIGN KEY(likeTweetId) REFERENCES tweet(tweetId),
 	-- finally, create a composite foreign key with the two foreign keys
 	PRIMARY KEY(likeProfileId, likeTweetId)
-);
+) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
