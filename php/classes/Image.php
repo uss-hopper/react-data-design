@@ -253,7 +253,7 @@ class Image implements \JsonSerializable {
 
 		// grab the image from mySQL
 		try {
-			$tweet = null;
+			$image = null;
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
