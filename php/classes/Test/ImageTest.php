@@ -24,13 +24,13 @@ class ImageTest extends DataDesignTest {
 	 * Profile that created the liked the Tweet; this is for foreign key relations
 	 * @var  Profile $profile
 	 **/
-	protected $profile;
+	protected $profile = null;
 
 	/**
 	 * Tweet that was liked; this is for foreign key relations
 	 * @var Tweet $tweet
 	 **/
-	protected $tweet;
+	protected $tweet = null;
 
 	/**
 	 * valid hash to use
@@ -62,6 +62,13 @@ class ImageTest extends DataDesignTest {
 	 * @var string $VALID_IMAGECLOUDINARYTOKEN
 	 */
 	protected $VALID_IMAGECLOUDINARYTOKEN;
+
+
+	/**
+	 * valid IMAGEURL to create the image object to own the test
+	 * @var string $VALID_IMAGEURL
+	 */
+	protected $VALID_IMAGEURL;
 
 
 
@@ -100,137 +107,109 @@ class ImageTest extends DataDesignTest {
 
 		// create a new Image and insert to into mySQL
 		$imageId = generateUuidV4();
-		$image = new Image($imageId, $this->tweet->getTweetId(),$this->VALID_IMAGECLOUDINARYTOKEN, $this->VALID_LIKEDATE);
-		$like->insert($this->getPDO());
+		$image = new Image($imageId, $this->tweet->getTweetId(),$this->VALID_IMAGECLOUDINARYTOKEN, $this->VALID_IMAGEURL);
+		$image->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoLike = Like::getLikeByLikeTweetIdAndLikeProfileId($this->getPDO(), $this->profile->getProfileId(), $this->tweet->getTweetId());
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("like"));
-		$this->assertEquals($pdoLike->getLikeProfileId(), $this->profile->getProfileId());
-		$this->assertEquals($pdoLike->getLikeTweetId(), $this->tweet->getTweetId());
-		//format the date too seconds since the beginning of time to avoid round off error
-		$this->assertEquals($pdoLike->getLikeDate()->getTimeStamp(), $this->VALID_LIKEDATE->getTimestamp());
+		$pdoImage = Image::getImageByImageId($this->getPDO(), $image->getImageId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("image"));
+		$this->assertEquals($pdoImage->getImageId(), $imageId);
+		$this->assertEquals($pdoImage->getImageTweetId(), $this->tweet->getTweetId());
+		$this->assertEquals($pdoImage->getImageCloudinaryToken(), $this->VALID_IMAGECLOUDINARYTOKEN);
+		$this->assertEquals($pdoImage->getImageUrl(), $this->VALID_IMAGEURL);
 	}
 	/**
-	 * test creating a Like and then deleting it
+	 * test creating an Image and then deleting it
 	 **/
-	public function testDeleteValidLike() : void {
+	public function testDeleteValidImage() : void {
 		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("like");
+		$numRows = $this->getConnection()->getRowCount("image");
 
-		// create a new Like and insert to into mySQL
-		$like = new Like($this->profile->getProfileId(), $this->tweet->getTweetId(), $this->VALID_LIKEDATE);
-		$like->insert($this->getPDO());
+		// create a new Image and insert to into mySQL
+		$imageId = generateUuidV4();
+		$image = new Image($imageId, $this->tweet->getTweetId(),$this->VALID_IMAGECLOUDINARYTOKEN, $this->VALID_IMAGEURL);
+		$image->insert($this->getPDO());
 
-		// delete the Like from mySQL
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("like"));
-		$like->delete($this->getPDO());
+		// delete the Image from mySQL
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("image"));
+		$image->delete($this->getPDO());
 
-		// grab the data from mySQL and enforce the Tweet does not exist
-		$pdoLike = Like::getLikeByLikeTweetIdAndLikeProfileId($this->getPDO(), $this->profile->getProfileId(), $this->tweet->getTweetId());
+		// grab the data from mySQL and enforce the Image does not exist
+		$pdoLike = Image::getImageByImageId($this->getPDO(), $this->	image->getImageId());
 		$this->assertNull($pdoLike);
-		$this->assertEquals($numRows, $this->getConnection()->getRowCount("like"));
+		$this->assertEquals($numRows, $this->getConnection()->getRowCount("image"));
 	}
 
-	/**
-	 * test inserting a Like and regrabbing it from mySQL
-	 **/
-	public function testGetValidLikeByTweetIdAndProfileId() : void {
-		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("like");
 
-		// create a new Like and insert to into mySQL
-		$like = new Like($this->profile->getProfileId(), $this->tweet->getTweetId(), $this->VALID_LIKEDATE);
-		$like->insert($this->getPDO());
-
-		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoLike = Like::getLikeByLikeTweetIdAndLikeProfileId($this->getPDO(), $this->profile->getProfileId(), $this->tweet->getTweetId());
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("like"));
-		$this->assertEquals($pdoLike->getLikeProfileId(), $this->profile->getProfileId());
-		$this->assertEquals($pdoLike->getLikeTweetId(), $this->tweet->getTweetId());
-
-		//format the date too seconds since the beginning of time to avoid round off error
-		$this->assertEquals($pdoLike->getLikeDate()->getTimeStamp(), $this->VALID_LIKEDATE->getTimestamp());
-	}
 
 	/**
-	 * test grabbing a Like that does not exist
+	 * test grabbing a Image that does not exist
 	 **/
-	public function testGetInvalidLikeByTweetIdAndProfileId() {
+	public function testGetImageByImageId() {
 		// grab a tweet id and profile id that exceeds the maximum allowable tweet id and profile id
-		$like = Like::getLikeByLikeTweetIdAndLikeProfileId($this->getPDO(), generateUuidV4(), generateUuidV4());
-		$this->assertNull($like);
+		$image = Like::getImageByImageId($this->getPDO(), generateUuidV4());
+		$this->assertNull($image);
 	}
 
 	/**
-	 * test grabbing a Like by tweet id
+	 * test grabbing an Image by tweet id
 	 **/
-	public function testGetValidLikeByTweetId() : void {
+	public function testGetValidImageByTweetId() : void {
 		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("like");
+		$numRows = $this->getConnection()->getRowCount("image");
 
-		// create a new Like and insert to into mySQL
-		$like = new Like($this->profile->getProfileId(), $this->tweet->getTweetId(), $this->VALID_LIKEDATE);
-		$like->insert($this->getPDO());
+		// create a new Image and insert to into mySQL
+		$imageId = generateUuidV4();
+		$image = new Image($imageId, $this->tweet->getTweetId(),$this->VALID_IMAGECLOUDINARYTOKEN, $this->VALID_IMAGEURL);
+		$image->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Like::getLikeByLikeTweetId($this->getPDO(), $this->tweet->getTweetId());
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("like"));
-		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Like", $results);
-
-		// grab the result from the array and validate it
-		$pdoLike = $results[0];
-		$this->assertEquals($pdoLike->getLikeProfileId(), $this->profile->getProfileId());
-		$this->assertEquals($pdoLike->getLikeTweetId(), $this->tweet->getTweetId());
-
-		//format the date too seconds since the beginning of time to avoid round off error
-		$this->assertEquals($pdoLike->getLikeDate()->getTimeStamp(), $this->VALID_LIKEDATE->getTimestamp());
-	}
-
-	/**
-	 * test grabbing a Like by a tweet id that does not exist
-	 **/
-	public function testGetInvalidLikeByTweetId() : void {
-		// grab a tweet id that exceeds the maximum allowable tweet id
-		$like = Like::getLikeByLikeTweetId($this->getPDO(), generateUuidV4());
-		$this->assertCount(0, $like);
-	}
-
-	/**
-	 * test grabbing a Like by profile id
-	 **/
-	public function testGetValidLikeByProfileId() : void {
-		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("like");
-
-		// create a new Like and insert to into mySQL
-		$like = new Like($this->profile->getProfileId(), $this->tweet->getTweetId(), $this->VALID_LIKEDATE);
-		$like->insert($this->getPDO());
-
-		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Like::getLikeByLikeProfileId($this->getPDO(), $this->profile->getProfileId());
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("like"));
-		$this->assertCount(1, $results);
+		$pdoImage = Image::getImageByImageTweetId($this->getPDO(), $this->tweet->getTweetId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("image"));
 
 		// enforce no other objects are bleeding into the test
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Like", $results);
-
-		// grab the result from the array and validate it
-		$pdoLike = $results[0];
-		$this->assertEquals($pdoLike->getLikeProfileId(), $this->profile->getProfileId());
-		$this->assertEquals($pdoLike->getLikeTweetId(), $this->tweet->getTweetId());
-
-		//format the date too seconds since the beginning of time to avoid round off error
-		$this->assertEquals($pdoLike->getLikeDate()->getTimeStamp(), $this->VALID_LIKEDATE->getTimestamp());
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Like", $pdoImage );
 	}
 
 	/**
-	 * test grabbing a Like by a profile id that does not exist
+	 * test grabbing a Image by a tweet id that does not exist
 	 **/
-	public function testGetInvalidLikeByProfileId() : void {
-		// grab a tweet id that exceeds the maximum allowable profile id
-		$like = Like::getLikeByLikeProfileId($this->getPDO(), generateUuidV4());
-		$this->assertCount(0, $like);
+	public function testGetInvalidImageByTweetId() : void {
+		// grab a tweet id that exceeds the maximum allowable tweet id
+		$image = Image::getImageByImageTweetId($this->getPDO(), generateUuidV4());
+		$this->assertCount(0, $image);
 	}
+
+//	/**
+//	 * test grabbing an Image by profile id
+//	 **/
+//	public function testGetValidImageByProfileId() : void {
+//		// count the number of rows and save it for later
+//		$numRows = $this->getConnection()->getRowCount("image");
+//
+//		// create a new Image and insert to into mySQL
+//		$imageId = generateUuidV4();
+//		$image = new Image($imageId, $this->tweet->getTweetId(),$this->VALID_IMAGECLOUDINARYTOKEN, $this->VALID_IMAGEURL);
+//		$image->insert($this->getPDO());
+//
+//		// grab the data from mySQL and enforce the fields match our expectations
+//		$pdoImage = Image::getImageByImageTweetId($this->getPDO(), $this->tweet->getTweetId());
+//		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("image"));
+//
+//		// enforce no other objects are bleeding into the test
+//		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Like", $pdoImage );
+//	}
+//
+//	/**
+//	 * test grabbing a Image by a tweet id that does not exist
+//	 **/
+//	public function testGetInvalidImageByTweetId() : void {
+//		// grab a tweet id that exceeds the maximum allowable tweet id
+//		$image = Image::getImageByImageTweetId($this->getPDO(), generateUuidV4());
+//		$this->assertCount(0, $image);
+//	}
+
+
+
+
 }
