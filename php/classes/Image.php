@@ -290,7 +290,7 @@ class Image implements \JsonSerializable {
 		$parameters = ["imageTweetId" => $imageTweetId->getBytes()];
 		$statement->execute($parameters);
 		// build an array of images
-		$tweets = new \SplFixedArray($statement->rowCount());
+		$images = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
