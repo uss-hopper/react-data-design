@@ -1,4 +1,5 @@
 <?php
+
 namespace Edu\Cnm\DataDesign;
 
 require_once("autoload.php");
@@ -55,8 +56,7 @@ class Image implements \JsonSerializable {
 			$this->setImageTweetId($newImageTweetId);
 			$this->setImageCloudinaryToken($newImageCloudinaryToken);
 			$this->setImageUrl($newImageUrl);
-		}
-			//determine what exception type was thrown
+		} //determine what exception type was thrown
 		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
@@ -68,8 +68,8 @@ class Image implements \JsonSerializable {
 	 *
 	 * @return Uuid value of image id
 	 **/
-	public function getImageId() : Uuid {
-		return($this->imageId);
+	public function getImageId(): Uuid {
+		return ($this->imageId);
 	}
 
 	/**
@@ -78,7 +78,7 @@ class Image implements \JsonSerializable {
 	 * @param Uuid/string $newImageId new value of image id
 	 * @throws \TypeError if $newImageId is not a uuid or string
 	 **/
-	public function setImageId( $newImageId) : void {
+	public function setImageId($newImageId): void {
 		try {
 			$uuid = self::validateUuid($newImageId);
 		} catch(\InvalidArgumentException | \Exception | \TypeError $exception) {
@@ -95,8 +95,8 @@ class Image implements \JsonSerializable {
 	 *
 	 * @return Uuid value of image tweet id
 	 **/
-	public function getImageTweetId() : Uuid{
-		return($this->imageTweetId);
+	public function getImageTweetId(): Uuid {
+		return ($this->imageTweetId);
 	}
 
 	/**
@@ -105,7 +105,7 @@ class Image implements \JsonSerializable {
 	 * @param string | Uuid $newImageTweetId new value of image tweet id
 	 * @throws \TypeError if $newImageTweetId is not a uuid or string
 	 **/
-	public function setImageTweetId( $newImageTweetId) : void {
+	public function setImageTweetId($newImageTweetId): void {
 		try {
 			$uuid = self::validateUuid($newImageTweetId);
 		} catch(\InvalidArgumentException | \Exception | \TypeError $exception) {
@@ -122,8 +122,8 @@ class Image implements \JsonSerializable {
 	 *
 	 * @return string value image cloudinary token
 	 **/
-	public function getImageCloudinaryToken() :string {
-		return($this->imageCloudinaryToken);
+	public function getImageCloudinaryToken(): string {
+		return ($this->imageCloudinaryToken);
 	}
 
 	/**
@@ -133,13 +133,13 @@ class Image implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if $newImageCloudinaryToken is not a string or insecure
 	 * @throws \TypeError if $newImageCloudinaryToken is not a string
 	 **/
-	public function setImageCloudinaryToken(string $newImageCloudinaryToken) : void {
+	public function setImageCloudinaryToken(string $newImageCloudinaryToken): void {
 		// verify the image cloudinary token content is secure
 		$newImageCloudinaryToken = filter_var($newImageCloudinaryToken, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newImageCloudinaryToken) === true) {
 			throw(new \InvalidArgumentException("image cloudinary token is empty or insecure"));
 		}
-		
+
 		// store the image cloudinary token
 		$this->imageCloudinaryToken = $newImageCloudinaryToken;
 	}
@@ -149,8 +149,8 @@ class Image implements \JsonSerializable {
 	 *
 	 * @return string value image url
 	 **/
-	public function getImageUrl() :string {
-		return($this->imageUrl);
+	public function getImageUrl(): string {
+		return ($this->imageUrl);
 	}
 
 	/**
@@ -160,7 +160,7 @@ class Image implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if $newImageUrl is not a string or insecure
 	 * @throws \TypeError if $newImageUrl is not a string
 	 **/
-	public function setImageUrl(string $newImageUrl) : void {
+	public function setImageUrl(string $newImageUrl): void {
 		// verify the image url content is secure
 		$newImageUrl = filter_var($newImageUrl, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newImageUrl) === true) {
@@ -178,7 +178,7 @@ class Image implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	public function insert(\PDO $pdo) : void {
+	public function insert(\PDO $pdo): void {
 
 		// create query template
 		$query = "INSERT INTO image(imageId, imageTweetId, imageCloudinaryToken, imageUrl) VALUES(:imageId, :imageTweetId, :imageCloudinaryToken, :imageUrl)";
@@ -197,7 +197,7 @@ class Image implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	public function delete(\PDO $pdo) : void {
+	public function delete(\PDO $pdo): void {
 
 		// create query template
 		$query = "DELETE FROM image WHERE imageId = :imageId";
@@ -215,14 +215,14 @@ class Image implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	public function update(\PDO $pdo) : void {
+	public function update(\PDO $pdo): void {
 
 		// create query template
 		$query = "UPDATE image SET imageTweetId = :imageTweetId, imageCloudinaryToken = :imageCloudinaryToken, imageUrl = :imageUrl WHERE imageId = :imageId";
 		$statement = $pdo->prepare($query);
 
 
-		$parameters = ["imageId" => $this->imageId->getBytes(),"imageTweetId" => $this->imageTweetId->getBytes(), "imageCloudinaryToken" => $this->imageCloudinaryToken, "imageUrl" => $this->imageUrl];
+		$parameters = ["imageId" => $this->imageId->getBytes(), "imageTweetId" => $this->imageTweetId->getBytes(), "imageCloudinaryToken" => $this->imageCloudinaryToken, "imageUrl" => $this->imageUrl];
 		$statement->execute($parameters);
 	}
 
@@ -235,7 +235,7 @@ class Image implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable is not the correct data type
 	 **/
-	public static function getImageByImageId(\PDO $pdo, string $imageId) : ?Image {
+	public static function getImageByImageId(\PDO $pdo, string $imageId): ?Image {
 		// sanitize the imageId before searching
 		try {
 			$imageId = self::validateUuid($imageId);
@@ -263,7 +263,7 @@ class Image implements \JsonSerializable {
 			// if the row couldn't be converted, rethrow it
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return($image);
+		return ($image);
 	}
 
 	/**
@@ -275,7 +275,7 @@ class Image implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getImageByImageTweetId(\PDO $pdo, string  $imageTweetId) : \SPLFixedArray {
+	public static function getImageByImageTweetId(\PDO $pdo, string $imageTweetId): \SPLFixedArray {
 
 		try {
 			$imageTweetId = self::validateUuid($imageTweetId);
@@ -302,10 +302,10 @@ class Image implements \JsonSerializable {
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return($images);
+		return ($images);
 	}
 
-	public static function getImageByProfileId(\PDO $pdo, string  $profileId) : \SPLFixedArray {
+	public static function getImageByProfileId(\PDO $pdo, string $profileId): \SPLFixedArray {
 
 		try {
 			$profileId = self::validateUuid($profileId);
@@ -332,7 +332,7 @@ class Image implements \JsonSerializable {
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return($images);
+		return ($images);
 	}
 
 
@@ -350,6 +350,6 @@ class Image implements \JsonSerializable {
 		$fields["imageUrl"] = $this->imageUrl;
 
 
-		return($fields);
+		return ($fields);
 	}
 }

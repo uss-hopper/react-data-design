@@ -1,7 +1,10 @@
 <?php
+
 namespace Edu\Cnm\DataDesign\Test;
 
-use Edu\Cnm\DataDesign\{Profile, Tweet, Image};
+use Edu\Cnm\DataDesign\{
+	Profile, Tweet, Image
+};
 
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
@@ -71,12 +74,10 @@ class ImageTest extends DataDesignTest {
 	protected $VALID_IMAGEURL;
 
 
-
-
 	/**
 	 * create dependent objects before running each test
 	 **/
-	public final function setUp() : void {
+	public final function setUp(): void {
 		// run the default setUp() method first
 		parent::setUp();
 
@@ -87,7 +88,7 @@ class ImageTest extends DataDesignTest {
 		$this->VALID_ACTIVATION = bin2hex(random_bytes(16));
 
 		// create and insert the mocked profile
-		$this->profile = new Profile(generateUuidV4(), null,"@phpunit", "test@phpunit.de",$this->VALID_HASH, "+12125551212", $this->VALID_SALT);
+		$this->profile = new Profile(generateUuidV4(), null, "@phpunit", "test@phpunit.de", $this->VALID_HASH, "+12125551212", $this->VALID_SALT);
 		$this->profile->insert($this->getPDO());
 
 		// create the and insert the mocked tweet
@@ -101,13 +102,13 @@ class ImageTest extends DataDesignTest {
 	/**
 	 * test inserting a valid Image and verify that the actual mySQL data matches
 	 **/
-	public function testInsertValidImage() : void {
+	public function testInsertValidImage(): void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("image");
 
 		// create a new Image and insert to into mySQL
 		$imageId = generateUuidV4();
-		$image = new Image($imageId, $this->tweet->getTweetId(),$this->VALID_IMAGECLOUDINARYTOKEN, $this->VALID_IMAGEURL);
+		$image = new Image($imageId, $this->tweet->getTweetId(), $this->VALID_IMAGECLOUDINARYTOKEN, $this->VALID_IMAGEURL);
 		$image->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
@@ -118,16 +119,17 @@ class ImageTest extends DataDesignTest {
 		$this->assertEquals($pdoImage->getImageCloudinaryToken(), $this->VALID_IMAGECLOUDINARYTOKEN);
 		$this->assertEquals($pdoImage->getImageUrl(), $this->VALID_IMAGEURL);
 	}
+
 	/**
 	 * test creating an Image and then deleting it
 	 **/
-	public function testDeleteValidImage() : void {
+	public function testDeleteValidImage(): void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("image");
 
 		// create a new Image and insert to into mySQL
 		$imageId = generateUuidV4();
-		$image = new Image($imageId, $this->tweet->getTweetId(),$this->VALID_IMAGECLOUDINARYTOKEN, $this->VALID_IMAGEURL);
+		$image = new Image($imageId, $this->tweet->getTweetId(), $this->VALID_IMAGECLOUDINARYTOKEN, $this->VALID_IMAGEURL);
 		$image->insert($this->getPDO());
 
 		// delete the Image from mySQL
@@ -135,11 +137,10 @@ class ImageTest extends DataDesignTest {
 		$image->delete($this->getPDO());
 
 		// grab the data from mySQL and enforce the Image does not exist
-		$pdoLike = Image::getImageByImageId($this->getPDO(), $this->	image->getImageId());
+		$pdoLike = Image::getImageByImageId($this->getPDO(), $this->image->getImageId());
 		$this->assertNull($pdoLike);
 		$this->assertEquals($numRows, $this->getConnection()->getRowCount("image"));
 	}
-
 
 
 	/**
@@ -154,13 +155,13 @@ class ImageTest extends DataDesignTest {
 	/**
 	 * test grabbing an Image by tweet id
 	 **/
-	public function testGetValidImageByTweetId() : void {
+	public function testGetValidImageByTweetId(): void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("image");
 
 		// create a new Image and insert to into mySQL
 		$imageId = generateUuidV4();
-		$image = new Image($imageId, $this->tweet->getTweetId(),$this->VALID_IMAGECLOUDINARYTOKEN, $this->VALID_IMAGEURL);
+		$image = new Image($imageId, $this->tweet->getTweetId(), $this->VALID_IMAGECLOUDINARYTOKEN, $this->VALID_IMAGEURL);
 		$image->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
@@ -168,13 +169,13 @@ class ImageTest extends DataDesignTest {
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("image"));
 
 		// enforce no other objects are bleeding into the test
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Like", $pdoImage );
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Like", $pdoImage);
 	}
 
 	/**
 	 * test grabbing a Image by a tweet id that does not exist
 	 **/
-	public function testGetInvalidImageByTweetId() : void {
+	public function testGetInvalidImageByTweetId(): void {
 		// grab a tweet id that exceeds the maximum allowable tweet id
 		$image = Image::getImageByImageTweetId($this->getPDO(), generateUuidV4());
 		$this->assertCount(0, $image);
@@ -183,13 +184,13 @@ class ImageTest extends DataDesignTest {
 	/**
 	 * test grabbing an Image by profile id
 	 **/
-	public function testGetValidImageByProfileId() : void {
+	public function testGetValidImageByProfileId(): void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("image");
 
 		// create a new Image and insert to into mySQL
 		$imageId = generateUuidV4();
-		$image = new Image($imageId, $this->tweet->getTweetId(),$this->VALID_IMAGECLOUDINARYTOKEN, $this->VALID_IMAGEURL);
+		$image = new Image($imageId, $this->tweet->getTweetId(), $this->VALID_IMAGECLOUDINARYTOKEN, $this->VALID_IMAGEURL);
 		$image->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
@@ -197,19 +198,17 @@ class ImageTest extends DataDesignTest {
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("image"));
 
 		// enforce no other objects are bleeding into the test
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Like", $pdoImage );
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Like", $pdoImage);
 	}
 
 	/**
 	 * test grabbing a Image by a tweet id that does not exist
 	 **/
-	public function testGetInvalidImageByTweetId() : void {
+	public function testGetInvalidImageByTweetId(): void {
 		// grab a tweet id that exceeds the maximum allowable tweet id
 		$image = Image::getImageByImageTweetId($this->getPDO(), generateUuidV4());
 		$this->assertCount(0, $image);
 	}
-
-
 
 
 }
