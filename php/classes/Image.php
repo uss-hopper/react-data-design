@@ -314,7 +314,7 @@ class Image implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "SELECT image.imageId, image.imageTweetId, image.imageCloudinaryToken, image.imageUrl, tweet.tweetProfileId FROM image INNER JOIN tweet ON tweet.tweetId = image.imageTweetId WHERE tweet.tweetProfileId = profileId";
+		$query = "SELECT image.imageId, image.imageTweetId, image.imageCloudinaryToken, image.imageUrl FROM image INNER JOIN tweet ON tweet.tweetId = image.imageTweetId WHERE tweet.tweetProfileId = profileId";
 		$statement = $pdo->prepare($query);
 		// bind the image tweet id to the place holder in the template
 		$parameters = ["profileId" => $profileId->getBytes()];

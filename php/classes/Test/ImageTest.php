@@ -180,34 +180,34 @@ class ImageTest extends DataDesignTest {
 		$this->assertCount(0, $image);
 	}
 
-//	/**
-//	 * test grabbing an Image by profile id
-//	 **/
-//	public function testGetValidImageByProfileId() : void {
-//		// count the number of rows and save it for later
-//		$numRows = $this->getConnection()->getRowCount("image");
-//
-//		// create a new Image and insert to into mySQL
-//		$imageId = generateUuidV4();
-//		$image = new Image($imageId, $this->tweet->getTweetId(),$this->VALID_IMAGECLOUDINARYTOKEN, $this->VALID_IMAGEURL);
-//		$image->insert($this->getPDO());
-//
-//		// grab the data from mySQL and enforce the fields match our expectations
-//		$pdoImage = Image::getImageByImageTweetId($this->getPDO(), $this->tweet->getTweetId());
-//		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("image"));
-//
-//		// enforce no other objects are bleeding into the test
-//		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Like", $pdoImage );
-//	}
-//
-//	/**
-//	 * test grabbing a Image by a tweet id that does not exist
-//	 **/
-//	public function testGetInvalidImageByTweetId() : void {
-//		// grab a tweet id that exceeds the maximum allowable tweet id
-//		$image = Image::getImageByImageTweetId($this->getPDO(), generateUuidV4());
-//		$this->assertCount(0, $image);
-//	}
+	/**
+	 * test grabbing an Image by profile id
+	 **/
+	public function testGetValidImageByProfileId() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("image");
+
+		// create a new Image and insert to into mySQL
+		$imageId = generateUuidV4();
+		$image = new Image($imageId, $this->tweet->getTweetId(),$this->VALID_IMAGECLOUDINARYTOKEN, $this->VALID_IMAGEURL);
+		$image->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$pdoImage = Image::getImageByProfileId($this->getPDO(), $this->tweet->getTweetId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("image"));
+
+		// enforce no other objects are bleeding into the test
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Like", $pdoImage );
+	}
+
+	/**
+	 * test grabbing a Image by a tweet id that does not exist
+	 **/
+	public function testGetInvalidImageByTweetId() : void {
+		// grab a tweet id that exceeds the maximum allowable tweet id
+		$image = Image::getImageByImageTweetId($this->getPDO(), generateUuidV4());
+		$this->assertCount(0, $image);
+	}
 
 
 
