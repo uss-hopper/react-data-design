@@ -18,7 +18,9 @@ export class AuthService {
 	//token : string = this.jwtHelperService.tokenGetter();
 	public isAuthenticated(): boolean {
 		const token = localStorage.getItem('jwt-token');
-		console.log(token);
+		console.log("I lose");
+
+		console.log(!this.jwtHelperService.isTokenExpired(token));
 		// Check whether the token is expired and return
 		// true or false
 		return !this.jwtHelperService.isTokenExpired(token);

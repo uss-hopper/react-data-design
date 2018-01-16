@@ -8,7 +8,7 @@ import {JwtHelperService} from "@auth0/angular-jwt";
 
 @Component({
 	template:`
-	<h1>hello world</h1>
+	<h1>{{profile.profileAtHandle}}</h1>
 	
 	`
 })
@@ -24,12 +24,14 @@ export class ProfileComponent implements OnInit{
 	}
 
 	currentlySignedIn() : void {
-		const encodedJwt = localStorage.getItem('jwt-token');
 
-		const decodedJwt = this.jwtHelper.decodeToken(encodedJwt);
+
+		const decodedJwt = this.jwtHelper.decodeToken(localStorage.getItem('jwt-token'));
 
 		this.profileService.getProfile(decodedJwt.auth.profileId)
 			.subscribe(profile => this.profile = profile)
+
+
 	}
 
 

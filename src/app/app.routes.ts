@@ -1,6 +1,6 @@
 //import needed @angularDependencies
 import {RouterModule, Routes} from "@angular/router";
-import {AuthGuardService, AuthGuardService as YouShallNotPass} from './services/auth.guard.service';
+import {AuthGuardService} from './services/auth.guard.service';
 
 //import all needed components
 import {CreateTweetComponent} from "./components/create.tweet.component";
@@ -41,7 +41,7 @@ export const allAppComponents = [ CreateTweetComponent, HomeComponent, ListTweet
 
 //an array of routes that will be passed of to the module
 export const routes: Routes = [
-	{path: "profile-page", component: ProfileComponent, canActivate: [YouShallNotPass]},
+	{path: "profile-page", component: ProfileComponent, canActivate: [AuthGuardService]},
 	{path: "", component: HomeComponent}
 
 
