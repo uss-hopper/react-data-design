@@ -1,17 +1,21 @@
 //import needed @angularDependencies
 import {RouterModule, Routes} from "@angular/router";
+import {AuthGuardService, AuthGuardService as YouShallNotPass} from './services/auth.guard.service';
 
 //import all needed components
 import {CreateTweetComponent} from "./components/create.tweet.component";
 import {HomeComponent} from "./components/home.component";
 import {ListTweetsComponent} from "./components/list.tweets.component";
 import {MainNavComponent} from "./components/main.nav";
+import {ProfileComponent} from "./components/profile.component";
 import {SignInComponent} from "./components/signin.component";
 import {SignUpComponent} from "./components/sign.up.component";
+
 
 // import all needed Services
 
 import {AuthService} from "./services/auth.service";
+
 import {CookieService} from "ng2-cookies";
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {LikeService} from "./services/like.service";
@@ -31,21 +35,25 @@ import {DeepDiveInterceptor} from "./services/deep.dive.interceptor";
 
 
 
+
 //an array of the components that will be passed off to the module
-export const allAppComponents = [ CreateTweetComponent, HomeComponent, ListTweetsComponent,MainNavComponent, SignInComponent, SignUpComponent];
+export const allAppComponents = [ CreateTweetComponent, HomeComponent, ListTweetsComponent,MainNavComponent, ProfileComponent, SignInComponent, SignUpComponent];
 
 //an array of routes that will be passed of to the module
 export const routes: Routes = [
+	{path: "profile-page", component: ProfileComponent, canActivate: [YouShallNotPass]},
 	{path: "", component: HomeComponent}
+
+
 ];
 
 // an array of services
-const services : any[] = [AuthService,CookieService,JwtHelperService ,LikeService, ProfileService, SessionService, SignInService,  SignUpService, TweetService];
+const services : any[] = [AuthService, AuthGuardService, CookieService,JwtHelperService ,LikeService, ProfileService, SessionService, SignInService,  SignUpService, TweetService];
 
 // an array of misc providers
 const providers : any[] = [
 	{provide: APP_BASE_HREF, useValue: window["_base_href"]},
-	{provide: HTTP_INTERCEPTORS, useClass: DeepDiveInterceptor, multi: true},
+	{provide: HTTP_INTERCEPTORS, useClass: DeepDiveInterceptor, multi: true}
 
 ];
 

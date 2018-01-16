@@ -35,7 +35,7 @@ export class SignInComponent {
 
 				if(status.status === 200) {
 
-					this.router.navigate([""]);
+					this.router.navigate(["profile-page"]);
 					//location.reload(true);
 					this.signInForm.reset();
 					setTimeout(function(){$("#signin-modal").modal('hide');},1000);

@@ -79,8 +79,8 @@ class Tweet implements \JsonSerializable {
 	 * mutator method for tweet id
 	 *
 	 * @param Uuid/string $newTweetId new value of tweet id
-	 * @throws \RangeException if $newTweetId is not positive
-	 * @throws \TypeError if $newTweetId is not a uuid or string
+	 * @throws \RangeException if $newTweetId is n
+	 * @throws \TypeError if $newTweetId is not a uuid.e
 	 **/
 	public function setTweetId( $newTweetId) : void {
 		try {
@@ -108,7 +108,7 @@ class Tweet implements \JsonSerializable {
 	 *
 	 * @param string | Uuid $newTweetProfileId new value of tweet profile id
 	 * @throws \RangeException if $newProfileId is not positive
-	 * @throws \TypeError if $newTweetProfileId is not an integer
+	 * @throws \TypeError if $newTweetProfileId is not an UUI
 	 **/
 	public function setTweetProfileId( $newTweetProfileId) : void {
 		try {
