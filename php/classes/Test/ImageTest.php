@@ -141,8 +141,8 @@ class ImageTest extends DataDesignTest {
 		$image->delete($this->getPDO());
 
 		// grab the data from mySQL and enforce the Image does not exist
-		$pdoLike = Image::getImageByImageId($this->getPDO(), $this->image->getImageId());
-		$this->assertNull($pdoLike);
+		$pdoImage = Image::getImageByImageId($this->getPDO(), $this->image->getImageId());
+		$this->assertNull($pdoImage);
 		$this->assertEquals($numRows, $this->getConnection()->getRowCount("image"));
 	}
 
