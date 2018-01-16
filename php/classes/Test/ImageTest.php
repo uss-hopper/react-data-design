@@ -36,6 +36,12 @@ class ImageTest extends DataDesignTest {
 	protected $tweet = null;
 
 	/**
+	 * Image in a tweet; this is for foreign key relations
+	 * @var Image $image
+	 **/
+	protected $image = null;
+
+	/**
 	 * valid hash to use
 	 * @var $VALID_HASH
 	 */
@@ -141,7 +147,7 @@ class ImageTest extends DataDesignTest {
 		$image->delete($this->getPDO());
 
 		// grab the data from mySQL and enforce the Image does not exist
-		$pdoImage = Image::getImageByImageId($this->getPDO(), $this->image->getImageId());
+		$pdoImage = Image::getImageByImageId($this->getPDO(), $image->getImageId());
 		$this->assertNull($pdoImage);
 		$this->assertEquals($numRows, $this->getConnection()->getRowCount("image"));
 	}
@@ -173,7 +179,7 @@ class ImageTest extends DataDesignTest {
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("image"));
 
 		// enforce no other objects are bleeding into the test
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Like", $pdoImage);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Image", $pdoImage);
 	}
 
 	/**
