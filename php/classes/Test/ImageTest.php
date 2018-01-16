@@ -64,14 +64,14 @@ class ImageTest extends DataDesignTest {
 	 * valid IMAGECLOUDINARYTOKEN to create the image object to own the test
 	 * @var string $VALID_IMAGECLOUDINARYTOKEN
 	 */
-	protected $VALID_IMAGECLOUDINARYTOKEN;
+	protected $VALID_IMAGECLOUDINARYTOKEN = "Valid Image Cloudinary Token";
 
 
 	/**
 	 * valid IMAGEURL to create the image object to own the test
 	 * @var string $VALID_IMAGEURL
 	 */
-	protected $VALID_IMAGEURL;
+	protected $VALID_IMAGEURL = "https://media.giphy.com/media/l2QDMn3ozS3SWcheo/giphy.gif";
 
 
 	/**
@@ -94,9 +94,6 @@ class ImageTest extends DataDesignTest {
 		// create the and insert the mocked tweet
 		$this->tweet = new Tweet(generateUuidV4(), $this->profile->getProfileId(), "PHPUnit like test passing");
 		$this->tweet->insert($this->getPDO());
-
-		// calculate the date (just use the time the unit test was setup...)
-		$this->VALID_LIKEDATE = new \DateTime();
 	}
 
 	/**
@@ -209,6 +206,4 @@ class ImageTest extends DataDesignTest {
 		$image = Image::getImageByImageTweetId($this->getPDO(), generateUuidV4());
 		$this->assertCount(0, $image);
 	}
-
-
 }
