@@ -59,12 +59,17 @@ class ImageTest extends DataDesignTest {
 	 */
 	protected $VALID_ACTIVATION;
 
+	/**
+	 * second valid cloudinary token  to use
+	 * @var string $VALID_CLOUDINARYTOKEN
+	 **/
+	protected $VALID_CLOUDINARYTOKEN;
 
 	/**
 	 * valid IMAGECLOUDINARYTOKEN to create the image object to own the test
 	 * @var string $VALID_IMAGECLOUDINARYTOKEN
 	 */
-	protected $VALID_IMAGECLOUDINARYTOKEN = "Valid Image Cloudinary Token";
+	protected $VALID_IMAGECLOUDINARYTOKEN;
 
 
 	/**
@@ -86,9 +91,11 @@ class ImageTest extends DataDesignTest {
 		$this->VALID_SALT = bin2hex(random_bytes(32));
 		$this->VALID_HASH = hash_pbkdf2("sha512", $password, $this->VALID_SALT, 262144);
 		$this->VALID_ACTIVATION = bin2hex(random_bytes(16));
+		$this->VALID_CLOUDINARYTOKEN = bin2hex(random_bytes(125));
+		$this->VALID_IMAGECLOUDINARYTOKEN = bin2hex(random_bytes(125));
 
 		// create and insert the mocked profile
-		$this->profile = new Profile(generateUuidV4(), null, "@phpunit", "test@phpunit.de", $this->VALID_HASH, "+12125551212", $this->VALID_SALT);
+		$this->profile = new Profile(generateUuidV4(), null, "@phpunit", $this->VALID_CLOUDINARYTOKEN,"test@phpunit.de", $this->VALID_HASH, "+12125551212", $this->VALID_SALT);
 		$this->profile->insert($this->getPDO());
 
 		// create the and insert the mocked tweet
@@ -201,9 +208,9 @@ class ImageTest extends DataDesignTest {
 	/**
 	 * test grabbing a Image by a tweet id that does not exist
 	 **/
-	public function testGetInvalidImageByTweetId(): void {
-		// grab a tweet id that exceeds the maximum allowable tweet id
-		$image = Image::getImageByImageTweetId($this->getPDO(), generateUuidV4());
+	public function testGetInvalidImageByProfileId(): void {
+		// grab a profile id that exceeds the maximum allowable profile id
+		$image = Image::getImageByProfileId($this->getPDO(), generateUuidV4());
 		$this->assertCount(0, $image);
 	}
 }
