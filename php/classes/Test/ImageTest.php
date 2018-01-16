@@ -152,7 +152,7 @@ class ImageTest extends DataDesignTest {
 	 **/
 	public function testGetImageByImageId() {
 		// grab a tweet id and profile id that exceeds the maximum allowable tweet id and profile id
-		$image = Like::getImageByImageId($this->getPDO(), generateUuidV4());
+		$image = Image::getImageByImageId($this->getPDO(), generateUuidV4());
 		$this->assertNull($image);
 	}
 
