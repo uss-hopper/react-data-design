@@ -16,6 +16,7 @@ CREATE TABLE profile (
 	profileActivationToken CHAR(32),
 	profileAtHandle VARCHAR(32) NOT NULL,
 	-- to make sure duplicate data cannot exist, create a unique index
+	profileAvatarUrl VARCHAR(255) NOT NULL,
 	profileEmail VARCHAR(128) NOT NULL,
 	-- to make something optional, exclude the not null
 	profileHash	CHAR(128) NOT NULL,

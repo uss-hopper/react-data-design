@@ -25,12 +25,10 @@ export class ProfileComponent implements OnInit{
 
 	currentlySignedIn() : void {
 
-
 		const decodedJwt = this.jwtHelper.decodeToken(localStorage.getItem('jwt-token'));
 
 		this.profileService.getProfile(decodedJwt.auth.profileId)
 			.subscribe(profile => this.profile = profile)
-
 
 	}
 
