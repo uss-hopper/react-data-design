@@ -95,7 +95,9 @@ try {
 		//enforce the end user has a JWT token
 		validateJwtHeader();
 
-		// delete image
+		// delete image from cloudinary
+		$cloudinaryResult = \Cloudinary\Uploader::destroy($image->getImageCloudinaryToken());
+		// delete image database
 		$image->delete($pdo);
 		// update reply
 		$reply->message = "Image deleted OK";
@@ -110,7 +112,7 @@ try {
 			throw (new \InvalidArgumentException("you must be logged in to post images", 401));
 
 			// verify user is logged into the profile posting the tweet before uploading an image
-		}elseif($_SESSION["profile"]->getProfileId()->toString() !== Tweet::getTweetByTweetId($pdo, $tweetId)->getTweetProfileId()->toString()) {
+		} elseif($_SESSION["profile"]->getProfileId()->toString() !== Tweet::getTweetByTweetId($pdo, $tweetId)->getTweetProfileId()->toString()) {
 			throw(new \InvalidArgumentException("You are not allowed to post an image to someone else's tweet", 403));
 		}
 
