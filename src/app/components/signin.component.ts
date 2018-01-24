@@ -30,12 +30,14 @@ export class SignInComponent {
 
 
 	signIn(): void {
+		localStorage.removeItem("jwt-token");
 		this.SignInService.postSignIn(this.signin).subscribe(status => {
 				this.status = status;
 
+
 				if(status.status === 200) {
 
-					this.router.navigate([""]);
+					this.router.navigate(["profile-page"]);
 					//location.reload(true);
 					this.signInForm.reset();
 					setTimeout(function(){$("#signin-modal").modal('hide');},1000);

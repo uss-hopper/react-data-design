@@ -7,27 +7,25 @@ DROP TABLE IF EXISTS `like`;
 DROP TABLE IF EXISTS image;
 DROP TABLE IF EXISTS tweet;
 DROP TABLE IF EXISTS profile;
-
 -- the CREATE TABLE function is a function that takes tons of arguments to layout the table's schema
 CREATE TABLE profile (
--- this creates the attribute for the primary key
--- auto_increment tells mySQL to number them {1, 2, 3, ...}
--- not null means the attribute is required!
+	-- this creates the attribute for the primary key
+	-- auto_increment tells mySQL to number them {1, 2, 3, ...}
+	-- not null means the attribute is required!
 	profileId BINARY(16) NOT NULL,
 	profileActivationToken CHAR(32),
 	profileAtHandle VARCHAR(32) NOT NULL,
 	profileCloudinaryToken VARCHAR(255),
--- to make sure duplicate data cannot exist, create a unique index
+	-- to make sure duplicate data cannot exist, create a unique index
 	profileEmail VARCHAR(128) NOT NULL,
--- to make something optional, exclude the not null
-	profileHash	CHAR(128) NOT NULL,
+	-- to make something optional, exclude the not null
+	profileHash CHAR(128) NOT NULL,
 	profilePhone VARCHAR(32),
 	profileSalt CHAR(64) NOT NULL,
 	UNIQUE(profileEmail),
 	UNIQUE(profileAtHandle),
--- this officiates the primary key for the entity
+	-- this officiates the primary key for the entity
 	PRIMARY KEY(profileId)
-	) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 -- create the tweet entity
 CREATE TABLE tweet (
@@ -48,13 +46,12 @@ CREATE TABLE tweet (
 
 -- create the tweetImage entity
 CREATE TABLE image (
- 	imageId BINARY(16) NOT NULL,
+	imageId BINARY(16) NOT NULL,
 	imageTweetId BINARY(16) NOT NULL,
 	imageCloudinaryToken VARCHAR(255) NOT NULL,
 	imageUrl VARCHAR(128) NOT NULL ,
 	INDEX(imageId),
 	INDEX(imageTweetId),
-
 	FOREIGN KEY(imageTweetId) REFERENCES tweet(tweetId),
 	PRIMARY KEY (imageId)
 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci;

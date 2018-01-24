@@ -67,13 +67,4 @@ export class ListTweetsComponent implements OnInit {
 				}
 			});
 	}
-
-
-	createLike(): void {
-
-		 this.authService.decodeJwt();
-
-	}
-
-
 }
