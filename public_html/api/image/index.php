@@ -83,12 +83,7 @@ try {
 		//enforce the user is signed in and only trying to edit their own image
 		// use the image id to get the tweet id to get the profile id to compare it to the session profile id
 
-//		$tweetId = $image->getImageTweetId();
-//		$tweet = Tweet::getTweetByTweetId($pdo, $tweetId);
-//		$profileId = $tweet->getTweetProfileId();
-//		$profileId = Tweet::getTweetByTweetId($pdo, $tweetId)->getTweetProfileId();
-
-		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== Tweet::getTweetByTweetId($pdo, $image->getImageTweetId())->getTweetProfileId()->toString()) {
+		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== Tweet::getTweetByTweetId($pdo, $image->getImageTweetId())->getTweetProfileId()) {
 			throw(new \InvalidArgumentException("You are not allowed to delete this image", 403));
 		}
 
@@ -112,7 +107,7 @@ try {
 			throw (new \InvalidArgumentException("you must be logged in to post images", 401));
 
 			// verify user is logged into the profile posting the tweet before uploading an image
-		} elseif($_SESSION["profile"]->getProfileId()->toString() !== Tweet::getTweetByTweetId($pdo, $tweetId)->getTweetProfileId()->toString()) {
+		} elseif($_SESSION["profile"]->getProfileId() !== Tweet::getTweetByTweetId($pdo, $tweetId)->getTweetProfileId()) {
 			throw(new \InvalidArgumentException("You are not allowed to post an image to someone else's tweet", 403));
 		}
 
