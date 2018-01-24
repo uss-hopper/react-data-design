@@ -5,6 +5,7 @@
 			<file>ProfileTest.php</file>
 		<!--	<file>TweetTest.php</file> -->
 		 <!--	<file>LikeTest.php</file> -->
+			<file>ImageTest.php</file>
 		</testsuite>
 	</testsuites>
 	<filter>
