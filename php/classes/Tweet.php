@@ -250,12 +250,12 @@ class Tweet implements \JsonSerializable {
 	 * gets the Tweet by tweetId
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param string $tweetId tweet id to search for
+	 * @param string|Uuid $tweetId tweet id to search for
 	 * @return Tweet|null Tweet found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	public static function getTweetByTweetId(\PDO $pdo, string $tweetId) : ?Tweet {
+	public static function getTweetByTweetId(\PDO $pdo, $tweetId) : ?Tweet {
 		// sanitize the tweetId before searching
 		try {
 			$tweetId = self::validateUuid($tweetId);
