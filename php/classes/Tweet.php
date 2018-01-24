@@ -199,7 +199,7 @@ class Tweet implements \JsonSerializable {
 	public function insert(\PDO $pdo) : void {
 
 		// create query template
-		$query = "INSERT INTO tweet(tweetId,tweetProfileId, tweetContent, tweetDate) VALUES(:tweetId, :tweetProfileId, :tweetContent, :tweetDate)";
+		$query = "INSERT INTO tweet(tweetId, tweetProfileId, tweetContent, tweetDate) VALUES(:tweetId, :tweetProfileId, :tweetContent, :tweetDate)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
