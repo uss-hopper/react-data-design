@@ -70,7 +70,7 @@ try {
 		$profileActivationToken = bin2hex(random_bytes(16));
 
 		//create the profile object and prepare to insert into the database
-		$profile = new Profile(generateUuidV4(), $profileActivationToken, $requestObject->profileAtHandle, $requestObject->profileEmail, $hash, $requestObject->profilePhone, $salt);
+		$profile = new Profile(generateUuidV4(), $profileActivationToken, $requestObject->profileAtHandle, "null", $requestObject->profileEmail, $hash, $requestObject->profilePhone, $salt);
 
 		//insert the profile into the database
 		$profile->insert($pdo);

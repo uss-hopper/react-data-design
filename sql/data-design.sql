@@ -15,7 +15,7 @@ CREATE TABLE profile (
 	profileId BINARY(16) NOT NULL,
 	profileActivationToken CHAR(32),
 	profileAtHandle VARCHAR(32) NOT NULL,
-	profileCloudinaryToken VARCHAR(255),
+	profileAvatarUrl  VARCHAR(255),
 	-- to make sure duplicate data cannot exist, create a unique index
 	profileEmail VARCHAR(128) NOT NULL,
 	-- to make something optional, exclude the not null
@@ -26,7 +26,7 @@ CREATE TABLE profile (
 	UNIQUE(profileAtHandle),
 	-- this officiates the primary key for the entity
 	PRIMARY KEY(profileId)
-
+) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 -- create the tweet entity
 CREATE TABLE tweet (
 	-- this is for yet another primary key...
@@ -43,7 +43,6 @@ CREATE TABLE tweet (
 	-- and finally create the primary key
 	PRIMARY KEY(tweetId)
 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-
 -- create the tweetImage entity
 CREATE TABLE image (
 	imageId BINARY(16) NOT NULL,
@@ -55,19 +54,18 @@ CREATE TABLE image (
 	FOREIGN KEY(imageTweetId) REFERENCES tweet(tweetId),
 	PRIMARY KEY (imageId)
 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-
 -- create the like entity (a weak entity from an m-to-n for profile --> tweet)
 CREATE TABLE `like` (
 	-- these are not auto_increment because they're still foreign keys
-	likeProfileId BINARY(16) NOT NULL,
-	likeTweetId BINARY(16) NOT NULL,
-	likeDate DATETIME(6) NOT NULL,
-	-- index the foreign keys
-	INDEX(likeProfileId),
+
+  likeTweetId BINARY(16) NOT NULL,
+	likeUserId BINARY(16) NOT NULL,
+	likeDate DATETIME(6) NOT NULL,	-- index the foreign keys
+	INDEX(likeUserId),
 	INDEX(likeTweetId),
 	-- create the foreign key relations
-	FOREIGN KEY(likeProfileId) REFERENCES profile(profileId),
 	FOREIGN KEY(likeTweetId) REFERENCES tweet(tweetId),
+	FOREIGN KEY(likeUserId) REFERENCES profile(profileId),
 	-- finally, create a composite foreign key with the two foreign keys
 	PRIMARY KEY(likeProfileId, likeTweetId)
 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci;

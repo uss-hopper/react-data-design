@@ -235,6 +235,7 @@ class ProfileTest extends DataDesignTest {
 	public function testGetInvalidProfileByAtHandle() : void {
 		// grab an at handle that does not exist
 		$profile = Profile::getProfileByProfileAtHandle($this->getPDO(), "@doesnotexist");
+		var_dump($profile);
 		$this->assertCount(0, $profile);
 	}
 
