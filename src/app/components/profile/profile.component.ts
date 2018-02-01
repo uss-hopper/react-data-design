@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
-import {Status} from "../shared/classes/status";
+import {Status} from "../../shared/classes/status";
 import {ProfileService} from "../services/profile.service";
-import {Profile} from "../shared/classes/profile";
+import {Profile} from "../../shared/classes/profile";
 import {JwtHelperService} from "@auth0/angular-jwt";
 
 

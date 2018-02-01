@@ -4,12 +4,12 @@ import {AuthGuardService} from './services/auth.guard.service';
 
 //import all needed components
 import {CreateTweetComponent} from "./components/create.tweet.component";
-import {HomeComponent} from "./components/home.component";
-import {ListTweetsComponent} from "./components/list.tweets.component";
+import {HomeComponent} from "./components/home/home.component";
+import {ListTweetsComponent} from "./components/home/home.list.component";
 import {MainNavComponent} from "./shared/components/main-nav/main.nav";
-import {ProfileComponent} from "./components/profile.component";
-import {SignInComponent} from "./components/signin.component";
-import {SignUpComponent} from "./components/sign.up.component";
+import {ProfileComponent} from "./components/profile/profile.component";
+import {SignInComponent} from "./shared/components/main-nav/signin.component";
+import {SignUpComponent} from "./components/home/sign-up/sign.up.component";
 
 
 // import all needed Services

@@ -6,9 +6,9 @@
 import {Component, OnInit, ViewChild,} from "@angular/core";
 import {Observable} from "rxjs/Observable"
 import {Router} from "@angular/router";
-import {Status} from "../shared/classes/status";
+import {Status} from "../../../shared/classes/status";
 import {SignUpService} from "../services/sign.up.service";
-import {SignUp} from "../shared/classes/sign.up";
+import {SignUp} from "../../../shared/classes/sign.up";
 import {setTimeout} from "timers";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
