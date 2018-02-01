@@ -2,13 +2,13 @@ import {Component, OnInit} from "@angular/core";
 
 import {AuthService} from "../services/auth.service";
 import {TweetService} from "../services/tweet.service";
-import {Status} from "../classes/status";
-import {Tweet} from "../classes/tweet";
+import {Status} from "../shared/classes/status";
+import {Tweet} from "../shared/classes/tweet";
 import {ProfileService} from "../services/profile.service";
-import {Profile} from "../classes/profile";
+import {Profile} from "../shared/classes/profile";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {LikeService} from "../services/like.service";
-import {Like} from "../classes/like";
+import {Like} from "../shared/classes/like";
 
 
 @Component({

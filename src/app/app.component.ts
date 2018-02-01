@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {SessionService} from "./services/session.service";
-import {Status} from "./classes/status";
+import {Status} from "./shared/classes/status";
 
 @Component({
 	selector: "data-design-app",

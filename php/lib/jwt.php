@@ -53,10 +53,12 @@ function setJwtAndAuthHeader(string $value, stdClass $content): void {
  * this function uses two custom methods to insure that the JWT-TOKENs match
  * This function returns nothing, but will throw an exception when something does not match
  */
-function jwtValidator() {
+function validateVerifyJwt() {
 
 	// retrieve the jwt from the header
 	$headerJwt = validateJwtHeader();
+
+	var_dump($headerJwt);
 
 	//enforce that the JWT is Valid and verified.
 	verifiedAndValidatedSignature($headerJwt);
@@ -74,7 +76,7 @@ function validateJwtHeader () : \Lcobucci\JWT\Token   {
 	$headers = array_change_key_case(apache_request_headers(), CASE_UPPER);
 
 	if(array_key_exists("X-JWT-TOKEN", $headers) === false) {
-		throw new InvalidArgumentException("invalid JWT token", 400);
+		throw new InvalidArgumentException("invalid JWT token", 418);
 	}
 
 	//enforce the session has needed content

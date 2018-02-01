@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {TweetService} from "../services/tweet.service";
-import {Status} from "../classes/status";
-import{Tweet} from "../classes/tweet";
+import {Status} from "../shared/classes/status";
+import{Tweet} from "../shared/classes/tweet";
 
 
 

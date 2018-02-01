@@ -62,6 +62,7 @@ try {
 
 		//get a specific tweet or all tweets and update reply
 		if(empty($id) === false) {
+
 			$tweet = Tweet::getTweetByTweetId($pdo, $id);
 			if($tweet !== null) {
 				$reply->data = $tweet;
@@ -80,11 +81,10 @@ try {
 			}
 		} else {
 			$tweets = Tweet::getAllTweets($pdo)->toArray();
-			if ($tweets === null) {
-				echo "go fuck yourself";
-			}
 			if($tweets !== null) {
+				validateVerifyJwt();
 				$reply->data = $tweets;
+
 			}
 		}
 	} else if($method === "PUT" || $method === "POST") {
@@ -128,7 +128,7 @@ try {
 				throw(new \InvalidArgumentException("You are not allowed to edit this tweet", 403));
 			}
 
-			validateJwtHeader();
+			//validateJwtHeader();
 
 			// update all attributes
 			//$tweet->setTweetDate($requestObject->tweetDate);
@@ -149,7 +149,7 @@ try {
 			}
 
 			//enforce the end user has a JWT token
-			validateJwtHeader();
+			//validateJwtHeader();
 
 			// create new tweet and insert into the database
 			$tweet = new Tweet(generateUuidV4(), $_SESSION["profile"]->getProfileId(), $requestObject->tweetContent, null);

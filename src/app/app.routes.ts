@@ -6,7 +6,7 @@ import {AuthGuardService} from './services/auth.guard.service';
 import {CreateTweetComponent} from "./components/create.tweet.component";
 import {HomeComponent} from "./components/home.component";
 import {ListTweetsComponent} from "./components/list.tweets.component";
-import {MainNavComponent} from "./components/main.nav";
+import {MainNavComponent} from "./shared/components/main-nav/main.nav";
 import {ProfileComponent} from "./components/profile.component";
 import {SignInComponent} from "./components/signin.component";
 import {SignUpComponent} from "./components/sign.up.component";
