@@ -8,7 +8,7 @@ DROP FUNCTION IF EXISTS haversine;
 -- @param FLOAT $originY point of origin, y coordinate
 -- @param FLOAT $destinationX point heading out, x coordinate
 -- @param FLOAT $destinationY point heading out, y coordinate
--- @return FLOAT distance between the points, in kilometers
+-- @return FLOAT distance between the points, in miles
 CREATE FUNCTION haversine(originX FLOAT, originY FLOAT, destinationX FLOAT, destinationY FLOAT) RETURNS FLOAT
 	BEGIN
 		-- first, declare all variables; I don't think you can declare later
@@ -22,8 +22,8 @@ CREATE FUNCTION haversine(originX FLOAT, originY FLOAT, destinationX FLOAT, dest
 		DECLARE distance FLOAT;
 
 		-- assign the variables that were declared & use them
-		SET radius = 3939; -- radius of the earth in miles
-		SET latitudeAngle1 = RADIANS(originX);
+		SET radius = 3958.7613; -- radius of the earth in miles
+		SET latitudeAngle1 = RADIANS(originY);
 		SET latitudeAngle2 = RADIANS(destinationY);
 		SET latitudePhase = RADIANS(destinationY - originY);
 		SET longitudePhase = RADIANS(destinationX - originX);
