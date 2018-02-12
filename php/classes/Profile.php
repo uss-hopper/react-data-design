@@ -248,7 +248,6 @@ class Profile implements \JsonSerializable {
 	 **/
 	public function setProfileEmail(string $newProfileEmail): void {
 
-		var_dump($newProfileEmail);
 		// verify the email is secure
 		$newProfileEmail = trim($newProfileEmail);
 		$newProfileEmail = filter_var($newProfileEmail, FILTER_VALIDATE_EMAIL);

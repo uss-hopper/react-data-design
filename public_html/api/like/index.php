@@ -101,9 +101,9 @@ try {
 				throw(new \InvalidArgumentException("you must be logged in too like posts", 403));
 			}
 
-			validateJwtHeader();
+			//validateJwtHeader();
 
-			$like = new Like($requestObject->likeProfileId, $requestObject->likeTweetId);
+			$like = new Like($_SESSION["profile"]->getProfileId(), $requestObject->likeTweetId);
 			$like->insert($pdo);
 			$reply->message = "liked tweet successful";
 
@@ -127,7 +127,7 @@ try {
 				throw(new \InvalidArgumentException("You are not allowed to delete this tweet", 403));
 			}
 
-			validateJwtHeader();
+			//validateJwtHeader();
 
 			//preform the actual delete
 			$like->delete($pdo);

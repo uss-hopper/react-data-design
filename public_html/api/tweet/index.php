@@ -128,7 +128,7 @@ try {
 				throw(new \InvalidArgumentException("You are not allowed to edit this tweet", 403));
 			}
 
-			validateJwtHeader();
+			//validateJwtHeader();
 
 			// update all attributes
 			//$tweet->setTweetDate($requestObject->tweetDate);
@@ -149,7 +149,7 @@ try {
 			}
 
 			//enforce the end user has a JWT token
-			validateJwtHeader();
+			//validateJwtHeader();
 
 			// create new tweet and insert into the database
 			$tweet = new Tweet(generateUuidV4(), $_SESSION["profile"]->getProfileId(), $requestObject->tweetContent, null);
@@ -178,7 +178,7 @@ try {
 		}
 
 		//enforce the end user has a JWT token
-		validateJwtHeader();
+		//validateJwtHeader();
 
 		// delete tweet
 		$tweet->delete($pdo);
