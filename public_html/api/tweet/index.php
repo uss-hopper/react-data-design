@@ -70,9 +70,9 @@ try {
 		} else if(empty($tweetProfileId) === false) {
 
 			// if the user is logged in grab all the tweets by that user based  on who is logged in
-			$tweet = Tweet::getTweetByTweetProfileId($pdo, $_SESSION["profile"]->getProfileId())->toArray();
-			if($tweet !== null) {
-				$reply->data = $tweet;
+			$tweets = Tweet::getTweetByTweetProfileId($pdo, $_SESSION["profile"]->getProfileId())->toArray();
+			if($tweets !== null) {
+				$reply->data = $tweets;
 			}
 		} else if(empty($tweetContent) === false) {
 			$tweets = Tweet::getTweetByTweetContent($pdo, $tweetContent)->toArray();
