@@ -80,9 +80,6 @@ try {
 			}
 		} else {
 			$tweets = Tweet::getAllTweets($pdo)->toArray();
-			if ($tweets === null) {
-				echo "go fuck yourself";
-			}
 			if($tweets !== null) {
 				$reply->data = $tweets;
 			}
