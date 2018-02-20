@@ -109,8 +109,8 @@ EOF;
 		 */
 		//define who the recipient is
 		$recipients = [$requestObject->profileEmail];
-
 		//set the recipient to the swift message
+		$swiftMessage->setTo($recipients);
 
 
 		//attach the subject line to the email message
@@ -146,10 +146,10 @@ EOF;
 		 * the send method returns the number of recipients that accepted the Email
 		 * so, if the number attempted is not the number accepted, this is an Exception
 		 **/
-		/*if($numSent !== count($recipients)) {
+		if($numSent !== count($recipients)) {
 			// the $failedRecipients parameter passed in the send() method now contains contains an array of the Emails that failed
 			throw(new RuntimeException("unable to send email", 400));
-		} */
+		}
 
 		// update reply
 		$reply->message = "Thank you for creating a profile with DDC-Twitter";
