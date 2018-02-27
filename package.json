@@ -33,7 +33,6 @@
 		"type": "git",
 		"url": "https://github.com/deepdivedylan/data-design.git"
 	},
-
 	"dependencies": {
 		"@angular/common": "^5.2.6",
 		"@angular/compiler": "^5.2.6",
