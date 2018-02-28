@@ -59,13 +59,13 @@ CREATE TABLE `like` (
 	-- these are not auto_increment because they're still foreign keys
 
   likeTweetId BINARY(16) NOT NULL,
-	likeUserId BINARY(16) NOT NULL,
+	likeProfileId BINARY(16) NOT NULL,
 	likeDate DATETIME(6) NOT NULL,	-- index the foreign keys
-	INDEX(likeUserId),
+	INDEX(likeProfileId),
 	INDEX(likeTweetId),
 	-- create the foreign key relations
 	FOREIGN KEY(likeTweetId) REFERENCES tweet(tweetId),
-	FOREIGN KEY(likeUserId) REFERENCES profile(profileId),
+	FOREIGN KEY(likeProfileId) REFERENCES profile(profileId),
 	-- finally, create a composite foreign key with the two foreign keys
 	PRIMARY KEY(likeProfileId, likeTweetId)
 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci;

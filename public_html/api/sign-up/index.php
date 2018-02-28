@@ -109,8 +109,8 @@ EOF;
 		 */
 		//define who the recipient is
 		$recipients = [$requestObject->profileEmail];
-
 		//set the recipient to the swift message
+		$swiftMessage->setTo($recipients);
 
 
 		//attach the subject line to the email message
