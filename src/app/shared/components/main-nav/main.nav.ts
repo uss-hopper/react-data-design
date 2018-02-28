@@ -4,7 +4,7 @@ import {Status} from "../../classes/status";
 
 @Component({
 	selector: "main-nav",
-	templateUrl: "./templates/main-nav.html",
+	template: require("./main-nav.html")
 })
 
 export class MainNavComponent {

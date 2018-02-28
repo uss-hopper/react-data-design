@@ -7,10 +7,10 @@ import {Component, OnInit, ViewChild,} from "@angular/core";
 import {Observable} from "rxjs/Observable"
 import {Router} from "@angular/router";
 import {Status} from "../shared/classes/status";
-import {SignUpService} from "../services/sign.up.service";
 import {SignUp} from "../shared/classes/sign.up";
 import {setTimeout} from "timers";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {SignUpService} from "../shared/services/sign.up.service";
 
 //declare $ for good old jquery
 declare let $: any;
@@ -18,7 +18,8 @@ declare let $: any;
 // set the template url and the selector for the ng powered html tag
 
 @Component({
-	templateUrl: "./templates/sign-up.html",
+	template: require
+	("./sign-up.component.html"),
 	selector: "sign-up"
 })
 export class SignUpComponent implements OnInit{

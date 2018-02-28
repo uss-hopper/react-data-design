@@ -7,13 +7,14 @@ import {Component, ViewChild, EventEmitter, Output} from "@angular/core";
 import {Router} from "@angular/router";
 import {Observable} from "rxjs/Observable"
 import {Status} from "../../classes/status";
-import {SignInService} from "../services/sign.in.service";
+
 import {SignIn} from "../../classes/sign.in";
 import {CookieService} from "ng2-cookies";
+import {SignInService} from "../../services/sign.in.service";
 declare var $: any;
 
 @Component({
-	templateUrl: "./templates/signin.html",
+	template: require( "./signin.html"),
 	selector: "signin"
 })
 

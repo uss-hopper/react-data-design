@@ -1,10 +1,10 @@
 import {Component, OnInit} from "@angular/core";
-import {SessionService} from "./services/session.service";
 import {Status} from "./shared/classes/status";
+import {SessionService} from "./shared/services/session.service";
 
 @Component({
 	selector: "data-design-app",
-	templateUrl: "./templates/data-design-app.html"
+	template: require("./app.component.html")
 })
 export class AppComponent{
 

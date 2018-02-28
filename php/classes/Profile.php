@@ -248,7 +248,6 @@ class Profile implements \JsonSerializable {
 	 **/
 	public function setProfileEmail(string $newProfileEmail): void {
 
-		var_dump($newProfileEmail);
 		// verify the email is secure
 		$newProfileEmail = trim($newProfileEmail);
 		$newProfileEmail = filter_var($newProfileEmail, FILTER_VALIDATE_EMAIL);
@@ -471,6 +470,7 @@ class Profile implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
+
 				$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileAvatarUrl"],$row["profileEmail"], $row["profileHash"], $row["profilePhone"], $row["profileSalt"]);
 			}
 		} catch(\Exception $exception) {

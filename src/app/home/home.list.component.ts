@@ -16,7 +16,7 @@ import {TweetService} from "../shared/services/tweet.service";
 
 @Component({
 	selector: "list-tweet",
-	templateUrl: "./templates/list-tweets.html"
+	template: require("./home.list.component.html")
 })
 
 export class ListTweetsComponent implements OnInit {
