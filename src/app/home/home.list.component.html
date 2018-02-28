@@ -5,15 +5,15 @@
 			<div class="input-group input-group-lg" [formGroup]="createTweetForm" (keyup.enter)="createTweet();"
 				  novalidate>
 				<label class="control-label" for="tweetContent" type="text" aria-hidden="true"></label>
-				<span class="input-group-addon fa fa-twitter" id="basic-addon1"></span>
+				<span class="input-group-addon fab fa-twitter" id="basic-addon1"></span>
 				<input id="tweetContent" type="text" name="tweetContent" formControlName="tweetContent"
 						 class="form-control">
 			</div>
 		</div>
 		<div class="col-lg-4">
-			<div *ngIf="createTweetForm.controls.tweetContent?.invalid && createTweetForm.controls.tweetContent?.touched" class="alert alert-danger">
+			<!-- <div *ngIf="createTweetForm.controls.tweetContent?.invalid && createTweetForm.controls.tweetContent?.touched" class="alert alert-danger">
 				<p *ngIf="createTweetForm.controls.tweetContent?.errors.maxlength">Tweet is way to long</p>
-			</div>
+			</div>-->
 		</div>
 
 		<div class=" col-lg-8">
@@ -25,7 +25,7 @@
 					<blockquote class="block-quote mb-0">
 						<p> {{ tweet.tweetContent }} </p>
 						<footer class="blockquote-footer"> placeholder
-							<button type="button" (click)="createLike(tweet.tweetId)" ><i class=" btn-sm fa fa-thumbs-o-up" aria-hidden="true"></i></button>
+							<button type="button" (click)="createLike(tweet.tweetId)" ><i class="" aria-hidden="true"></i></button>
 						</footer>
 					</blockquote>
 

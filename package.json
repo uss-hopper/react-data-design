@@ -1,81 +1,78 @@
 {
-  "name": "data-design",
-  "version": "1.0.0",
-  "license": "Apache-2.0",
-  "author": {
-    "name": "Dylan McDonald",
-    "email": "dylan@deepdivedylan.com",
-    "url": "https://bootcamp-coders.cnm.edu/class-materials/data-design/"
-  },
-  "contributors": [
-    {
-      "name": "Eric Debelak",
-      "email": "eric@11online.us"
-    },
-    {
-      "name": "George Kephart",
-      "email": "gkephart@cnm.edu"
-    },
-    {
-      "name": "Valente Meza",
-      "email": "valebmeza@gmail.com"
-    },
-    {
-      "name": "Rochelle Lewis",
-      "email": "rlewis37@cnm.edu"
-    }
-  ],
-  "scripts": {
-    "build": "rimraf public_html/dist && tsc && webpack --config webpack/webpack.live.js --progress --profile --bail",
-    "start": "rimraf public_html/dist && webpack-dev-server --config webpack/webpack.dev.js --inline --progress --port 7272"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/deepdivedylan/data-design.git"
-  },
-  "dependencies": {
-    "@angular/common": "^5.2.1",
-    "@angular/compiler": "^5.2.1",
-    "@angular/core": "^5.2.1",
-    "@angular/forms": "^5.2.1",
-    "@angular/platform-browser": "^5.2.1",
-    "@angular/platform-browser-dynamic": "^5.2.1",
-    "@angular/router": "^5.2.1",
-    "@auth0/angular-jwt": "^1.0.0-beta.9",
-    "core-js": "^2.5.3",
-    "jquery": "^3.3.1",
-    "jwt-decode": "^2.2.0",
-    "ng2-cookies": "^1.0.12",
-    "rxjs": "^5.5.6",
-    "zone.js": "^0.8.20"
-  },
-  "devDependencies": {
-    "@types/node": "^8.5.9",
-    "awesome-typescript-loader": "^3.4.1",
-    "bootstrap": "^4.0.0",
-    "bootstrap-loader": "^2.2.0",
-    "css-loader": "^0.28.9",
-    "eslint": "^4.16.0",
-    "extract-text-webpack-plugin": "^2.1.2",
-    "file-loader": "^1.1.6",
-    "font-awesome": "^4.7.0",
-    "font-awesome-webpack2": "^0.0.6",
-    "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^2.30.1",
-    "less": "^2.7.3",
-    "less-loader": "^4.0.5",
-    "node-sass": "^4.5.3",
-    "null-loader": "^0.1.1",
-    "popper.js": "^1.13.0",
-    "raw-loader": "^0.5.1",
-    "resolve-url-loader": "^2.2.1",
-    "rimraf": "^2.6.2",
-    "sass-loader": "^6.0.6",
-    "style-loader": "^0.19.1",
-    "typescript": "^2.6.1",
-    "url-loader": "^0.6.2",
-    "webpack": "^2.7.0",
-    "webpack-dev-server": "^2.11.1",
-    "webpack-merge": "^4.1.1"
-  }
+	"name": "data-design",
+	"version": "1.0.0",
+	"license": "Apache-2.0",
+	"author": {
+		"name": "Dylan McDonald",
+		"email": "dylan@deepdivedylan.com",
+		"url": "https://bootcamp-coders.cnm.edu/class-materials/data-design/"
+	},
+	"contributors": [
+		{
+			"name": "Eric Debelak",
+			"email": "eric@11online.us"
+		},
+		{
+			"name": "George Kephart",
+			"email": "gkephart@cnm.edu"
+		},
+		{
+			"name": "Valente Meza",
+			"email": "valebmeza@gmail.com"
+		},
+		{
+			"name": "Rochelle Lewis",
+			"email": "rlewis37@cnm.edu"
+		}
+	],
+	"scripts": {
+		"build": "rimraf public_html/dist && tsc && webpack --config webpack/webpack.live.js --progress --profile --bail",
+		"start": "rimraf public_html/dist && webpack-dev-server --config webpack/webpack.dev.js --inline --progress --port 7272"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/deepdivedylan/data-design.git"
+	},
+	"dependencies": {
+		"@angular/common": "^5.2.6",
+		"@angular/compiler": "^5.2.6",
+		"@angular/core": "^5.2.6",
+		"@angular/forms": "^5.2.6",
+		"@angular/platform-browser": "^5.2.6",
+		"@angular/platform-browser-dynamic": "^5.2.6",
+		"@angular/router": "^5.2.6",
+		"@auth0/angular-jwt": "^1.0.0-beta.10",
+		"core-js": "^2.5.3",
+		"rxjs": "^5.5.6",
+		"jquery": "^3.3.1",
+		"zone.js": "^0.8.20"
+	},
+	"devDependencies": {
+		"@fortawesome/fontawesome": "^1.1.4",
+		"@fortawesome/fontawesome-free-brands": "^5.0.7",
+		"@fortawesome/fontawesome-free-regular": "^5.0.7",
+		"@fortawesome/fontawesome-free-solid": "^5.0.7",
+		"@types/node": "^8.0.47",
+		"ajv": "^6.2.0",
+		"awesome-typescript-loader": "^3.5.0",
+		"bootstrap": "^4.0.0",
+		"css-loader": "^0.28.10",
+		"extract-text-webpack-plugin": "^3.0.2",
+		"file-loader": "^1.1.10",
+		"html-loader": "^0.5.5",
+		"html-webpack-plugin": "^2.30.1",
+		"jwt-decode": "^2.2.0",
+		"ng2-cookies": "^1.0.12",
+		"null-loader": "^0.1.1",
+		"popper.js": "^1.12.9",
+		"raw-loader": "^0.5.1",
+		"resolve-url-loader": "^2.2.1",
+		"rimraf": "^2.6.2",
+		"style-loader": "^0.20.2",
+		"typescript": "^2.7.2",
+		"url-loader": "^0.6.2",
+		"webpack": "^3.11.0",
+		"webpack-dev-server": "^2.11.2",
+		"webpack-merge": "^4.1.2"
+	}
 }

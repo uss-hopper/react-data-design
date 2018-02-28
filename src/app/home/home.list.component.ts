@@ -1,19 +1,22 @@
 import {Component, OnInit} from "@angular/core";
 
-import {AuthService} from "../services/auth.service";
-import {TweetService} from "../services/tweet.service";
-import {Status} from "../classes/status";
-import {Tweet} from "../classes/tweet";
-import {ProfileService} from "../services/profile.service";
-import {Profile} from "../classes/profile";
+
+import {Status} from "../shared/classes/status";
+import {Tweet} from "../shared/classes/tweet";
+
+import {Profile} from "../shared/classes/profile";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {LikeService} from "../services/like.service";
-import {Like} from "../classes/like";
+
+import {Like} from "../shared/classes/like";
+import {AuthService} from "../shared/services/auth.service";
+import {ProfileService} from "../shared/services/profile.service";
+import {LikeService} from "../shared/services/like.service";
+import {TweetService} from "../shared/services/tweet.service";
 
 
 @Component({
 	selector: "list-tweet",
-	templateUrl: "./templates/list-tweets.html"
+	template: require("./home.list.component.html")
 })
 
 export class ListTweetsComponent implements OnInit {

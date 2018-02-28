@@ -27,7 +27,7 @@ module.exports = {
 			},
 			{
 				test: /\.css$/,
-				loader: ExtractTextPlugin.extract({ fallbackLoader: "style-loader", loader: "css-loader?minimize=true" })
+				loader: ExtractTextPlugin.extract({ fallback: "style-loader", use: ["css-loader?minimize=true"] })
 			},
 			{
 				test: /\.ts$/,
@@ -40,6 +40,16 @@ module.exports = {
 		new webpack.optimize.CommonsChunkPlugin({
 			name: ["app", "vendor", "polyfills"]
 		}),
+
+		new webpack.ContextReplacementPlugin(
+			// The (\\|\/) piece accounts for path separators in *nix and Windows
+			// For Angular 5, see also https://github.com/angular/angular/issues/20357#issuecomment-343683491
+			/\@angular(\\|\/)core(\\|\/)esm5/,
+			helpers.root("src"), // location of your src
+			{
+				// your Angular Async Route paths relative to this root directory
+			}
+		),
 
 		new webpack.ProvidePlugin({
 			$: "jquery",

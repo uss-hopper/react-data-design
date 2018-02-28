@@ -62,6 +62,7 @@ try {
 
 		//get a specific tweet or all tweets and update reply
 		if(empty($id) === false) {
+
 			$tweet = Tweet::getTweetByTweetId($pdo, $id);
 			if($tweet !== null) {
 				$reply->data = $tweet;
@@ -69,11 +70,12 @@ try {
 		} else if(empty($tweetProfileId) === false) {
 
 			// if the user is logged in grab all the tweets by that user based  on who is logged in
-			$tweet = Tweet::getTweetByTweetProfileId($pdo, $_SESSION["profile"]->getProfileId())->toArray();
-			if($tweet !== null) {
-				$reply->data = $tweet;
+			$tweets = Tweet::getTweetByTweetProfileId($pdo, $_SESSION["profile"]->getProfileId())->toArray();
+			if($tweets !== null) {
+				$reply->data = $tweets;
 			}
 		} else if(empty($tweetContent) === false) {
+			//var_dump($tweetContent);
 			$tweets = Tweet::getTweetByTweetContent($pdo, $tweetContent)->toArray();
 			if($tweets !== null) {
 				$reply->data = $tweets;
@@ -81,7 +83,9 @@ try {
 		} else {
 			$tweets = Tweet::getAllTweets($pdo)->toArray();
 			if($tweets !== null) {
+				//validateVerifyJwt();
 				$reply->data = $tweets;
+
 			}
 		}
 	} else if($method === "PUT" || $method === "POST") {
@@ -91,17 +95,7 @@ try {
 			throw(new \InvalidArgumentException("you must be logged in to post tweets", 401));
 		}
 
-		verifyXsrf();
-		$requestContent = file_get_contents("php://input");
-		// Retrieves the JSON package that the front end sent, and stores it in $requestContent. Here we are using file_get_contents("php://input") to get the request from the front end. file_get_contents() is a PHP function that reads a file into a string. The argument for the function, here, is "php://input". This is a read only stream that allows raw data to be read from the front end request which is, in this case, a JSON package.
-		$requestObject = json_decode($requestContent);
-		// This Line Then decodes the JSON package and stores that result in $requestObject
-
-
-		//make sure tweet content is available (required field)
-		if(empty($requestObject->tweetContent) === true) {
-			throw(new \InvalidArgumentException ("No content for Tweet.", 405));
-		}
+		
 
 		// make sure tweet date is accurate (optional field)
 		if(empty($requestObject->tweetDate) === true) {
@@ -110,6 +104,7 @@ try {
 
 		//perform the actual put or post
 		if($method === "PUT") {
+			var_dump($id);
 
 			// retrieve the tweet to update
 			$tweet = Tweet::getTweetByTweetId($pdo, $id);
@@ -146,7 +141,8 @@ try {
 			}
 
 			//enforce the end user has a JWT token
-			//validateJwtHeader();
+
+			validateJwtHeader();
 
 			// create new tweet and insert into the database
 			$tweet = new Tweet(generateUuidV4(), $_SESSION["profile"]->getProfileId(), $requestObject->tweetContent, null);

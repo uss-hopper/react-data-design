@@ -53,10 +53,11 @@ function setJwtAndAuthHeader(string $value, stdClass $content): void {
  * this function uses two custom methods to insure that the JWT-TOKENs match
  * This function returns nothing, but will throw an exception when something does not match
  */
-function jwtValidator() {
+function validateVerifyJwt() {
 
 	// retrieve the jwt from the header
 	$headerJwt = validateJwtHeader();
+
 
 	//enforce that the JWT is Valid and verified.
 	verifiedAndValidatedSignature($headerJwt);
@@ -74,7 +75,7 @@ function validateJwtHeader () : \Lcobucci\JWT\Token   {
 	$headers = array_change_key_case(apache_request_headers(), CASE_UPPER);
 
 	if(array_key_exists("X-JWT-TOKEN", $headers) === false) {
-		throw new InvalidArgumentException("invalid JWT token", 400);
+		throw new InvalidArgumentException("invalid JWT token", 418);
 	}
 
 	//enforce the session has needed content
@@ -112,14 +113,14 @@ function verifiedAndValidatedSignature ( \Lcobucci\JWT\Token  $headerJwt) : void
 	$validator = new ValidationData();
 	$validator->setId(session_id());
 	if($headerJwt->validate($validator) !== true) {
-		throw (new InvalidArgumentException("not authorized to preform task", 402));
+		throw (new InvalidArgumentException("not authorized to perform task", 402));
 	}
 
 	//verify that the JWT was signed by the server
 	$signer = new Sha512();
 
 	if($headerJwt->verify($signer, $_SESSION["signature"]) !== true) {
-		throw (new InvalidArgumentException("not authorized to preform task", 403));
+		throw (new InvalidArgumentException("not authorized to perform task", 403));
 	}
 }
 

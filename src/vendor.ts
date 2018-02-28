@@ -13,4 +13,9 @@ import "rxjs";
 import "jquery";
 import "bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import "font-awesome-webpack2";
+
+// font awesome
+import "@fortawesome/fontawesome";
+import "@fortawesome/fontawesome-free-brands";
+import "@fortawesome/fontawesome-free-regular";
+import "@fortawesome/fontawesome-free-solid";
