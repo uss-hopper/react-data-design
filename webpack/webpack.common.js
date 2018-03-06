@@ -63,7 +63,7 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			inject: "head",
 			filename: helpers.root("public_html") + "/index.html",
-			template: helpers.root("webpack") + "/index.html"
+			template: helpers.root("webpack") + "/index.ejs"
 		})
 	]
 };
