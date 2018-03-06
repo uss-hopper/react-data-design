@@ -8,8 +8,6 @@ var targetUrl = require("./target.js");
 const ENV = process.env.NODE_ENV = process.env.ENV = "live";
 
 module.exports = webpackMerge(commonConfig, {
-	devtool: "source-map",
-
 	output: {
 		path: helpers.root("public_html/dist"),
 		publicPath: "dist",
@@ -23,7 +21,7 @@ module.exports = webpackMerge(commonConfig, {
 		new ExtractTextPlugin("[name].[hash].css"),
 		new webpack.DefinePlugin({
 			"process.env": {
-				"BASE_HREF": JSON.stringify(targetUrl().substring(targetUrl().indexOf("/", targetUrl().indexOf("//") + 2)) + "/"),
+				"BASE_HREF": JSON.stringify(targetUrl().substring(targetUrl().indexOf("/", targetUrl().indexOf("//") + 2))),
 				"ENV": JSON.stringify(ENV)
 			}
 		}),
