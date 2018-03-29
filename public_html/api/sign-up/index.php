@@ -64,13 +64,12 @@ try {
 			throw(new \InvalidArgumentException("passwords do not match"));
 
 		}
-		$salt = bin2hex(random_bytes(32));
 		$hash = password_hash($requestObject->profilePassword, PASSWORD_ARGON2I, ["time_cost" => 384]);
 
 		$profileActivationToken = bin2hex(random_bytes(16));
 
 		//create the profile object and prepare to insert into the database
-		$profile = new Profile(generateUuidV4(), $profileActivationToken, $requestObject->profileAtHandle, "null", $requestObject->profileEmail, $hash, $requestObject->profilePhone, $salt);
+		$profile = new Profile(generateUuidV4(), $profileActivationToken, $requestObject->profileAtHandle, "null", $requestObject->profileEmail, $hash, $requestObject->profilePhone);
 
 		//insert the profile into the database
 		$profile->insert($pdo);
