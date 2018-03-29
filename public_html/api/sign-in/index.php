@@ -62,11 +62,8 @@ try {
 			throw (new \InvalidArgumentException ("you are not allowed to sign in unless you have activated your account", 403));
 		}
 
-		//hash the password given to make sure it matches.
-		$hash = password_hash($requestObject->profilePassword, PASSWORD_ARGON2I, ["time_cost" => 384]);
-
 		//verify hash is correct
-		if($hash !== $profile->getProfileHash()) {
+		if(password_verify($requestObject->profilePassword, $profile->getProfileHash()) === false) {
 			throw(new \InvalidArgumentException("Password or email is incorrect.", 401));
 		}
 
