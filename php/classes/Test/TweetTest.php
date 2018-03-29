@@ -33,12 +33,6 @@ class TweetTest extends DataDesignTest {
 	protected $VALID_PROFILE_HASH;
 
 	/**
-	 * valid salt to use to create the profile object to own the test
-	 * @var string $VALID_SALT
-	 */
-	protected $VALID_PROFILE_SALT;
-
-	/**
 	 * content of the Tweet
 	 * @var string $VALID_TWEETCONTENT
 	 **/
@@ -73,12 +67,11 @@ class TweetTest extends DataDesignTest {
 		// run the default setUp() method first
 		parent::setUp();
 		$password = "abc123";
-		$this->VALID_PROFILE_SALT = bin2hex(random_bytes(32));
-		$this->VALID_PROFILE_HASH = hash_pbkdf2("sha512", $password, $this->VALID_PROFILE_SALT, 262144);
+		$this->VALID_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
 
 
 		// create and insert a Profile to own the test Tweet
-		$this->profile = new Profile(generateUuidV4(), null,"@handle", "test@phpunit.de",$this->VALID_PROFILE_HASH, "+12125551212", $this->VALID_PROFILE_SALT);
+		$this->profile = new Profile(generateUuidV4(), null,"@handle", "https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif", "test@phpunit.de",$this->VALID_PROFILE_HASH, "+12125551212");
 		$this->profile->insert($this->getPDO());
 
 		// calculate the date (just use the time the unit test was setup...)

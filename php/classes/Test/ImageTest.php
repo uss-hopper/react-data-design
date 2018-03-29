@@ -54,12 +54,6 @@ class ImageTest extends DataDesignTest {
 	protected $VALID_LIKEDATE;
 
 	/**
-	 * valid salt to use to create the profile object to own the test
-	 * @var string $VALID_SALT
-	 */
-	protected $VALID_SALT;
-
-	/**
 	 * valid activationToken to create the profile object to own the test
 	 * @var string $VALID_ACTIVATION
 	 */
@@ -82,7 +76,7 @@ class ImageTest extends DataDesignTest {
 	 * valid IMAGEURL to create the image object to own the test
 	 * @var string $VALID_IMAGEURL
 	 */
-	protected $VALID_IMAGEURL = "https://media.giphy.com/media/l2QDMn3ozS3SWcheo/giphy.gif";
+	protected $VALID_IMAGEURL = "https://media.giphy.com/media/szxw88uS1cq4M/giphy.gif";
 
 
 	/**
@@ -94,14 +88,13 @@ class ImageTest extends DataDesignTest {
 
 		// create a salt and hash for the mocked profile
 		$password = "abc123";
-		$this->VALID_SALT = bin2hex(random_bytes(32));
-		$this->VALID_HASH = hash_pbkdf2("sha512", $password, $this->VALID_SALT, 262144);
+		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
 		$this->VALID_ACTIVATION = bin2hex(random_bytes(16));
 		$this->VALID_CLOUDINARYTOKEN = bin2hex(random_bytes(125));
-		$this->VALID_IMAGECLOUDINARYTOKEN = bin2hex(random_bytes(125));
+		$this->VALID_IMAGECLOUDINARYTOKEN = "https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif";
 
 		// create and insert the mocked profile
-		$this->profile = new Profile(generateUuidV4(), null, "@phpunit", $this->VALID_CLOUDINARYTOKEN,"test@phpunit.de", $this->VALID_HASH, "+12125551212", $this->VALID_SALT);
+		$this->profile = new Profile(generateUuidV4(), null, "@phpunit", $this->VALID_CLOUDINARYTOKEN, "test@phpunit.de", $this->VALID_HASH, "+12125551212");
 		$this->profile->insert($this->getPDO());
 
 		// create the and insert the mocked tweet

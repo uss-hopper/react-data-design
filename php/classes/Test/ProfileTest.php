@@ -43,7 +43,7 @@ class ProfileTest extends DataDesignTest {
 	 * second valid at handle to use
 	 * @var string $VALID_ATHANDLE2
 	 **/
-	protected $VALID_PROFILE_AVATAR_URL = "github.com/deepdivedylan/data-design/blob/fbc9aebd85dbc10a65c7c9160a52f9eb2453a911/php/classes/Profile.php";
+	protected $VALID_PROFILE_AVATAR_URL = "https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif";
 
 	/**
 	 * valid email to use
