@@ -63,7 +63,7 @@ try {
 		}
 
 		//hash the password given to make sure it matches.
-		$hash = hash_pbkdf2("sha512", $profilePassword, $profile->getProfileSalt(), 262144);
+		$hash = password_hash($requestObject->profilePassword, PASSWORD_ARGON2I, ["time_cost" => 384]);
 
 		//verify hash is correct
 		if($hash !== $profile->getProfileHash()) {

@@ -65,7 +65,7 @@ try {
 
 		}
 		$salt = bin2hex(random_bytes(32));
-		$hash = hash_pbkdf2("sha512", $requestObject->profilePassword, $salt, 262144);
+		$hash = password_hash($requestObject->profilePassword, PASSWORD_ARGON2I, ["time_cost" => 384]);
 
 		$profileActivationToken = bin2hex(random_bytes(16));
 
