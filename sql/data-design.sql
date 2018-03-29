@@ -19,9 +19,8 @@ CREATE TABLE profile (
 	-- to make sure duplicate data cannot exist, create a unique index
 	profileEmail VARCHAR(128) NOT NULL,
 	-- to make something optional, exclude the not null
-	profileHash CHAR(128) NOT NULL,
+	profileHash CHAR(98) NOT NULL,
 	profilePhone VARCHAR(32),
-	profileSalt CHAR(64) NOT NULL,
 	UNIQUE(profileEmail),
 	UNIQUE(profileAtHandle),
 	-- this officiates the primary key for the entity
@@ -57,8 +56,7 @@ CREATE TABLE image (
 -- create the like entity (a weak entity from an m-to-n for profile --> tweet)
 CREATE TABLE `like` (
 	-- these are not auto_increment because they're still foreign keys
-
-  likeTweetId BINARY(16) NOT NULL,
+	likeTweetId BINARY(16) NOT NULL,
 	likeProfileId BINARY(16) NOT NULL,
 	likeDate DATETIME(6) NOT NULL,	-- index the foreign keys
 	INDEX(likeProfileId),
