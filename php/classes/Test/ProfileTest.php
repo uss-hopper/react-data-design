@@ -63,12 +63,6 @@ class ProfileTest extends DataDesignTest {
 	 **/
 	protected $VALID_PHONE = "+12125551212";
 
-	/**
-	 * valid salt to use to create the profile object to own the test
-	 * @var string $VALID_SALT
-	 */
-	protected $VALID_SALT;
-
 
 
 	/**
@@ -79,8 +73,7 @@ class ProfileTest extends DataDesignTest {
 
 		//
 		$password = "abc123";
-		$this->VALID_SALT = bin2hex(random_bytes(32));
-		$this->VALID_HASH = hash_pbkdf2("sha512", $password, $this->VALID_SALT, 262144);
+		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
 		$this->VALID_ACTIVATION = bin2hex(random_bytes(16));
 	}
 
@@ -95,7 +88,7 @@ class ProfileTest extends DataDesignTest {
 
 
 
-		$profile = new Profile($profileId, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE, $this->VALID_SALT);
+		$profile = new Profile($profileId, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE);
 		$profile->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
@@ -108,7 +101,6 @@ class ProfileTest extends DataDesignTest {
 		$this->assertEquals($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
 		$this->assertEquals($pdoProfile->getProfileHash(), $this->VALID_HASH);
 		$this->assertEquals($pdoProfile->getProfilePhone(), $this->VALID_PHONE);
-		$this->assertEquals($pdoProfile->getProfileSalt(), $this->VALID_SALT);
 	}
 
 	/**
@@ -120,7 +112,7 @@ class ProfileTest extends DataDesignTest {
 
 		// create a new Profile and insert to into mySQL
 		$profileId = generateUuidV4();
-		$profile = new Profile($profileId, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE,$this->VALID_PROFILE_AVATAR_URL, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE, $this->VALID_SALT);
+		$profile = new Profile($profileId, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE,$this->VALID_PROFILE_AVATAR_URL, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE);
 		$profile->insert($this->getPDO());
 
 
@@ -140,7 +132,6 @@ class ProfileTest extends DataDesignTest {
 		$this->assertEquals($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
 		$this->assertEquals($pdoProfile->getProfileHash(), $this->VALID_HASH);
 		$this->assertEquals($pdoProfile->getProfilePhone(), $this->VALID_PHONE);
-		$this->assertEquals($pdoProfile->getProfileSalt(), $this->VALID_SALT);
 	}
 
 
@@ -153,7 +144,7 @@ class ProfileTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		$profileId = generateUuidV4();
-		$profile = new Profile($profileId, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE, $this->VALID_SALT);
+		$profile = new Profile($profileId, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE);
 		$profile->insert($this->getPDO());
 
 
@@ -175,7 +166,7 @@ class ProfileTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		$profileId = generateUuidV4();
-		$profile = new Profile($profileId, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE, $this->VALID_SALT);
+		$profile = new Profile($profileId, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE);
 		$profile->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
@@ -188,7 +179,6 @@ class ProfileTest extends DataDesignTest {
 		$this->assertEquals($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
 		$this->assertEquals($pdoProfile->getProfileHash(), $this->VALID_HASH);
 		$this->assertEquals($pdoProfile->getProfilePhone(), $this->VALID_PHONE);
-		$this->assertEquals($pdoProfile->getProfileSalt(), $this->VALID_SALT);
 	}
 
 	/**
@@ -206,7 +196,7 @@ class ProfileTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		$profileId = generateUuidV4();
-		$profile = new Profile($profileId, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE, $this->VALID_SALT);
+		$profile = new Profile($profileId, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE);
 		$profile->insert($this->getPDO());
 
 		//grab the data from MySQL
@@ -226,7 +216,6 @@ class ProfileTest extends DataDesignTest {
 		$this->assertEquals($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
 		$this->assertEquals($pdoProfile->getProfileHash(), $this->VALID_HASH);
 		$this->assertEquals($pdoProfile->getProfilePhone(), $this->VALID_PHONE);
-		$this->assertEquals($pdoProfile->getProfileSalt(), $this->VALID_SALT);
 	}
 
 	/**
@@ -235,7 +224,6 @@ class ProfileTest extends DataDesignTest {
 	public function testGetInvalidProfileByAtHandle() : void {
 		// grab an at handle that does not exist
 		$profile = Profile::getProfileByProfileAtHandle($this->getPDO(), "@doesnotexist");
-		var_dump($profile);
 		$this->assertCount(0, $profile);
 	}
 
@@ -247,7 +235,7 @@ class ProfileTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		$profileId = generateUuidV4();
-		$profile = new Profile($profileId, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE, $this->VALID_SALT);
+		$profile = new Profile($profileId, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE);
 		$profile->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
@@ -260,7 +248,6 @@ class ProfileTest extends DataDesignTest {
 		$this->assertEquals($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
 		$this->assertEquals($pdoProfile->getProfileHash(), $this->VALID_HASH);
 		$this->assertEquals($pdoProfile->getProfilePhone(), $this->VALID_PHONE);
-		$this->assertEquals($pdoProfile->getProfileSalt(), $this->VALID_SALT);
 	}
 
 	/**
@@ -280,7 +267,7 @@ class ProfileTest extends DataDesignTest {
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		$profileId = generateUuidV4();
-		$profile = new Profile($profileId, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE, $this->VALID_SALT);
+		$profile = new Profile($profileId, $this->VALID_ACTIVATION, $this->VALID_ATHANDLE, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_PHONE);
 		$profile->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
@@ -293,7 +280,6 @@ class ProfileTest extends DataDesignTest {
 		$this->assertEquals($pdoProfile->getProfileEmail(), $this->VALID_EMAIL);
 		$this->assertEquals($pdoProfile->getProfileHash(), $this->VALID_HASH);
 		$this->assertEquals($pdoProfile->getProfilePhone(), $this->VALID_PHONE);
-		$this->assertEquals($pdoProfile->getProfileSalt(), $this->VALID_SALT);
 	}
 
 	/**
@@ -301,7 +287,7 @@ class ProfileTest extends DataDesignTest {
 	 **/
 	public function testGetInvalidProfileActivation() : void {
 		// grab an email that does not exist
-		$profile = Profile::getProfileByProfileActivationToken($this->getPDO(), "5ebc7867885cb8dd25af05b991dd5609");
+		$profile = Profile::getProfileByProfileActivationToken($this->getPDO(), "6675636b646f6e616c646472756d7066");
 		$this->assertNull($profile);
 	}
 }
