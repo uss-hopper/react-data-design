@@ -19,7 +19,7 @@ CREATE TABLE profile (
 	-- to make sure duplicate data cannot exist, create a unique index
 	profileEmail VARCHAR(128) NOT NULL,
 	-- to make something optional, exclude the not null
-	profileHash CHAR(98) NOT NULL,
+	profileHash CHAR(97) NOT NULL,
 	profilePhone VARCHAR(32),
 	UNIQUE(profileEmail),
 	UNIQUE(profileAtHandle),

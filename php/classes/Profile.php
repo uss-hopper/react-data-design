@@ -31,7 +31,7 @@ class Profile implements \JsonSerializable {
 
 	/**
 	 * token handed out to verify that the profile is valid and not malicious.
-	 *v@var $profileActivationToken
+	 * @var $profileActivationToken
 	 **/
 	private $profileActivationToken;
 
@@ -286,9 +286,9 @@ class Profile implements \JsonSerializable {
 			throw(new \InvalidArgumentException("profile hash is not a valid hash"));
 		}
 
-		//enforce that the hash is exactly 98 characters.
-		if(strlen($newProfileHash) !== 98) {
-			throw(new \RangeException("profile hash must be 98 characters"));
+		//enforce that the hash is exactly 97 characters.
+		if(strlen($newProfileHash) !== 97) {
+			throw(new \RangeException("profile hash must be 97 characters"));
 		}
 
 		//store the hash
