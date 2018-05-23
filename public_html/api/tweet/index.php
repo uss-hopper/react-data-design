@@ -104,7 +104,6 @@ try {
 
 		//perform the actual put or post
 		if($method === "PUT") {
-			var_dump($id);
 
 			// retrieve the tweet to update
 			$tweet = Tweet::getTweetByTweetId($pdo, $id);
