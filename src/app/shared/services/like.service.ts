@@ -21,11 +21,11 @@ export class LikeService {
 	}
 
 	//grabs a  like based on its composite key
-	getLikeByCompositeKey(likeProfileId : number, likeTweetId : number) : Observable <Like> {
+	getLikeByCompositeKey(likeProfileId : string, likeTweetId : string) : Observable <Like> {
 		return (this.http.get<Like>(this.likeUrl+ "?likeProfileId=" + likeProfileId +"&likeTweetId=" + likeTweetId))
 	}
 
-	getLikeBytweetId (likeTweetId : number) : Observable<Like[]> {
+	getLikeBytweetId (likeTweetId : string) : Observable<Like[]> {
 	return(this.http.get<Like[]>(this.likeUrl + likeTweetId))
 	}
 

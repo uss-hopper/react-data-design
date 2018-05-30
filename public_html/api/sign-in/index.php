@@ -56,6 +56,8 @@ try {
 		if(empty($profile) === true) {
 			throw(new \InvalidArgumentException("Invalid Email", 401));
 		}
+		$profile->setProfileActivationToken(null);
+		$profile->update($pdo);
 
 		//if the profile activation is not null throw an error
 		if($profile->getProfileActivationToken() !== null){
@@ -69,6 +71,7 @@ try {
 
 		//grab profile from database and put into a session
 		$profile = Profile::getProfileByProfileId($pdo, $profile->getProfileId());
+
 
 		$_SESSION["profile"] = $profile;
 

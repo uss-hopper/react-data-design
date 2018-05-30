@@ -14,7 +14,7 @@ export class TweetService {
 	private tweetUrl = "api/tweet/";
 
 	// call to the tweet API and delete the tweet in question
-	deleteTweet(tweetId: number) : Observable<Status> {
+	deleteTweet(tweetId: string) : Observable<Status> {
 		return(this.http.delete<Status>(this.tweetUrl + tweetId));
 
 	}
@@ -30,13 +30,13 @@ export class TweetService {
 	}
 
 	// call to the tweet API and get a tweet object based on its Id
-	getTweet(tweetId : number) : Observable<Tweet> {
+	getTweet(tweetId : string) : Observable<Tweet> {
 		return(this.http.get<Tweet>(this.tweetUrl + tweetId));
 
 	}
 
 	// call to the API and get an array of tweets based off the profileId
-	getTweetbyProfileId(tweetProfileId : number) : Observable<Tweet[]> {
+	getTweetbyProfileId(tweetProfileId : string) : Observable<Tweet[]> {
 		return(this.http.get<Tweet[]>(this.tweetUrl + tweetProfileId));
 
 	}

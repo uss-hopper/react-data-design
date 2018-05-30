@@ -63,6 +63,7 @@ try {
 		//get a specific tweet or all tweets and update reply
 		if(empty($id) === false) {
 
+			var_dump($id);
 			$tweet = Tweet::getTweetByTweetId($pdo, $id);
 			if($tweet !== null) {
 				$reply->data = $tweet;
