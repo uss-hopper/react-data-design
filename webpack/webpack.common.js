@@ -1,6 +1,6 @@
-var webpack = require("webpack");
+ar webpack = require("webpack");
 var HtmlWebpackPlugin = require("html-webpack-plugin");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var helpers = require("./helpers");
 
 module.exports = {
@@ -27,7 +27,7 @@ module.exports = {
 			},
 			{
 				test: /\.css$/,
-				loader: ExtractTextPlugin.extract({ fallback: "style-loader", use: ["css-loader?minimize=true"] })
+				loader: [MiniCssExtractPlugin.loader, "css-loader"]
 			},
 			{
 				test: /\.ts$/,
@@ -37,9 +37,6 @@ module.exports = {
 	},
 
 	plugins: [
-		new webpack.optimize.CommonsChunkPlugin({
-			name: ["app", "vendor", "polyfills"]
-		}),
 
 		new webpack.ContextReplacementPlugin(
 			// The (\\|\/) piece accounts for path separators in *nix and Windows
