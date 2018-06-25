@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 
 import {Status} from "../classes/status";
 import {Tweet} from "../classes/tweet";
-import {Observable} from "rxjs/Observable";
+import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
 
 @Injectable ()
