@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs/Observable";
 import {Status} from "../classes/status";
 import {SignIn} from "../classes/sign.in";
+import {Observable} from "rxjs/internal/Observable";
 
 @Injectable()
 export class SignInService {
