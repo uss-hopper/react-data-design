@@ -1,6 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse} from "@angular/common/http";
 import {Observable} from "rxjs/Observable";
+import {map} from 'rxjs/operators';
 
 /**
  * class that intercepts data for Deep Dive's API standard
@@ -25,7 +26,7 @@ export class DeepDiveInterceptor implements HttpInterceptor {
 	 **/
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		// hand off to the next interceptor
-		return(next.handle(request).map((event: HttpEvent<any>) => {
+		return(next.handle(request).pipe(map((event: HttpEvent<any>) => {
 			// if this is an HTTP Response, from Angular...
 			if(event instanceof HttpResponse && event.body !== null) {
 				// create an event to return (by default, return the same event)
@@ -64,6 +65,6 @@ export class DeepDiveInterceptor implements HttpInterceptor {
 				}
 				return(dataEvent);
 			}
-		}));
+		})))
 	}
 }
