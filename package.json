@@ -1,81 +1,81 @@
 {
-	"name": "data-design",
-	"version": "1.0.0",
-	"license": "Apache-2.0",
-	"author": {
-		"name": "Dylan McDonald",
-		"email": "dylan@deepdivedylan.com",
-		"url": "https://bootcamp-coders.cnm.edu/class-materials/data-design/"
-	},
-	"contributors": [
-		{
-			"name": "Eric Debelak",
-			"email": "eric@11online.us"
-		},
-		{
-			"name": "George Kephart",
-			"email": "gkephart@cnm.edu"
-		},
-		{
-			"name": "Valente Meza",
-			"email": "valebmeza@gmail.com"
-		},
-		{
-			"name": "Rochelle Lewis",
-			"email": "rlewis37@cnm.edu"
-		}
-	],
-	"scripts": {
-		"build": "rimraf public_html/dist && tsc && webpack --config webpack/webpack.live.js --progress --profile --bail",
-		"start": "rimraf public_html/dist && webpack-dev-server --config webpack/webpack.dev.js --inline --progress --port 7272"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/deepdivedylan/data-design.git"
-	},
-	"dependencies": {
-		"@angular/common": "^6.0.0",
-		"@angular/compiler": "^6.0.0",
-		"@angular/core": "^6.0.0",
-		"@angular/forms": "^6.0.0",
-		"@angular/platform-browser": "^6.0.0",
-		"@angular/platform-browser-dynamic": "^6.0.0",
-		"@angular/router": "^6.0.0",
-		"@auth0/angular-jwt": "^2.0.0",
-		"core-js": "^2.5.5",
-		"jquery": "^3.3.1",
-		"rxjs": "^6.1.0",
-		"rxjs-compat": "^6.2.1",
-		"webpack-command": "^0.3.1",
-		"zone.js": "^0.8.26"
-	},
-	"devDependencies": {
-		"@fortawesome/fontawesome": "^1.1.7",
-		"@fortawesome/fontawesome-free-brands": "^5.0.12",
-		"@fortawesome/fontawesome-free-regular": "^5.0.12",
-		"@fortawesome/fontawesome-free-solid": "^5.0.12",
-		"@types/node": "^10.0.4",
-		"ajv": "^6.4.0",
-		"awesome-typescript-loader": "^5.0.0",
-		"bootstrap": "^4.1.1",
-		"css-loader": "^0.28.11",
-		"file-loader": "^1.1.11",
-		"html-loader": "^0.5.5",
-		"html-webpack-plugin": "^3.2.0",
-		"jwt-decode": "^2.2.0",
-		"mini-css-extract-plugin": "^0.4.0",
-		"ng2-cookies": "^1.0.12",
-		"null-loader": "^0.1.1",
-		"popper.js": "^1.14.3",
-		"raw-loader": "^0.5.1",
-		"resolve-url-loader": "^2.3.0",
-		"rimraf": "^2.6.2",
-		"typescript": "^2.7.0",
-		"url-loader": "^1.0.1",
-		"webpack": "^4.7.0",
-		"webpack-bundle-analyzer": "^2.13.1",
-		"webpack-cli": "^2.1.2",
-		"webpack-dev-server": "^3.1.4",
-		"webpack-merge": "^4.1.2"
-	}
+  "name": "data-design",
+  "version": "1.0.0",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Dylan McDonald",
+    "email": "dylan@deepdivedylan.com",
+    "url": "https://bootcamp-coders.cnm.edu/class-materials/data-design/"
+  },
+  "contributors": [
+    {
+      "name": "Eric Debelak",
+      "email": "eric@11online.us"
+    },
+    {
+      "name": "George Kephart",
+      "email": "gkephart@cnm.edu"
+    },
+    {
+      "name": "Valente Meza",
+      "email": "valebmeza@gmail.com"
+    },
+    {
+      "name": "Rochelle Lewis",
+      "email": "rlewis37@cnm.edu"
+    }
+  ],
+  "scripts": {
+    "build": "rimraf public_html/dist && tsc && webpack --config webpack/webpack.live.js --progress --profile --bail",
+    "start": "rimraf public_html/dist && webpack-dev-server --config webpack/webpack.dev.js --inline --progress --port 7272"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deepdivedylan/data-design.git"
+  },
+  "dependencies": {
+    "@angular/common": "^6.0.0",
+    "@angular/compiler": "^6.0.0",
+    "@angular/core": "^6.0.0",
+    "@angular/forms": "^6.0.0",
+    "@angular/platform-browser": "^6.0.0",
+    "@angular/platform-browser-dynamic": "^6.0.0",
+    "@angular/router": "^6.0.0",
+    "core-js": "^2.5.5",
+    "jquery": "^3.3.1",
+    "rxjs": "^6.1.0",
+    "rxjs-compat": "^6.2.1",
+    "webpack-command": "^0.3.1",
+    "zone.js": "^0.8.26"
+  },
+  "devDependencies": {
+    "@auth0/angular-jwt": "^2.0.0",
+    "@fortawesome/fontawesome": "^1.1.7",
+    "@fortawesome/fontawesome-free-brands": "^5.0.12",
+    "@fortawesome/fontawesome-free-regular": "^5.0.12",
+    "@fortawesome/fontawesome-free-solid": "^5.0.12",
+    "@types/node": "^10.0.4",
+    "ajv": "^6.4.0",
+    "awesome-typescript-loader": "^5.0.0",
+    "bootstrap": "^4.1.1",
+    "css-loader": "^0.28.11",
+    "file-loader": "^1.1.11",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "jwt-decode": "^2.2.0",
+    "mini-css-extract-plugin": "^0.4.0",
+    "ng2-cookies": "^1.0.12",
+    "null-loader": "^0.1.1",
+    "popper.js": "^1.14.3",
+    "raw-loader": "^0.5.1",
+    "resolve-url-loader": "^2.3.0",
+    "rimraf": "^2.6.2",
+    "typescript": "^2.7.0",
+    "url-loader": "^1.0.1",
+    "webpack": "^4.7.0",
+    "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-cli": "^2.1.2",
+    "webpack-dev-server": "^3.1.4",
+    "webpack-merge": "^4.1.2"
+  }
 }
