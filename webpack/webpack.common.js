@@ -57,8 +57,6 @@ module.exports = {
 
 		new webpack.ContextReplacementPlugin(/@angular(\\|\/)core(\\|\/)/, helpers.root("src")),
 
-		new BundleAnalyzerPlugin(),
-
 		new HtmlWebpackPlugin({
 			inject: "head",
 			filename: helpers.root("public_html") + "/index.html",
