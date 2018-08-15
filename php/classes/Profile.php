@@ -397,12 +397,12 @@ class Profile implements \JsonSerializable {
 	 * gets the Profile by profile id
 	 *
 	 * @param \PDO $pdo $pdo PDO connection object
-	 * @param string $profileId profile Id to search for
+	 * @param  $profileId profile Id to search for (the data type should be mixed/not specified)
 	 * @return Profile|null Profile or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	public static function getProfileByProfileId(\PDO $pdo, string $profileId):?Profile {
+	public static function getProfileByProfileId(\PDO $pdo, $profileId):?Profile {
 		// sanitize the profile id before searching
 		try {
 			$profileId = self::validateUuid($profileId);
