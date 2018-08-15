@@ -1,3 +1,5 @@
+@import "~bootstrap/dist/css/bootstrap.min.css";
+
 body{
 	background: rgb(231,235, 240);  /* fallback for old browsers */
 
