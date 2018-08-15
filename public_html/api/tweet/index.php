@@ -62,32 +62,14 @@ try {
 
 		//get a specific tweet or all tweets and update reply
 		if(empty($id) === false) {
-
-			var_dump($id);
-			$tweet = Tweet::getTweetByTweetId($pdo, $id);
-			if($tweet !== null) {
-				$reply->data = $tweet;
-			}
+			$reply->data = Tweet::getTweetByTweetId($pdo, $id);
 		} else if(empty($tweetProfileId) === false) {
-
 			// if the user is logged in grab all the tweets by that user based  on who is logged in
-			$tweets = Tweet::getTweetByTweetProfileId($pdo, $_SESSION["profile"]->getProfileId())->toArray();
-			if($tweets !== null) {
-				$reply->data = $tweets;
-			}
+			$reply->data = Tweet::getTweetByTweetProfileId($pdo, $_SESSION["profile"]->getProfileId())->toArray();
 		} else if(empty($tweetContent) === false) {
-			//var_dump($tweetContent);
-			$tweets = Tweet::getTweetByTweetContent($pdo, $tweetContent)->toArray();
-			if($tweets !== null) {
-				$reply->data = $tweets;
-			}
+			$reply->data = Tweet::getTweetByTweetContent($pdo, $tweetContent)->toArray();
 		} else {
-			$tweets = Tweet::getAllTweets($pdo)->toArray();
-			if($tweets !== null) {
-				//validateVerifyJwt();
-				$reply->data = $tweets;
-
-			}
+			$reply->data = Tweet::getAllTweets($pdo)->toArray();
 		}
 	} else if($method === "PUT" || $method === "POST") {
 
