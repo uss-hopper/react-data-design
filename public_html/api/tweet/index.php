@@ -72,10 +72,21 @@ try {
 			$reply->data = Tweet::getAllTweets($pdo)->toArray();
 		}
 	} else if($method === "PUT" || $method === "POST") {
+		// enforce the user has a XSRF token
+		verifyXsrf();
 
 		// enforce the user is signed in
 		if(empty($_SESSION["profile"]) === true) {
 			throw(new \InvalidArgumentException("you must be logged in to post tweets", 401));
+		}
+
+		$requestContent = file_get_contents("php://input");
+		// Retrieves the JSON package that the front end sent, and stores it in $requestContent. Here we are using file_get_contents("php://input") to get the request from the front end. file_get_contents() is a PHP function that reads a file into a string. The argument for the function, here, is "php://input". This is a read only stream that allows raw data to be read from the front end request which is, in this case, a JSON package.
+		$requestObject = json_decode($requestContent);
+		// This Line Then decodes the JSON package and stores that result in $requestObject
+		//make sure tweet content is available (required field)
+		if(empty($requestObject->tweetContent) === true) {
+			throw(new \InvalidArgumentException ("No content for Tweet.", 405));
 		}
 
 		
