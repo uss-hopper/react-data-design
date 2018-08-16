@@ -32,7 +32,7 @@ try {
 	$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
 
 	//determine which HTTP method was used
-	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
+	$method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
 
 
 	//sanitize the search parameters
@@ -53,21 +53,13 @@ try {
 			}
 			//if none of the search parameters are met throw an exception
 		} else if(empty($likeProfileId) === false) {
-			$like = Like::getLikeByLikeProfileId($pdo, $likeProfileId)->toArray();
-			if($like !== null) {
-				$reply->data = $like;
-			}
+			$reply->data = Like::getLikeByLikeProfileId($pdo, $likeProfileId)->toArray();
 		//get all the likes associated with the tweetId
 		} else if(empty($likeTweetId) === false) {
-			$like = Like::getLikeByLikeTweetId($pdo, $likeTweetId)->toArray();
-
-			if($like !== null) {
-				$reply->data = $like;
-			}
+			$reply->data = Like::getLikeByLikeTweetId($pdo, $likeTweetId)->toArray();
 		} else {
 			throw new InvalidArgumentException("incorrect search parameters ", 404);
 		}
-
 
 	} else if($method === "POST" || $method === "PUT") {
 
@@ -101,7 +93,7 @@ try {
 				throw(new \InvalidArgumentException("you must be logged in too like posts", 403));
 			}
 
-			//validateJwtHeader();
+			validateJwtHeader();
 
 			$like = new Like($_SESSION["profile"]->getProfileId(), $requestObject->likeTweetId);
 			$like->insert($pdo);
@@ -114,7 +106,7 @@ try {
 			verifyXsrf();
 
 			//enforce the end user has a JWT token
-			//validateJwtHeader();
+			validateJwtHeader();
 
 			//grab the like by its composite key
 			$like = Like::getLikeByLikeTweetIdAndLikeProfileId($pdo, $requestObject->likeProfileId, $requestObject->likeTweetId);

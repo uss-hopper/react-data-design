@@ -34,7 +34,7 @@ try {
 	$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
 
 	//determine which HTTP method is being used
-	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
+	$method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
 
 	$tweetId = filter_input(INPUT_GET, "tweetId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$profileId = filter_input(INPUT_GET, "profileId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -53,21 +53,11 @@ try {
 		//get a specific image by id and update reply
 		if(empty($id) === false) {
 			$image = Image::getImageByImageId($pdo, $id);
-			if($image !== null) {
-				$reply->data = $image;
-			}
 		} elseif(empty($tweetId) === false) {
-			$images = Image::getImageByImageTweetId($pdo, $id)->toArray();
-			if($images !== null) {
-				$reply->data = $images;
-			}
+		$reply->data = Image::getImageByImageTweetId($pdo, $tweetId)->toArray();
 		} elseif(empty($profileId) === false) {
-			$images = Image::getImageByProfileId($pdo, $id)->toArray();
-			if($images !== null) {
-				$reply->data = $images;
-			}
+			$reply->data = Image::getImageByProfileId($pdo, $profileId)->toArray();
 		}
-
 
 	} elseif($method === "DELETE") {
 
@@ -122,7 +112,6 @@ try {
 		$image->update($pdo);
 		// update reply
 		$reply->message = "Image uploaded Ok";
-
 	}
 
 } catch(Exception $exception) {

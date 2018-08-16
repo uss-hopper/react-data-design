@@ -35,14 +35,9 @@ try {
 	$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
 
 
-	  // mock a logged in user by forcing the session. This is only for testing purposes and should not be in the live code.
-
-
-
-
 
 	//determine which HTTP method was used
-	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
+	$method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
 
 	//sanitize input
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -113,7 +108,7 @@ try {
 				throw(new \InvalidArgumentException("You are not allowed to edit this tweet", 403));
 			}
 
-			//validateJwtHeader();
+			validateJwtHeader();
 
 			// update all attributes
 			//$tweet->setTweetDate($requestObject->tweetDate);
@@ -125,16 +120,12 @@ try {
 
 		} else if($method === "POST") {
 
-
-
-
 			// enforce the user is signed in
 			if(empty($_SESSION["profile"]) === true) {
 				throw(new \InvalidArgumentException("you must be logged in to post tweets", 403));
 			}
 
 			//enforce the end user has a JWT token
-
 			validateJwtHeader();
 
 			// create new tweet and insert into the database
@@ -156,15 +147,13 @@ try {
 			throw(new RuntimeException("Tweet does not exist", 404));
 		}
 
-
-
 		//enforce the user is signed in and only trying to edit their own tweet
 		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $tweet->getTweetProfileId()->toString()) {
 			throw(new \InvalidArgumentException("You are not allowed to delete this tweet", 403));
 		}
 
 		//enforce the end user has a JWT token
-		//validateJwtHeader();
+		validateJwtHeader();
 
 		// delete tweet
 		$tweet->delete($pdo);

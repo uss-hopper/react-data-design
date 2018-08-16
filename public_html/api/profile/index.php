@@ -34,7 +34,7 @@ try {
 	$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
 
 	//determine which HTTP method was used
-	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
+	$method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
 
 	// sanitize input
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -43,7 +43,7 @@ try {
 
 
 	// make sure the id is valid for methods that require it
-	if(($method === "DELETE" || $method === "PUT") && (empty($id) === true )) {
+	if(($method === "DELETE" || $method === "PUT") && (empty($id) === true)) {
 		throw(new InvalidArgumentException("id cannot be empty or negative", 405));
 	}
 
@@ -53,22 +53,16 @@ try {
 
 		//gets a post by content
 		if(empty($id) === false) {
-			$profile = Profile::getProfileByProfileId($pdo, $id);
-			if($profile !== null) {
-				$reply->data = $profile;
-			}
+			$reply->data = Profile::getProfileByProfileId($pdo, $id);
+
 		} else if(empty($profileAtHandle) === false) {
-			$profile = Profile::getProfileByProfileAtHandle($pdo, $profileAtHandle);
-			if($profile !== null) {
-				$reply->data = $profile;
-			}
+			$reply->data = Profile::getProfileByProfileAtHandle($pdo, $profileAtHandle);
+
 		} else if(empty($profileEmail) === false) {
 
-			$profile = Profile::getProfileByProfileEmail($pdo, $profileEmail);
-			if($profile !== null) {
-				$reply->data = $profile;
-			}
+			$reply->data = Profile::getProfileByProfileEmail($pdo, $profileEmail);
 		}
+
 	} elseif($method === "PUT") {
 
 		//enforce that the XSRF token is present in the header
@@ -147,7 +141,8 @@ try {
 		throw (new InvalidArgumentException("Invalid HTTP request", 400));
 	}
 	// catch any exceptions that were thrown and update the status and message state variable fields
-} catch(\Exception | \TypeError $exception) {
+} catch
+(\Exception | \TypeError $exception) {
 	$reply->status = $exception->getCode();
 	$reply->message = $exception->getMessage();
 }
