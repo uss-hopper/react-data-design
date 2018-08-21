@@ -11,6 +11,7 @@ import {SignUp} from "../shared/interfaces/sign.up";
 import {setTimeout} from "timers";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SignUpService} from "../shared/services/sign.up.service";
+import {SignIn} from "../shared/interfaces/sign.in";
 
 //declare $ for good old jquery
 declare let $: any;
@@ -26,7 +27,8 @@ export class SignUpComponent implements OnInit{
 
 	//
 	signUpForm : FormGroup;
-	status : Status;
+	status : Status = {status : null, message: null, type: null};
+
 
 
 	constructor(private formBuilder : FormBuilder, private router: Router, private signUpService: SignUpService) {}
@@ -41,11 +43,13 @@ export class SignUpComponent implements OnInit{
 
 		});
 
+		this.status = {status : null, message: null, type: null}
+
 }
 
 	createSignUp(): void {
 
-		let signUp : SignUp = (this.signUpForm.value.atHandle, this.signUpForm.value.email, this.signUpForm.value.password, this.signUpForm.value.passwordConfirm,  this.signUpForm.value.phoneNumber);
+		let signUp : SignUp = { profileAtHandle: this.signUpForm.value.atHandle, profileEmail: this.signUpForm.value.email, profilePassword: this.signUpForm.value.password, profilePasswordConfirm: this.signUpForm.value.passwordConfirm, profilePhone: this.signUpForm.value.phoneNumber};
 
 		this.signUpService.createProfile(signUp)
 			.subscribe(status => {

@@ -21,8 +21,8 @@ declare var $: any;
 export class SignInComponent {
 	@ViewChild("signInForm") signInForm: any;
 
-	signin: SignIn;
-	status: Status = null;
+	signin: SignIn = {profileEmail: null, profilePassword: null};
+	status: Status = {status: null, type: null, message: null};
 	//cookie: any = {};
 
 	constructor(private SignInService: SignInService, private router: Router, private cookieService : CookieService) {
