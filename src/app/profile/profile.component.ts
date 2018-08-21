@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
-import {Status} from "../shared/classes/status";
-import {Profile} from "../shared/classes/profile";
+import {Status} from "../shared/interfaces/status";
+import {Profile} from "../shared/interfaces/profile";
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {ProfileService} from "../shared/services/profile.service";
 
@@ -14,8 +14,8 @@ import {ProfileService} from "../shared/services/profile.service";
 })
 export class ProfileComponent implements OnInit{
 
-	profile: Profile = new Profile(null,null, null, null, null);
-	status: Status = null;
+	profile: Profile;
+	status: Status;
 
 	constructor(private profileService: ProfileService, private jwtHelper : JwtHelperService) {}
 

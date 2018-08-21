@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {Status} from "./shared/classes/status";
+import {Status} from "./shared/interfaces/status";
 import {SessionService} from "./shared/services/session.service";
 
 @Component({

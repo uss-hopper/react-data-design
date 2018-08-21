@@ -6,8 +6,8 @@
 import {Component, OnInit, ViewChild,} from "@angular/core";
 import {Observable} from "rxjs/Observable"
 import {Router} from "@angular/router";
-import {Status} from "../shared/classes/status";
-import {SignUp} from "../shared/classes/sign.up";
+import {Status} from "../shared/interfaces/status";
+import {SignUp} from "../shared/interfaces/sign.up";
 import {setTimeout} from "timers";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SignUpService} from "../shared/services/sign.up.service";
@@ -26,9 +26,7 @@ export class SignUpComponent implements OnInit{
 
 	//
 	signUpForm : FormGroup;
-
-	signUp: SignUp = new SignUp(null, null, null, null, null);
-	status: Status = null;
+	status : Status;
 
 
 	constructor(private formBuilder : FormBuilder, private router: Router, private signUpService: SignUpService) {}
@@ -47,7 +45,7 @@ export class SignUpComponent implements OnInit{
 
 	createSignUp(): void {
 
-		let signUp =  new SignUp(this.signUpForm.value.atHandle, this.signUpForm.value.email, this.signUpForm.value.password, this.signUpForm.value.passwordConfirm, this.signUpForm.value.phoneNumber);
+		let signUp : SignUp = (this.signUpForm.value.atHandle, this.signUpForm.value.email, this.signUpForm.value.password, this.signUpForm.value.passwordConfirm,  this.signUpForm.value.phoneNumber);
 
 		this.signUpService.createProfile(signUp)
 			.subscribe(status => {

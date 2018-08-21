@@ -1,8 +1,8 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 
-import {Status} from "../classes/status";
-import {Profile} from "../classes/profile";
+import {Status} from "../interfaces/status";
+import {Profile} from "../interfaces/profile";
 import {Observable} from "rxjs/internal/Observable";
 
 @Injectable ()

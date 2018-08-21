@@ -1,6 +1,6 @@
 import {Component} from "@angular/core";
 import {SignInService} from "../../services/sign.in.service";
-import {Status} from "../../classes/status";
+import {Status} from "../../interfaces/status";
 
 @Component({
 	selector: "main-nav",

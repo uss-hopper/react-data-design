@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 
-import {Status} from "../classes/status";
-import {Tweet} from "../classes/tweet";
+import {Status} from "../interfaces/status";
+import {Tweet} from "../interfaces/tweet";
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
 

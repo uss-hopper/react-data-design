@@ -1,13 +1,13 @@
 import {Component, OnInit} from "@angular/core";
 
 
-import {Status} from "../shared/classes/status";
-import {Tweet} from "../shared/classes/tweet";
+import {Status} from "../shared/interfaces/status";
+import {Tweet} from "../shared/interfaces/tweet";
 
-import {Profile} from "../shared/classes/profile";
+import {Profile} from "../shared/interfaces/profile";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
-import {Like} from "../shared/classes/like";
+import {Like} from "../shared/interfaces/like";
 import {AuthService} from "../shared/services/auth.service";
 import {ProfileService} from "../shared/services/profile.service";
 import {LikeService} from "../shared/services/like.service";
@@ -23,10 +23,10 @@ export class ListTweetsComponent implements OnInit {
 
 	createTweetForm: FormGroup;
 
-	tweet: Tweet = new Tweet(null, null, null, null);
+	tweet: Tweet;
 
 
-	profile: Profile = new Profile(null, null, null, null, null);
+	profile : Profile;
 
 	//declare needed state variables for latter use
 	status: Status = null;
@@ -58,7 +58,7 @@ export class ListTweetsComponent implements OnInit {
 
 	createTweet(): void {
 
-		let tweet = new Tweet(null, null, this.createTweetForm.value.tweetContent, null);
+		let tweet: Tweet;
 
 		this.tweetService.createTweet(tweet)
 			.subscribe(status => {

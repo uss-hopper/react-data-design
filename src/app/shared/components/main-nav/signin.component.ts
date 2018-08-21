@@ -6,9 +6,9 @@ import {Component, ViewChild, EventEmitter, Output} from "@angular/core";
 
 import {Router} from "@angular/router";
 import {Observable} from "rxjs/Observable"
-import {Status} from "../../classes/status";
+import {Status} from "../../interfaces/status";
 
-import {SignIn} from "../../classes/sign.in";
+import {SignIn} from "../../interfaces/sign.in";
 import {CookieService} from "ng2-cookies";
 import {SignInService} from "../../services/sign.in.service";
 declare var $: any;
@@ -21,7 +21,7 @@ declare var $: any;
 export class SignInComponent {
 	@ViewChild("signInForm") signInForm: any;
 
-	signin: SignIn = new SignIn(null, null);
+	signin: SignIn;
 	status: Status = null;
 	//cookie: any = {};
 
@@ -41,7 +41,7 @@ export class SignInComponent {
 					this.router.navigate(["profile-page"]);
 					//location.reload(true);
 					this.signInForm.reset();
-					setTimeout(function(){$("#signin-modal").modal('hide');},1000);
+					setTimeout(1000,function(){$("#signin-modal").modal('hide');});
 				} else {
 					console.log("failed login")
 				}
