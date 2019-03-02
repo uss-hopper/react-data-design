@@ -2,7 +2,8 @@
 require_once dirname(__DIR__, 3) . "/php/classes/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/php/lib/jwt.php";
-require_once ("/etc/apache2/capstone-mysql/encrypted-config.php");
+require_once("/etc/apache2/capstone-mysql/Secrets.php");
+
 use Edu\Cnm\DataDesign\Profile;
 
 /**
@@ -21,7 +22,8 @@ try {
 		session_start();
 	}
 	//grab mySQL statement
-	$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
+	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+	$pdo = $secrets->getPdoObject();
 
 	//determine which HTTP method is being used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
@@ -37,6 +39,8 @@ try {
 		//process the request content and decode the json object into a php object
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
+
+		var_dump($requestObject);
 
 		//check to make sure the password and email field is not empty.s
 		if(empty($requestObject->profileEmail) === true) {
@@ -58,11 +62,6 @@ try {
 		}
 		$profile->setProfileActivationToken(null);
 		$profile->update($pdo);
-
-		//if the profile activation is not null throw an error
-		if($profile->getProfileActivationToken() !== null){
-			throw (new \InvalidArgumentException ("you are not allowed to sign in unless you have activated your account", 403));
-		}
 
 		//verify hash is correct
 		if(password_verify($requestObject->profilePassword, $profile->getProfileHash()) === false) {

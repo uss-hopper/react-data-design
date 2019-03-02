@@ -6,8 +6,8 @@ require_once(dirname(__DIR__, 3) . "/php/classes/autoload.php");
 require_once(dirname(__DIR__, 3) . "/php/lib/jwt.php");
 require_once(dirname(__DIR__, 3) . "/php/lib/xsrf.php");
 require_once(dirname(__DIR__, 3) . "/php/lib/uuid.php");
+require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
-require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
 
 use Edu\Cnm\DataDesign\ {
 	Profile
@@ -31,7 +31,10 @@ $reply->data = null;
 
 try {
 	//grab the mySQL connection
-	$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
+
+	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+	$pdo = $secrets->getPdoObject();
+
 
 	//determine which HTTP method was used
 	$method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];

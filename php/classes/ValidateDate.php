@@ -30,6 +30,7 @@ trait ValidateDate {
 		// treat the date as a mySQL date string: Y-m-d
 		$newDate = trim($newDate);
 		if((preg_match("/^(\d{4})-(\d{2})-(\d{2})$/", $newDate, $matches)) !== 1) {
+			//2019-01-25
 			throw(new \InvalidArgumentException("date is not a valid date"));
 		}
 		// verify the date is really a valid calendar date
@@ -102,6 +103,7 @@ trait ValidateDate {
 		// put a placeholder for microseconds if they do not exist
 		$microseconds = $matches[4] ?? "0";
 		$newTime = "$hour:$minute:$second.$microseconds";
+
 		// if we got here, the date is clean
 		return($newTime);
 	}

@@ -104,8 +104,8 @@ class TweetTest extends DataDesignTest {
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoTweet = Tweet::getTweetByTweetId($this->getPDO(), $tweet->getTweetId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
-		$this->assertEquals($pdoTweet->getTweetId(), $tweetId);
-		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoTweet->getTweetId()->toString(), $tweetId->toString());
+		$this->assertEquals($pdoTweet->getTweetProfileId(), $tweet->getTweetId()->toString());
 		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
 		//format the date too seconds since the beginning of time to avoid round off error
 		$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
@@ -131,7 +131,7 @@ class TweetTest extends DataDesignTest {
 		$pdoTweet = Tweet::getTweetByTweetId($this->getPDO(), $tweet->getTweetId());
 		$this->assertEquals($pdoTweet->getTweetId(), $tweetId);
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
-		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoTweet->getTweetProfileId()->toString(), $this->profile->getProfileId()->toString());
 		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT2);
 		//format the date too seconds since the beginning of time to avoid round off error
 		$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
@@ -173,6 +173,8 @@ class TweetTest extends DataDesignTest {
 
 	/**
 	 * test inserting a Tweet and regrabbing it from mySQL
+	 *
+	 *
 	 **/
 	public function testGetValidTweetByTweetProfileId() {
 		// count the number of rows and save it for later
@@ -273,4 +275,7 @@ class TweetTest extends DataDesignTest {
 		//format the date too seconds since the beginning of time to avoid round off error
 		$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
 	}
+
+
+
 }

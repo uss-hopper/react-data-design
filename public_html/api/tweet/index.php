@@ -2,7 +2,7 @@
 
 require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 require_once dirname(__DIR__, 3) . "/php/classes/autoload.php";
-require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
+require_once("/etc/apache2/capstone-mysql/Secrets.php");
 require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/php/lib/uuid.php";
 require_once dirname(__DIR__, 3) . "/php/lib/jwt.php";
@@ -31,11 +31,10 @@ $reply->status = 200;
 $reply->data = null;
 
 try {
-	//grab the mySQL connection
-	$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
 
 
-
+	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+	$pdo = $secrets->getPdoObject();
 	//determine which HTTP method was used
 	$method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
 
@@ -60,7 +59,7 @@ try {
 			$reply->data = Tweet::getTweetByTweetId($pdo, $id);
 		} else if(empty($tweetProfileId) === false) {
 			// if the user is logged in grab all the tweets by that user based  on who is logged in
-			$reply->data = Tweet::getTweetByTweetProfileId($pdo, $_SESSION["profile"]->getProfileId())->toArray();
+			$reply->data = Tweet::getTweetByTweetProfileId($pdo, $tweetProfileId);
 		} else if(empty($tweetContent) === false) {
 			$reply->data = Tweet::getTweetByTweetContent($pdo, $tweetContent)->toArray();
 		} else {
@@ -83,8 +82,6 @@ try {
 		if(empty($requestObject->tweetContent) === true) {
 			throw(new \InvalidArgumentException ("No content for Tweet.", 405));
 		}
-
-		
 
 		// make sure tweet date is accurate (optional field)
 		if(empty($requestObject->tweetDate) === true) {
