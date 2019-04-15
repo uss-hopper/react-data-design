@@ -74,6 +74,6 @@ function verifyXsrf() {
     // compare the XSRF token from the header with the correct token in the session
     $correctHeader = $_SESSION["XSRF-TOKEN"];
     if($angularHeader !== $correctHeader) {
-        throw(netw InvalidArgumentException("invalid XSRF token", 401));
+        throw(new InvalidArgumentException("invalid XSRF token", 401));
     }
 }
