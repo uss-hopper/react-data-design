@@ -6,9 +6,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import bootcampCoders from "../apis/bootcampCoders";
 
 class Home extends Component {
-	getTea =  () => bootcampCoders.get("earl-grey");
+	getTea =  () =>  bootcampCoders.get("earl-grey").then(reply => {console.log(reply)}).catch(response => console.log(response));
 	componentDidMount() {
-		this.getTea().then(response => console.log(response))
+		this.getTea()
 
 	}
 

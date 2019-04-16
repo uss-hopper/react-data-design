@@ -26,7 +26,8 @@ try {
 	$reply->message = $exception->getMessage();
 
 }
-header("Content-type: application/json");
+header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *" );
 // encode and return reply to front end caller
 echo json_encode($reply);
 
