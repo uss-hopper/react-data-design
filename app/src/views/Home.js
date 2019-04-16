@@ -3,8 +3,15 @@ import Card from "react-bootstrap/Card";
 import CardColumn from "react-bootstrap/CardColumns"
 import Button from "react-bootstrap/Button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import bootcampCoders from "../apis/bootcampCoders";
 
 class Home extends Component {
+	getTea =  () => bootcampCoders.get("earl-grey");
+	componentDidMount() {
+		this.getTea().then(response => console.log(response))
+
+	}
+
 	render() {
 		return (
 			<div className="container">

@@ -15,8 +15,8 @@ import {FormControl} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import {LinkContainer} from "react-router-bootstrap";
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStroopwafel } from '@fortawesome/free-solid-svg-icons'
+
 
 library.add(faStroopwafel);
 
@@ -34,6 +34,7 @@ const checkActive = (match, location) => {
 };
 
 
+
 const routing = (
 	<>
 		<BrowserRouter>
@@ -44,7 +45,7 @@ const routing = (
 				<Nav className="mr-auto">
 					<LinkContainer exact to="/profile"
 										isActive={checkActive}
-										ActiveStyle={{
+										activeStyle={{
 											fontWeight: "bold",
 											color: "red"
 										}}
