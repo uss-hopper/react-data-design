@@ -31,9 +31,9 @@ const checkActive = (match, location) => {
 	const {path} = match;
 	const {pathname} = location;
 	return (pathname !== path)
-
-
 };
+
+
 const routing = (
 	<>
 		<BrowserRouter>
@@ -70,8 +70,5 @@ const routing = (
 );
 
 
-ReactDOM.render(
-	routing,
-	document.querySelector("#root")
-);
+ReactDOM.render(routing, document.querySelector("#root"));
 
