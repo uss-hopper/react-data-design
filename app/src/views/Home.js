@@ -6,14 +6,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import http from "../apis/http";
 
 class Home extends Component {
-	getTea =  () =>  http.get("earl-grey/").then(reply => {console.log(reply)}).catch(response => console.log(response));
+	getTea =  () =>  http.get("earl-grey/")
+		.then(reply => {console.log(reply)});
 	componentDidMount() {
 		this.getTea()
 
 	}
 	postTweet = async () => {
-		const data = await http.post("tweet/", {tweetContent: "hello world"});
-		console.log(data.data.status)
+		let data = await http.get("tweet/");
+		console.log(data)
 	};
 
 	render() {

@@ -2,11 +2,10 @@
 require_once dirname(__DIR__,3 ) .  "/lib/xsrf.php";
 
 use Edu\Cnm\DataDesign;
-$reply = (object) [
-	"data" => null,
-	"message" => null,
-	"status" => 200,
-];
+
+$reply = new stdClass();
+$reply->status = 200;
+$reply->data = null;
 
 try {
 	//verify the HTTP method being used
