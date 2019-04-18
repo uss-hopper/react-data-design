@@ -3,14 +3,19 @@ import Card from "react-bootstrap/Card";
 import CardColumn from "react-bootstrap/CardColumns"
 import Button from "react-bootstrap/Button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import bootcampCoders from "../apis/bootcampCoders";
+import http from "../apis/http";
 
 class Home extends Component {
-	getTea =  () =>  bootcampCoders.get("earl-grey").then(reply => {console.log(reply)}).catch(response => console.log(response));
+	getTea =  () =>  http.get("earl-grey/").then(reply => {console.log(reply)}).catch(response => console.log(response));
 	componentDidMount() {
 		this.getTea()
 
 	}
+	postTweet =  () => {
+		 http.post("tweet/", {tweetContent: "hello world"})
+			 .then(reply => {console.log(reply)})
+			.catch(error=> {console.log(error)});
+	};
 
 	render() {
 		return (
@@ -23,7 +28,7 @@ class Home extends Component {
 								Some quick example text to build on the card title and make up the bulk of
 								the card's content.
 							</Card.Text>
-							<Button variant="primary">Go somewhere</Button>
+							<Button onClick={this.postTweet} variant="primary">Go somewhere</Button>
 						</Card.Body>
 					</Card>
 					<Card>
