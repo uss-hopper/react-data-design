@@ -2,9 +2,11 @@
 require_once dirname(__DIR__,3 ) .  "/lib/xsrf.php";
 
 use Edu\Cnm\DataDesign;
-$reply = new stdClass();
-$reply->status = 200;
-$reply->data = null;
+$reply = (object) [
+	"data" => null,
+	"message" => null,
+	"status" => 200,
+];
 
 try {
 	//verify the HTTP method being used
@@ -27,7 +29,6 @@ try {
 
 }
 header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *" );
 // encode and return reply to front end caller
 echo json_encode($reply);
 

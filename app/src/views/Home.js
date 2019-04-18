@@ -11,10 +11,9 @@ class Home extends Component {
 		this.getTea()
 
 	}
-	postTweet =  () => {
-		 http.post("tweet/", {tweetContent: "hello world"})
-			 .then(reply => {console.log(reply)})
-			.catch(error=> {console.log(error)});
+	postTweet = async () => {
+		const data = await http.post("tweet/", {tweetContent: "hello world"});
+		console.log(data.data.status)
 	};
 
 	render() {
