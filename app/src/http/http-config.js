@@ -1,10 +1,8 @@
 import axios from "axios";
 
-const http = axios.create({
-	baseURL: "/apis",
-});
+export const httpConfig = axios.create();
 
-http.interceptors.response.use(function ({data} ) {
+httpConfig.interceptors.response.use(function ({data} ) {
 	if(data.status === 200) {
 		return data.data !== null
 			? {message: null, data: data.data, status: 200, type: "alert-success"}
@@ -17,4 +15,3 @@ http.interceptors.response.use(function ({data} ) {
 	console.log(error);
 	return Promise.reject(error);
 });
-export default http;
