@@ -1,10 +1,25 @@
-import React, {Component} from 'react'
+import React, { Fragment, useState, useEffect } from 'react';
 import Button from "react-bootstrap/Button";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {tweet} from "../http/tweet";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {httpConfig} from "../http/http-config";
+
 import Form from "react-bootstrap/Form";
 
-const Home = (props) => {
+const Home = () => {
+
+	const [data, setData] = useState({});
+
+	useEffect(() => {
+		const fetchTweets = async () => {
+			const result = await httpConfig.get("/apis/tweet/");
+			setData(result);
+		};
+		fetchTweets();
+
+	}, []);
+
+	console.log(data);
+
 	return (
 		<div className="container">
 			<div className="row">
@@ -29,7 +44,7 @@ const Home = (props) => {
 						</Button>
 					</Form>
 				</div>
-				<div className="col-sm-4">
+				<div className="col-sm-8">
 
 				</div>
 
