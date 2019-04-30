@@ -39,7 +39,7 @@ const Home = () => {
 								email: "",
 								password: ""
 							}}
-							onSubmit={ (values, {setSubmitting}) => {
+							onSubmit={(values, {setSubmitting}) => {
 								console.log(values);
 
 							}}
@@ -48,6 +48,8 @@ const Home = () => {
 							{props => {
 								const {
 									values,
+									errors,
+									touched,
 									dirty,
 									isSubmitting,
 									handleChange,
@@ -67,6 +69,9 @@ const Home = () => {
 												onBlur={handleBlur}
 
 											/>
+											{errors.email && touched.email && (
+												<div className="input-feedback">WHY U NO RIGHT GOOD</div>
+											)}
 										</Form.Group>
 
 										<Form.Group controlId="password">
@@ -78,17 +83,19 @@ const Home = () => {
 												onChange={handleChange}
 												onBlur={handleBlur}
 											/>
+											{errors.password && touched.password && (
+												<div className="input-feedback">WHY U NO RIGHT GOOD</div>
+											)}
 										</Form.Group>
 
-										<Form.Group controlId="formBasicChecbox">
-											<Form.Check type="checkbox" label="Check me out"/>
+										<Form.Group>
+											<Button variant="primary" type="submit">Submit</Button>
+											<Button
+												variant="primary"
+												onClick={handleReset}
+												disabled={!dirty || isSubmitting}
+											>Reset</Button>
 										</Form.Group>
-										<Button variant="primary" type="submit">Submit</Button>
-										<Button
-											variant="primary"
-											onClick={handleReset}
-											disabled={!dirty || isSubmitting}
-										>Reset</Button>
 										<DisplayFormikState {...props} />
 									</Form>
 								)
@@ -105,8 +112,8 @@ const Home = () => {
 };
 
 export const DisplayFormikState = props =>
-	<div style={{ margin: '1rem 0' }}>
-		<h3 style={{ fontFamily: 'monospace' }} />
+	<div style={{margin: '1rem 0'}}>
+		<h3 style={{fontFamily: 'monospace'}}/>
 		<pre
 			style={{
 				background: '#f6f8fa',
