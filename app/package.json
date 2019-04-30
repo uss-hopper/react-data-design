@@ -8,6 +8,7 @@
     "@fortawesome/react-fontawesome": "^0.1.4",
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
+    "formik": "^1.5.4",
     "http-proxy-middleware": "^0.19.1",
     "i": "^0.3.6",
     "npm": "^6.9.0",
@@ -19,7 +20,8 @@
     "react-router-dom": "^5.0.0",
     "react-scripts": "^3.0.0",
     "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "yup": "^0.27.0"
   },
   "scripts": {
     "start": "react-scripts start",

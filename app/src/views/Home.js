@@ -1,9 +1,10 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import Button from "react-bootstrap/Button";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {httpConfig} from "../http/http-config";
 
 import Form from "react-bootstrap/Form";
+import {Formik} from "formik";
+import * as Yup from "yup";
 
 const Home = () => {
 
@@ -18,41 +19,105 @@ const Home = () => {
 
 	}, []);
 
-	console.log(data);
+
+	const validator = Yup.object().shape({
+		email: Yup.string()
+			.email()
+			.required('Required'),
+		password: Yup.string()
+			.required("Password Is Required")
+	});
 
 	return (
-		<div className="container">
-			<div className="row">
-				<div className="col-sm-4">
-					<Form>
-						<Form.Group controlId="formBasicEmail">
-							<Form.Label>Email address</Form.Label>
-							<Form.Control type="email" placeholder="Enter email"/>
-							<Form.Text className="text-muted">
-							</Form.Text>
-						</Form.Group>
+		<>
+			<div className="container">
+				<div className="row">
+					<div className="col-sm-4">
 
-						<Form.Group controlId="formBasicPassword">
-							<Form.Label>Password</Form.Label>
-							<Form.Control type="password" placeholder="Password"/>
-						</Form.Group>
-						<Form.Group controlId="formBasicChecbox">
-							<Form.Check type="checkbox" label="Check me out"/>
-						</Form.Group>
-						<Button variant="primary" type="submit">
-							Submit
-						</Button>
-					</Form>
+						<Formik
+							initialValues={{
+								email: "",
+								password: ""
+							}}
+							onSubmit={ (values, {setSubmitting}) => {
+								console.log(values);
+
+							}}
+							validationSchema={validator}
+						>
+							{props => {
+								const {
+									values,
+									dirty,
+									isSubmitting,
+									handleChange,
+									handleBlur,
+									handleSubmit,
+									handleReset
+								} = props;
+								return (
+									<Form onSubmit={handleSubmit}>
+										<Form.Group controlId="email">
+											<Form.Label>Email address</Form.Label>
+											<Form.Control
+												type="email"
+												value={values.email}
+												placeholder="Enter email"
+												onChange={handleChange}
+												onBlur={handleBlur}
+
+											/>
+										</Form.Group>
+
+										<Form.Group controlId="password">
+											<Form.Label>Password</Form.Label>
+											<Form.Control
+												type="password"
+												placeholder="Password"
+												value={values.password}
+												onChange={handleChange}
+												onBlur={handleBlur}
+											/>
+										</Form.Group>
+
+										<Form.Group controlId="formBasicChecbox">
+											<Form.Check type="checkbox" label="Check me out"/>
+										</Form.Group>
+										<Button variant="primary" type="submit">Submit</Button>
+										<Button
+											variant="primary"
+											onClick={handleReset}
+											disabled={!dirty || isSubmitting}
+										>Reset</Button>
+										<DisplayFormikState {...props} />
+									</Form>
+								)
+							}}
+
+						</Formik>
+					</div>
+					<div className="col-sm-8">
+					</div>
 				</div>
-				<div className="col-sm-8">
-
-				</div>
-
-
 			</div>
-		</div>
+		</>
 	)
 };
+
+export const DisplayFormikState = props =>
+	<div style={{ margin: '1rem 0' }}>
+		<h3 style={{ fontFamily: 'monospace' }} />
+		<pre
+			style={{
+				background: '#f6f8fa',
+				fontSize: '.65rem',
+				padding: '.5rem',
+			}}
+		>
+      <strong>props</strong> ={' '}
+			{JSON.stringify(props, null, 2)}
+    </pre>
+	</div>;
 
 
 export default Home;
