@@ -25,7 +25,7 @@ const Home = () => {
 			.email()
 			.required('Required'),
 		password: Yup.string()
-			.required("Password Is Required")
+			.required("Password Is Required").minLength(8, )
 	});
 
 	return (
@@ -69,9 +69,14 @@ const Home = () => {
 												onBlur={handleBlur}
 
 											/>
-											{errors.email && touched.email && (
-												<div className="input-feedback">WHY U NO RIGHT GOOD</div>
-											)}
+											{console.log(errors)}
+											{
+												errors.email && touched.email && (
+												<div className="alert alert-danger">
+													{errors.email}
+												</div>)
+
+											}
 										</Form.Group>
 
 										<Form.Group controlId="password">
@@ -84,7 +89,7 @@ const Home = () => {
 												onBlur={handleBlur}
 											/>
 											{errors.password && touched.password && (
-												<div className="input-feedback">WHY U NO RIGHT GOOD</div>
+												<div className="alert alert-danger">{errors.password}</div>
 											)}
 										</Form.Group>
 
