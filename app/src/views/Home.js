@@ -41,7 +41,7 @@ const Home = () => {
 								password: ""
 							}}
 							onSubmit={(values, {setSubmitting}) => {
-								console.log(values);
+								httpConfig.post("/apis/sign-in/", values);
 
 							}}
 							validationSchema={validator}
@@ -70,7 +70,6 @@ const Home = () => {
 												onBlur={handleBlur}
 
 											/>
-											{console.log(errors)}
 											{
 												errors.email && touched.email && (
 												<div className="alert alert-danger">
