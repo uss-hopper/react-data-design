@@ -23,9 +23,10 @@ const Home = () => {
 	const validator = Yup.object().shape({
 		email: Yup.string()
 			.email()
-			.required('Required'),
+			.required('email is required'),
 		password: Yup.string()
-			.required("Password Is Required").minLength(8, )
+			.required("Password Is Required")
+			.min(8,"Password must be at least eight characters")
 	});
 
 	return (
