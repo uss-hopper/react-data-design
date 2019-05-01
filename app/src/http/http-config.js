@@ -5,10 +5,10 @@ export const httpConfig = axios.create();
 httpConfig.interceptors.response.use(function ({data} ) {
 	if(data.status === 200) {
 		return data.data !== null
-			? {message: null, data: data.data, status: 200, type: "alert-success"}
-			: {message: data.message, status: 200, type: "alert-success", data: null};
+			? {message: null, data: data.data, status: 200, type: " alert alert-success"}
+			: {message: data.message, status: 200, type: " alert alert-success", data: null};
 	}
-	return {message: data.message, status: data.status, type: "alert-danger", data: null}
+	return {message: data.message, status: data.status, type: "alert alert-danger", data: null}
 
 }, function (error) {
 	// Do something with response error
