@@ -4,16 +4,17 @@ import {httpConfig} from "../../shared/http/http-config";
 import Form from "react-bootstrap/Form";
 import {Formik} from "formik";
 import * as Yup from "yup";
+
 ;
 
-const Home = () => {
+export const Home = () => {
 
 	const [data, setData] = useState({});
 
 	const [defaultFormValues, setDefaultFormValues] = useState({
 		email: "",
 		password: ""
-});
+	});
 
 	useEffect(() => {
 		const fetchTweets = async () => {
@@ -108,7 +109,7 @@ const Home = () => {
 											</Form.Group>
 											<DisplayFormikState {...props} />
 										</Form>
-										{ status && (<div className={status.type}>{status.message}</div>)}
+										{status && (<div className={status.type}>{status.message}</div>)}
 									</>
 								)
 							}}
@@ -137,5 +138,3 @@ export const DisplayFormikState = props =>
     </pre>
 	</div>;
 
-
-export default Home;

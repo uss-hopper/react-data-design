@@ -5,7 +5,7 @@ import Nav from "react-bootstrap/Nav";
 import {LinkContainer} from "react-router-bootstrap"
 
 
-const MainNav = (props) => {
+export const MainNav = (props) => {
 	return(
 		<Navbar bg="primary" variant="dark">
 		<LinkContainer exact to="/" >
@@ -23,4 +23,3 @@ const MainNav = (props) => {
 	)
 };
 
-export default MainNav

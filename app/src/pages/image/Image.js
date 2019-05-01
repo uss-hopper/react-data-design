@@ -1,5 +1,4 @@
 import React from 'react'
-const Image  = ( props) =>{
+export const Image  = ( props) =>{
 		return <h1>Image</h1>;
 };
-export default Image;

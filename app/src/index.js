@@ -1,7 +1,7 @@
-import Home from "./pages/home/Home";
-import Profile from "./pages/profile/Profile";
-import Image from "./pages/image/Image"
-import FourOhFour from "./pages/four-oh-four/FourOhFour";
+import {Home} from "./pages/home/Home";
+import {Profile} from "./pages/profile/Profile";
+import {Image} from "./pages/image/Image"
+import {FourOhFour} from "./pages/four-oh-four/FourOhFour";
 
 
 
@@ -12,7 +12,8 @@ import {Route, BrowserRouter, Switch} from 'react-router-dom'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faStroopwafel } from '@fortawesome/free-solid-svg-icons'
-import Navbar from "./navbar/NavBar";
+import {MainNav} from "./shared/components/MainNav";
+
 
 
 library.add(faStroopwafel);
@@ -20,7 +21,7 @@ library.add(faStroopwafel);
 const routing = (
 	<>
 		<BrowserRouter>
-			<Navbar/>
+			<MainNav/>
 			<Switch>
 				<Route exact path="/" component={Home}/>
 				<Route exact path="/profile" component={Profile}/>
