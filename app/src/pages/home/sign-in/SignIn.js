@@ -23,10 +23,16 @@ export const SignIn = () => {
 		profilePassword:""
 	};
 
-	const submitSignIn = (values, grabBag) => {
-		console.log(grabBag);
+	const submitSignIn = (values, {resetForm, setStatus, status}) => {
+		//console.log(grabBag);
 		httpConfig.post("/apis/sign-in/", values)
-			.then(reply => {grabBag.setStatus(reply)});
+			.then(reply => {
+				console.log(reply);
+				let {message, type} = reply;
+				setStatus({message,type});
+				 reply.status === 200 &&   reply.headers["x-jwt-token"] && console.log("I win");
+
+			});
 		//console.log(status);
 	};
 
@@ -57,8 +63,9 @@ export const SignIn = () => {
 								return (
 									<>
 										<Form onSubmit={handleSubmit}>
+										{/*controlId must match what is passed to the initialValues prop*/}
 											<Form.Group controlId="profileEmail">
-												<Form.Label>Email address</Form.Label>
+												<Form.Label>Email Address</Form.Label>
 												<Form.Control
 													type="email"
 													value={values.profileEmail}
@@ -75,7 +82,7 @@ export const SignIn = () => {
 
 												}
 											</Form.Group>
-
+											{/*controlId must match what is defined by the initialValues object*/}
 											<Form.Group controlId="profilePassword">
 												<Form.Label>Password</Form.Label>
 												<Form.Control
