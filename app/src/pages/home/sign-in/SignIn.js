@@ -4,11 +4,12 @@ import {httpConfig} from "../../../shared/http/http-config";
 import Form from "react-bootstrap/Form";
 import {Formik} from "formik";
 import * as Yup from "yup";
+import {FormDebugger} from "../../../shared/components/FormDebugger";
 
 export const SignIn = () => {
 	const validator = Yup.object().shape({
 		profileEmail: Yup.string()
-			.email()
+			.email("profile email must be a valid email")
 			.required('email is required'),
 		profilePassword: Yup.string()
 			.required("Password is required")
@@ -25,7 +26,7 @@ export const SignIn = () => {
 	const submitSignIn = (values, grabBag) => {
 		console.log(grabBag);
 		httpConfig.post("/apis/sign-in/", values)
-			.then(reply => grabBag.setStatus(reply));
+			.then(reply => {grabBag.setStatus(reply)});
 		//console.log(status);
 	};
 
@@ -69,7 +70,7 @@ export const SignIn = () => {
 												{
 													errors.profileEmail && touched.profileEmail && (
 														<div className="alert alert-danger">
-															{errors.email}
+															{errors.profileEmail}
 														</div>)
 
 												}
@@ -85,7 +86,7 @@ export const SignIn = () => {
 													onBlur={handleBlur}
 												/>
 												{ errors.profilePassword && touched.profilePassword && (
-													<div className="alert alert-danger">{errors.password}</div>
+													<div className="alert alert-danger">{errors.profilePassword}</div>
 												)}
 											</Form.Group>
 
@@ -97,7 +98,7 @@ export const SignIn = () => {
 													disabled={!dirty || isSubmitting}
 												>Reset</Button>
 											</Form.Group>
-											<DisplayFormikState {...props} />
+											<FormDebugger {...props} />
 										</Form>
 										{status && (<div className={status.type}>{status.message}</div>)}
 									</>
@@ -112,20 +113,6 @@ export const SignIn = () => {
 		</>
 	)
 };
-const DisplayFormikState = props => (
-	<div style={{margin: '1rem 0'}}>
-		<h3 style={{fontFamily: 'monospace'}}>.</h3>
-		<pre
-			style={{
-				background: '#f6f8fa',
-				fontSize: '.65rem',
-				padding: '.5rem',
-			}}
-		>
-      <strong>props</strong> ={' '}
-			{JSON.stringify(props, null, 2)}
-    </pre>
-	</div>
-);
+
 
 
