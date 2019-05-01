@@ -7,17 +7,26 @@ import * as Yup from "yup";
 
 export const SignIn = () => {
 	const validator = Yup.object().shape({
-		email: Yup.string()
+		profileEmail: Yup.string()
 			.email()
 			.required('email is required'),
-		password: Yup.string()
+		profilePassword: Yup.string()
 			.required("Password is required")
 			.min(8, "Password must be at least eight characters")
 	});
 
+
+	//the initial values object defines what the request payload is.
 	const signIn = {
-		email:"",
-		password:""
+		profileEmail:"",
+		profilePassword:""
+	};
+
+	const submitSignIn = (values, grabBag) => {
+		console.log(grabBag);
+		httpConfig.post("/apis/sign-in/", values)
+			.then(reply => grabBag.setStatus(reply));
+		//console.log(status);
 	};
 
 	return (
@@ -28,12 +37,7 @@ export const SignIn = () => {
 
 						<Formik
 							initialValues={signIn}
-							onSubmit={(values, grabBag) => {
-								console.log(grabBag);
-								httpConfig.post("/apis/sign-in/", values)
-									.then(reply => grabBag.setStatus(reply));
-								//console.log(status);
-							}}
+							onSubmit= {submitSignIn}
 							validationSchema={validator}
 						>
 							{props => {
@@ -52,18 +56,18 @@ export const SignIn = () => {
 								return (
 									<>
 										<Form onSubmit={handleSubmit}>
-											<Form.Group controlId="email">
+											<Form.Group controlId="profileEmail">
 												<Form.Label>Email address</Form.Label>
 												<Form.Control
 													type="email"
-													value={values.email}
+													value={values.profileEmail}
 													placeholder="Enter email"
 													onChange={handleChange}
 													onBlur={handleBlur}
 
 												/>
 												{
-													errors.email && touched.email && (
+													errors.profileEmail && touched.profileEmail && (
 														<div className="alert alert-danger">
 															{errors.email}
 														</div>)
@@ -71,16 +75,16 @@ export const SignIn = () => {
 												}
 											</Form.Group>
 
-											<Form.Group controlId="password">
+											<Form.Group controlId="profilePassword">
 												<Form.Label>Password</Form.Label>
 												<Form.Control
 													type="password"
 													placeholder="Password"
-													value={values.password}
+													value={values.profilePassword}
 													onChange={handleChange}
 													onBlur={handleBlur}
 												/>
-												{ errors.password && touched.password && (
+												{ errors.profilePassword && touched.profilePassword && (
 													<div className="alert alert-danger">{errors.password}</div>
 												)}
 											</Form.Group>
@@ -108,8 +112,7 @@ export const SignIn = () => {
 		</>
 	)
 };
-
-export const DisplayFormikState = props => (
+const DisplayFormikState = props => (
 	<div style={{margin: '1rem 0'}}>
 		<h3 style={{fontFamily: 'monospace'}}>.</h3>
 		<pre
