@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import Button from "react-bootstrap/Button";
 import {httpConfig} from "../../../shared/http/http-config";
 import Form from "react-bootstrap/Form";
@@ -16,8 +16,8 @@ export const SignIn = () => {
 	});
 
 	const signIn = {
-		email: null,
-		password: null
+		email:"",
+		password:""
 	};
 
 	return (
@@ -28,10 +28,11 @@ export const SignIn = () => {
 
 						<Formik
 							initialValues={signIn}
-							onSubmit={(values, {setStatus, status}) => {
+							onSubmit={(values, grabBag) => {
+								console.log(grabBag);
 								httpConfig.post("/apis/sign-in/", values)
-									.then(reply => setStatus(reply));
-								console.log(status);
+									.then(reply => grabBag.setStatus(reply));
+								//console.log(status);
 							}}
 							validationSchema={validator}
 						>
@@ -110,7 +111,7 @@ export const SignIn = () => {
 
 export const DisplayFormikState = props => (
 	<div style={{margin: '1rem 0'}}>
-		<h3 style={{fontFamily: 'monospace'}}/>
+		<h3 style={{fontFamily: 'monospace'}}>.</h3>
 		<pre
 			style={{
 				background: '#f6f8fa',
