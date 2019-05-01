@@ -2,6 +2,7 @@ import {Home} from "./pages/home/Home";
 import {Profile} from "./pages/profile/Profile";
 import {Image} from "./pages/image/Image"
 import {FourOhFour} from "./pages/four-oh-four/FourOhFour";
+import {MainNav} from "./shared/components/MainNav";
 
 
 
@@ -12,9 +13,6 @@ import {Route, BrowserRouter, Switch} from 'react-router-dom'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faStroopwafel } from '@fortawesome/free-solid-svg-icons'
-import {MainNav} from "./shared/components/MainNav";
-
-
 
 library.add(faStroopwafel);
 
