@@ -1,7 +1,7 @@
-import Home from "./views/Home";
-import Profile from "./views/Profile";
-import Image from "./views/Image"
-import FourOhFour from "./views/FourOhFour";
+import Home from "./pages/home/Home";
+import Profile from "./pages/profile/Profile";
+import Image from "./pages/image/Image"
+import FourOhFour from "./pages/four-oh-four/FourOhFour";
 
 
 import React from "react";

@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import Button from "react-bootstrap/Button";
-import {httpConfig} from "../http/http-config";
-
+import {httpConfig} from "../../shared/http/http-config";
 import Form from "react-bootstrap/Form";
 import {Formik} from "formik";
 import * as Yup from "yup";
-import divWithClassName from "react-bootstrap/es/utils/divWithClassName";
+;
 
 const Home = () => {
 
@@ -14,7 +13,7 @@ const Home = () => {
 	const [defaultFormValues, setDefaultFormValues] = useState({
 		email: "",
 		password: ""
-	});
+});
 
 	useEffect(() => {
 		const fetchTweets = async () => {
@@ -111,11 +110,8 @@ const Home = () => {
 										</Form>
 										{ status && (<div className={status.type}>{status.message}</div>)}
 									</>
-
-
 								)
 							}}
-
 						</Formik>
 					</div>
 					<div className="col-sm-8">
