@@ -38,8 +38,6 @@ export const SignIn = () => {
 			});
 	};
 
-
-
 	return (
 		<>
 			<div className="container">
