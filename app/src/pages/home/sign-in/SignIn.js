@@ -9,7 +9,7 @@ import {FormDebugger} from "../../../shared/components/FormDebugger";
 export const SignIn = () => {
 	const validator = Yup.object().shape({
 		profileEmail: Yup.string()
-			.email("profile email must be a valid email")
+			.email("email must be a valid email")
 			.required('email is required'),
 		profilePassword: Yup.string()
 			.required("Password is required")
@@ -18,23 +18,27 @@ export const SignIn = () => {
 
 
 	//the initial values object defines what the request payload is.
+
 	const signIn = {
 		profileEmail:"",
 		profilePassword:""
 	};
 
-	const submitSignIn = (values, {resetForm, setStatus, status}) => {
-		//console.log(grabBag);
+	const submitSignIn = (values, {resetForm, setStatus}) => {
+
 		httpConfig.post("/apis/sign-in/", values)
 			.then(reply => {
-				console.log(reply);
-				let {message, type} = reply;
-				setStatus({message,type});
-				 reply.status === 200 &&   reply.headers["x-jwt-token"] && console.log("I win");
-
+				let {message, type} = reply
+				setStatus({message, type});
+				if(reply.status === 200 && reply.headers["x-jwt-token"]) {
+					window.localStorage.removeItem("jwt-token");
+					window.localStorage.setItem("jwt-token", reply.headers["x-jwt-token"]);
+					resetForm();
+				}
 			});
-		//console.log(status);
 	};
+
+
 
 	return (
 		<>
