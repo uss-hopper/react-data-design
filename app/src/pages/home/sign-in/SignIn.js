@@ -18,17 +18,15 @@ export const SignIn = () => {
 
 
 	//the initial values object defines what the request payload is.
-
 	const signIn = {
 		profileEmail:"",
 		profilePassword:""
 	};
 
 	const submitSignIn = (values, {resetForm, setStatus}) => {
-
 		httpConfig.post("/apis/sign-in/", values)
 			.then(reply => {
-				let {message, type} = reply
+				let {message, type} = reply;
 				setStatus({message, type});
 				if(reply.status === 200 && reply.headers["x-jwt-token"]) {
 					window.localStorage.removeItem("jwt-token");
