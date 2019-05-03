@@ -2,26 +2,34 @@ import {SignIn} from "./sign-in/SignIn";
 import {httpConfig} from "../../shared/http/http-config";
 
 import React, {useState, useEffect} from 'react';
+import {connect} from "react-redux";
+import {getTweets} from "../../shared/actions/tweet";
 
 
-export const Home = () => {
-
-	const [data, setData] = useState({});
+const HomeComponent = ({getTweets, tweets}) => {
 
 	useEffect(() => {
-		const fetchTweets = async () => {
-			const result = await httpConfig.get("/apis/tweet/");
-			setData(result);
-		};
-		fetchTweets();
-
+		getTweets()
 	}, []);
 
+	console.log(tweets);
+
+
 	return (
+		<>
+
 		<SignIn/>
+		</>
 	)
 };
 
+const mapStateToProps = ({tweets}) => {
+	return {tweets};
+
+};
+
+export const Home = connect(mapStateToProps, {getTweets}
+)(HomeComponent);
 
 
 

@@ -1,0 +1,6 @@
+import {httpConfig} from "../http/http-config";
+
+export const getTweets = () => async (dispatch) => {
+	const payload =  await httpConfig.get("/apis/tweet/");
+	dispatch({type: "FETCH_TWEETS",payload : payload.data });
+};

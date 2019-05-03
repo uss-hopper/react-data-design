@@ -39,5 +39,5 @@ const Routing = (store) => (
 );
 
 
-ReactDOM.render(<Routing store={store}/> , document.querySelector("#root"));
+ReactDOM.render(Routing(store) , document.querySelector("#root"));
 
