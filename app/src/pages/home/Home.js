@@ -1,10 +1,7 @@
 import {SignIn} from "./sign-in/SignIn";
-import {httpConfig} from "../../shared/http/http-config";
-
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 import {getTweets} from "../../shared/actions/tweet";
-
 
 const HomeComponent = ({getTweets, tweets}) => {
 
@@ -14,10 +11,8 @@ const HomeComponent = ({getTweets, tweets}) => {
 
 	console.log(tweets);
 
-
 	return (
 		<>
-
 		<SignIn/>
 		</>
 	)
@@ -25,7 +20,6 @@ const HomeComponent = ({getTweets, tweets}) => {
 
 const mapStateToProps = ({tweets}) => {
 	return {tweets};
-
 };
 
 export const Home = connect(mapStateToProps, {getTweets}
