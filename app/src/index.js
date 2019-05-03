@@ -15,6 +15,7 @@ import {Provider} from "react-redux";
 import {applyMiddleware, createStore} from "redux";
 import thunk from "redux-thunk";
 import reducers from "./shared/reducers";
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 const store = createStore(reducers,applyMiddleware(thunk));
 
