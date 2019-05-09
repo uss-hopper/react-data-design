@@ -2,6 +2,7 @@ import React from 'react';
 import {httpConfig} from "../../http/http-config";
 import {Formik} from "formik/dist/index";
 import * as Yup from "yup";
+import {FormDebugger} from "../FormDebugger";
 
 
 export const SignIn = () => {
@@ -17,8 +18,8 @@ export const SignIn = () => {
 
 	//the initial values object defines what the request payload is.
 	const signIn = {
-		profileEmail:"",
-		profilePassword:""
+		profileEmail: "",
+		profilePassword: ""
 	};
 
 	const submitSignIn = (values, {resetForm, setStatus}) => {
@@ -36,85 +37,86 @@ export const SignIn = () => {
 
 	return (
 		<>
-			<div className="container">
-				<div className="row">
-					<div className="col-sm-4">
 
-						<Formik
-							initialValues={signIn}
-							onSubmit= {submitSignIn}
-							validationSchema={validator}
-						>
-							{props => {
-								const {
-									status,
-									values,
-									errors,
-									touched,
-									dirty,
-									isSubmitting,
-									handleChange,
-									handleBlur,
-									handleSubmit,
-									handleReset
-								} = props;
-								return (
-									<>
-										<Form onSubmit={handleSubmit}>
-										{/*controlId must match what is passed to the initialValues prop*/}
-											<Form.Group controlId="profileEmail">
-												<Form.Label>Email Address</Form.Label>
-												<Form.Control
-													type="email"
-													value={values.profileEmail}
-													placeholder="Enter email"
-													onChange={handleChange}
-													onBlur={handleBlur}
 
-												/>
-												{
-													errors.profileEmail && touched.profileEmail && (
-														<div className="alert alert-danger">
-															{errors.profileEmail}
-														</div>)
+			<Formik
+				initialValues={signIn}
+				onSubmit={submitSignIn}
+				validationSchema={validator}
+			>
+				{(props) => {
+					const {
+						status,
+						values,
+						errors,
+						touched,
+						dirty,
+						isSubmitting,
+						handleChange,
+						handleBlur,
+						handleSubmit,
+						handleReset
+					} = props;
+					return (
+						<>
+							<form onSubmit={handleSubmit}>
+								{/*controlId must match what is passed to the initialValues prop*/}
+								<div className="form-group">
+									<label htmlFor="profileEmail">Email Address</label>
+									<div className="input-group">
+										<input
+											className="form-control"
+											type="email"
+											value={values.profileEmail}
+											placeholder="Enter email"
+											onChange={handleChange}
+											onBlur={handleBlur}
 
-												}
-											</Form.Group>
-											{/*controlId must match what is defined by the initialValues object*/}
-											<Form.Group controlId="profilePassword">
-												<Form.Label>Password</Form.Label>
-												<Form.Control
-													type="password"
-													placeholder="Password"
-													value={values.profilePassword}
-													onChange={handleChange}
-													onBlur={handleBlur}
-												/>
-												{ errors.profilePassword && touched.profilePassword && (
-													<div className="alert alert-danger">{errors.profilePassword}</div>
-												)}
-											</Form.Group>
+										/>
+									</div>
+									{
+										errors.profileEmail && touched.profileEmail && (
+											<div className="alert alert-danger">
+												{errors.profileEmail}
+											</div>
+										)
 
-											<Form.Group>
-												<Button variant="primary" type="submit">Submit</Button>
-												<Button
-													variant="primary"
-													onClick={handleReset}
-													disabled={!dirty || isSubmitting}
-												>Reset</Button>
-											</Form.Group>
-											<FormDebugger {...props} />
-										</Form>
-										{status && (<div className={status.type}>{status.message}</div>)}
-									</>
-								)
-							}}
-						</Formik>
-					</div>
-					<div className="col-sm-8">
-					</div>
-				</div>
-			</div>
+									}
+								</div>
+								{/*controlId must match what is defined by the initialValues object*/}
+								<div className="form-group">
+									<label htmlFor="profilePassword">Password</label>
+									<div className="input-group">
+										<input
+											className="form-control"
+											type="password"
+											placeholder="Password"
+											value={values.profilePassword}
+											onChange={handleChange}
+											onBlur={handleBlur}
+										/>
+									</div>
+									{errors.profilePassword && touched.profilePassword && (
+										<div className="alert alert-danger">{errors.profilePassword}</div>
+									)}
+								</div>
+
+								<div className="form-group">
+									<button className="btn btn-primary mb-2" type="submit">Submit</button>
+									<button
+										className="btn btn-danger mb-2"
+										onClick={handleReset}
+										disabled={!dirty || isSubmitting}
+									>Reset
+									</button>
+								</div>
+								<FormDebugger {...props} />
+							</form>
+							{status && (<div className={status.type}>{status.message}</div>)}
+						</>
+					)
+				}}
+			</Formik>
 		</>
 	)
 };
