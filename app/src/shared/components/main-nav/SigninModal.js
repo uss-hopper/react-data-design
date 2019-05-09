@@ -1,5 +1,5 @@
 import React from "react";
-import {SignIn} from "./SignIn";
+import {SignInForm} from "./SignInForm";
 
 export const SignInModal = () => (
 	<>
@@ -18,10 +18,7 @@ export const SignInModal = () => (
 						</button>
 					</div>
 					<div className="modal-body">
-						<SignIn/>
-					</div>
-					<div className="modal-footer">
-						<button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+						<SignInForm/>
 					</div>
 				</div>
 			</div>
