@@ -3,6 +3,7 @@ import {httpConfig} from "../../http/http-config";
 import {Formik} from "formik/dist/index";
 import * as Yup from "yup";
 import {FormDebugger} from "../FormDebugger";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 
 export const SignIn = () => {
@@ -64,6 +65,11 @@ export const SignIn = () => {
 								<div className="form-group">
 									<label htmlFor="profileEmail">Email Address</label>
 									<div className="input-group">
+										<div className="input-group-prepend">
+											<div className="input-group-text">
+												<FontAwesomeIcon icon="envelope"></FontAwesomeIcon>
+											</div>
+										</div>
 										<input
 											className="form-control"
 											id="profileEmail"
@@ -88,6 +94,11 @@ export const SignIn = () => {
 								<div className="form-group">
 									<label htmlFor="profilePassword">Password</label>
 									<div className="input-group">
+										<div className="input-group-prepend">
+											<div className="input-group-text">
+												<FontAwesomeIcon icon="key"></FontAwesomeIcon>
+											</div>
+										</div>
 										<input
 											id="profilePassword"
 											className="form-control"
