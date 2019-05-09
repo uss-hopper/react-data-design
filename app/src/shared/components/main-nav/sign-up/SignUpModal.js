@@ -1,13 +1,13 @@
 import React from "react";
-import {SignInForm} from "./SignInForm";
+import {SignInForm} from "../sign-in/SignInForm";
 
-export const SignInModal = () => (
+export const SignUpModal = () => (
 	<>
-		<button type="button" className="btn btn-primary" data-toggle="modal" data-target="#signInModal">
-			Sign In
+		<button type="button" className="btn btn-primary" data-toggle="modal" data-target="#signUpModal">
+			Sign Up
 		</button>
 
-		<div className="modal fade" id="signInModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+		<div className="modal fade" id="signUpModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 			  aria-hidden="true">
 			<div className="modal-dialog" role="document">
 				<div className="modal-content">
@@ -18,7 +18,8 @@ export const SignInModal = () => (
 						</button>
 					</div>
 					<div className="modal-body">
-						<SignInForm/>
+						{/*<SignUpForm/>*/}
+						I work
 					</div>
 				</div>
 			</div>

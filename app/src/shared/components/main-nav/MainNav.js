@@ -2,6 +2,7 @@ import React from "react";
 
 import {LinkContainer} from "react-router-bootstrap"
 import {SignInModal} from "./sign-in/SigninModal";
+import {SignUpModal} from "./sign-up/SignUpModal";
 
 
 export const MainNav = () => (
@@ -26,6 +27,7 @@ export const MainNav = () => (
 					</LinkContainer>
 					<li>
 						<SignInModal/>
+						<SignUpModal/>
 					</li>
 				</ul>
 			</div>
