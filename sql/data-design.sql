@@ -14,7 +14,7 @@ CREATE TABLE profile (
 	-- not null means the attribute is required!
 	profileId BINARY(16) NOT NULL,
 	profileActivationToken CHAR(32),
-	profileAtHandle VARCHAR(32) NOT NULL,
+	profileAtHandle VARCHAR(32) NOT NULL UNIQUE,
 	profileAvatarUrl  VARCHAR(255),
 	-- to make sure duplicate data cannot exist, create a unique index
 	profileEmail VARCHAR(128) NOT NULL,

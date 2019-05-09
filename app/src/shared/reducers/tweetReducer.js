@@ -1,6 +1,6 @@
 export default (state = [], action) => {
 	switch(action.type) {
-		case "FETCH_TWEETS":
+		case "GET_ALL_TWEETS":
 			return action.payload;
 		default:
 			return state;

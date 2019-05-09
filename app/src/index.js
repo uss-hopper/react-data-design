@@ -2,7 +2,7 @@ import {Home} from "./pages/home/Home";
 import {Profile} from "./pages/profile/Profile";
 import {Image} from "./pages/image/Image"
 import {FourOhFour} from "./pages/four-oh-four/FourOhFour";
-import {MainNav} from "./shared/components/MainNav";
+import {MainNav} from "./shared/components/main-nav/MainNav";
 
 import React from "react";
 import ReactDOM from "react-dom";
@@ -21,17 +21,15 @@ const store = createStore(reducers,applyMiddleware(thunk));
 
 library.add(faStroopwafel);
 
-
-
 const Routing = (store) => (
 	<>
 		<Provider store={store}>
 		<BrowserRouter>
 			<MainNav/>
 			<Switch>
-				<Route exact path="/" component={Home}/>
-				<Route exact path="/profile" component={Profile}/>
+				<Route exact path="/profile/:profileHandle" component={Profile}/>
 				<Route exact path="/image" component={Image}/>
+				<Route exact path="/" component={Home}/>
 				<Route component={FourOhFour}/>
 			</Switch>
 		</BrowserRouter>

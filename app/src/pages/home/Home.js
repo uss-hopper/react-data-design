@@ -1,19 +1,21 @@
-import {SignIn} from "./sign-in/SignIn";
+
 import React, {useEffect} from 'react';
 import {connect} from "react-redux";
-import {getTweets} from "../../shared/actions/tweet";
+import {getAllTweets} from "../../shared/actions";
 
-const HomeComponent = ({getTweets, tweets}) => {
+const HomeComponent = ({getAllTweets, tweets}) => {
 
 	useEffect(() => {
-		getTweets()
-	}, []);
+		getAllTweets()
 
-	console.log(tweets);
+		},
+		[getAllTweets]
+	);
+
 
 	return (
 		<>
-		<SignIn/>
+			<h3>hello world</h3>
 		</>
 	)
 };
@@ -22,7 +24,7 @@ const mapStateToProps = ({tweets}) => {
 	return {tweets};
 };
 
-export const Home = connect(mapStateToProps, {getTweets}
+export const Home = connect(mapStateToProps, {getAllTweets}
 )(HomeComponent);
 
 
