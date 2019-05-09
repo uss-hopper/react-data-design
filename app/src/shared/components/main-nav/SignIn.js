@@ -66,6 +66,7 @@ export const SignIn = () => {
 									<div className="input-group">
 										<input
 											className="form-control"
+											id="profileEmail"
 											type="email"
 											value={values.profileEmail}
 											placeholder="Enter email"
@@ -88,6 +89,7 @@ export const SignIn = () => {
 									<label htmlFor="profilePassword">Password</label>
 									<div className="input-group">
 										<input
+											id="profilePassword"
 											className="form-control"
 											type="password"
 											placeholder="Password"
