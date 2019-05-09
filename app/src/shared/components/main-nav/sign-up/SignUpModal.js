@@ -1,5 +1,6 @@
 import React from "react";
 import {SignInForm} from "../sign-in/SignInForm";
+import {SignUpForm} from "./SignUpForm";
 
 export const SignUpModal = () => (
 	<>
@@ -18,8 +19,7 @@ export const SignUpModal = () => (
 						</button>
 					</div>
 					<div className="modal-body">
-						{/*<SignUpForm/>*/}
-						I work
+						<SignUpForm/>
 					</div>
 				</div>
 			</div>

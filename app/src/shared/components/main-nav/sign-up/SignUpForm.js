@@ -6,7 +6,6 @@ import {SignInFormContent} from "../sign-in/SignInFormContent";
 
 export const SignUpForm = () => {
 
-	[status, setStatus] = useState(null);
 
 	const validator = Yup.object().shape({
 		profileEmail: Yup.string()
@@ -46,13 +45,31 @@ export const SignUpForm = () => {
 
 	return (
 		<>
-			<Formik
+			<FormikWrapper
+				formContent={SignInFormContent}
 				initialValues={signUp}
-				onSubmit={submitSignUp}
-				validationSchema={validator}
-			>
-				{SignInFormContent}
-			</Formik>
+				submitFunction={submitSignUp}
+				validators={validator}
+			/>
 		</>
 	)
+};
+
+const FormikWrapper = ({
+								  initialValues,
+								  validators,
+								  formContent,
+								  submitFunction
+							  }) => {
+	return (
+		<Formik
+			initialValues={initialValues}
+			onSubmit={submitFunction}
+			validationSchema={validators}
+		>
+			{formContent}
+		</Formik>
+	)
+
+
 };
