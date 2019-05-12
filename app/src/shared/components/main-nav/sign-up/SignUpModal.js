@@ -1,5 +1,4 @@
 import React from "react";
-import {SignInForm} from "../sign-in/SignInForm";
 import {SignUpForm} from "./SignUpForm";
 
 export const SignUpModal = () => (
@@ -13,7 +12,7 @@ export const SignUpModal = () => (
 			<div className="modal-dialog" role="document">
 				<div className="modal-content">
 					<div className="modal-header">
-						<h5 className="modal-title" id="exampleModalLabel">Modal title</h5>
+						<h5 className="modal-title" id="exampleModalLabel">Sign Up</h5>
 						<button type="button" className="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
