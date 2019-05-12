@@ -7,7 +7,7 @@ import {FormDebugger} from "../../FormDebugger";
 
 export const SignUpForm = () => {
 
-
+	const [status, setStatus] = useState(null);
 	const validator = Yup.object().shape({
 		profileEmail: Yup.string()
 			.email("email must be a valid email")
@@ -21,7 +21,8 @@ export const SignUpForm = () => {
 			.required("Password Confirm is required")
 			.min(8, "Password must be at least eight characters"),
 		profilePhone: Yup.string()
-			.min(10, "phone number is to short").max(10, "phone Number is to long")
+			.min(10, "phone number is to short")
+			.max(10, "phone Number is to long")
 	});
 
 	const signUp = {
@@ -32,7 +33,7 @@ export const SignUpForm = () => {
 		profilePhone: ""
 	};
 
-	const submitSignUp = (values, {resetForm, setStatus}) => {
+	const submitSignUp = (values, {resetForm}) => {
 		httpConfig.post("/apis/sign-up/", values)
 			.then(reply => {
 					let {message, type} = reply;
@@ -46,7 +47,6 @@ export const SignUpForm = () => {
 
 	const formContent = (props) => {
 		const {
-			status,
 			values,
 			errors,
 			touched,
@@ -121,9 +121,10 @@ export const SignUpForm = () => {
 								</div>
 							</div>
 							<input
-								id="profilePasswordConfirm"
+
 								className="form-control"
 								type="password"
+								id="profilePasswordConfirm"
 								placeholder="Password Confirm"
 								value={values.profilePasswordConfirm}
 								onChange={handleChange}
@@ -141,13 +142,13 @@ export const SignUpForm = () => {
 						<div className="input-group">
 							<div className="input-group-prepend">
 								<div className="input-group-text">
-									<FontAwesomeIcon icon="envelope"/>
+									<FontAwesomeIcon icon="dove"/>
 								</div>
 							</div>
 							<input
 								className="form-control"
 								id="profileHandle"
-								type="email"
+								type="text"
 								value={values.profileHandle}
 								placeholder="@Handle"
 								onChange={handleChange}
@@ -170,7 +171,7 @@ export const SignUpForm = () => {
 						<div className="input-group">
 							<div className="input-group-prepend">
 								<div className="input-group-text">
-									<FontAwesomeIcon icon="envelope"/>
+									<FontAwesomeIcon icon="phone"/>
 								</div>
 							</div>
 							<input
@@ -186,7 +187,7 @@ export const SignUpForm = () => {
 						{
 							errors.profilePhone && touched.profilePhone && (
 								<div className="alert alert-danger">
-									{errors.profileEmail}
+									{errors.profilePhone}
 								</div>
 							)
 
@@ -204,7 +205,12 @@ export const SignUpForm = () => {
 					</div>
 					<FormDebugger {...props} />
 				</form>
-				{status && (<div className={status.type}>{status.message}</div>)}
+				{console.log(
+					status
+				)}
+				{
+					status && (<div className={status.type}>{status.message}</div>)
+				}
 			</>
 
 
