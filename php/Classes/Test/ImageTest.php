@@ -1,8 +1,8 @@
 <?php
 
-namespace Edu\Cnm\DataDesign\Test;
+namespace UssHopper\DataDesign\Test;
 
-use Edu\Cnm\DataDesign\{
+use UssHopper\DataDesign\{
 	Profile, Tweet, Image
 };
 

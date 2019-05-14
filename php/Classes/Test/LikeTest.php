@@ -1,7 +1,9 @@
 <?php
-namespace Edu\Cnm\DataDesign\Test;
 
-use Edu\Cnm\DataDesign\{Like, Profile, Tweet};
+namespace UssHopper\DataDesign\Test;
+use UssHopper\DataDesign\{
+	Profile, Tweet, Image, Like
+};
 
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");

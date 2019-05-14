@@ -1,5 +1,5 @@
 <?php
-namespace Edu\Cnm\DataDesign\Test;
+namespace UssHopper\DataDesign\Test;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\DbUnit\TestCaseTrait;
@@ -8,9 +8,10 @@ use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\Operation\{Composite, Factory, Operation};
 
 // grab the encrypted properties file
-require_once("/etc/apache2/capstone-mysql/Secret.php");
-
-require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
+require_once("/etc/apache2/capstone-mysql/Secrets.php");
+// grab the class under scrutiny
+require_once(dirname(__DIR__) . "/autoload.php");
+require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
 /**
  * Abstract class containing universal and project specific mySQL parameters
@@ -51,7 +52,9 @@ abstract class DataDesignTest extends TestCase {
 		$dataset->addTable("tweet");
 		// the second parameter is required because like is also a SQL keyword and is the only way PHPUnit can query the like table
 		$dataset->addTable("like", "SELECT likeProfileId, likeTweetId, likeDate FROM `like`");
+		$dataset->addTable("image");
 		return($dataset);
+
 	}
 
 	/**
@@ -89,7 +92,7 @@ abstract class DataDesignTest extends TestCase {
 			// connect to mySQL and provide the interface to PHPUnit
 
 
-			$secrets =  new Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+			$secrets =  new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
 			$pdo = $secrets->getPdoObject();
 			$this->connection = $this->createDefaultDBConnection($pdo, $secrets->getDatabase());
 		}

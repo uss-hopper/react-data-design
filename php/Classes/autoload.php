@@ -15,7 +15,7 @@ spl_autoload_register(function($class) {
 	 * prefix: the prefix for all the classes (i.e., the namespace)
 	 * baseDir: the base directory for all classes (default = current directory)
 	 **/
-	$prefix = "Edu\\Cnm\\DataDesign";
+	$prefix = "UssHopper\\DataDesign";
 	$baseDir = __DIR__;
 
 	// does the class use the namespace prefix?
@@ -28,10 +28,15 @@ spl_autoload_register(function($class) {
 	// get the relative class name
 	$className = substr($class, $len);
 
+	var_dump($className);
+
+
 	// replace the namespace prefix with the base directory, replace namespace
 	// separators with directory separators in the relative class name, append
 	// with .php
 	$file = $baseDir . str_replace("\\", "/", $className) . ".php";
+
+	var_dump($file);
 
 	// if the file exists, require it
 	if(file_exists($file)) {

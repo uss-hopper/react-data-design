@@ -1,6 +1,6 @@
 <?php
 
-namespace Edu\Cnm\DataDesign;
+namespace UssHopper\DataDesign;
 require_once("autoload.php");
 
 require_once(dirname(__DIR__) . "/vendor/autoload.php");

@@ -1,6 +1,6 @@
 <?php
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
-require_once(dirname(__DIR__) . "/classes/autoload.php");
+require_once(dirname(__DIR__) . "/Classes/autoload.php");
 require("uuid.php");
 require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
 

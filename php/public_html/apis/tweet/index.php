@@ -30,12 +30,12 @@ if(session_status() !== PHP_SESSION_ACTIVE) {
 $reply = new stdClass();
 $reply->status = 200;
 $reply->data = null;
-
 try {
 
 
 	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
 	$pdo = $secrets->getPdoObject();
+
 	//determine which HTTP method was used
 	$method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
 
