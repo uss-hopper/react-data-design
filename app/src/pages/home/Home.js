@@ -5,6 +5,8 @@ import {getAllTweets} from "../../shared/actions";
 
 const HomeComponent = ({getAllTweets, tweets}) => {
 
+	console.log(tweets);
+
 	useEffect(() => {
 		getAllTweets()
 
