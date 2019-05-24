@@ -4,20 +4,7 @@ import * as Yup from "yup";
 import {FormikWrapper} from "../../../misc/FormikWrapper";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {FormDebugger} from "../../FormDebugger";
-// Import React FilePond
-import {FilePond, File, registerPlugin} from 'react-filepond'
 
-// Import FilePond styles
-import 'filepond/dist/filepond.min.css'
-
-// Import the Image EXIF Orientation and Image Preview plugins
-// Note: These need to be installed separately
-// `npm i filepond-plugin-image-preview filepond-plugin-image-exif-orientation --save`
-import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
-import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
-import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
-// Register the plugins
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
 export const SignUpForm = () => {
 
 	const [status, setStatus] = useState(null);
@@ -207,19 +194,6 @@ export const SignUpForm = () => {
 
 						}
 					</div>
-					<div className="form-group">
-						<FilePond
-							id="profileAvatar"
-							value={values.profileAvatar}
-							allowMultiple={true}
-							onupdatefiles={file => {
-								values.profileAvatar = file;
-							}}
-							labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
-
-						/>
-					</div>
-
 					<div className="form-group">
 						<button className="btn btn-primary mb-2" type="submit">Submit</button>
 						<button
