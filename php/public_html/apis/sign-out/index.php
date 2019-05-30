@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__DIR__, 3) . "/classes/autoload.php";
+require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 
 

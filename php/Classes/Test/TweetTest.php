@@ -96,8 +96,7 @@ class TweetTest extends DataDesignTest {
 	 * test inserting a valid Tweet and verify that the actual mySQL data matches
 	 **/
 	public function testInsertValidTweet() : void {
-		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("tweet");
+
 
 		// create a new Tweet and insert to into mySQL
 		$tweetId = generateUuidV4();
@@ -106,7 +105,7 @@ class TweetTest extends DataDesignTest {
 
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoTweet = Tweet::getTweetByTweetId($this->getPDO(), $tweet->getTweetId());
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
+
 		$this->assertEquals($pdoTweet->getTweetId()->toString(), $tweetId->toString());
 		$this->assertEquals($pdoTweet->getTweetProfileId(), $tweet->getTweetId()->toString());
 		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
