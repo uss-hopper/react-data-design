@@ -1,5 +1,5 @@
 <?php
-namespace Edu\Cnm\DataDesign;
+namespace UssHopper\DataDesign;
 /**
  * Trait to Validate a mySQL Date
  *

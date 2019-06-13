@@ -8,7 +8,7 @@ const HomeComponent = ({getAllTweets, tweets}) => {
 
 	useEffect(() => {
 			getAllTweets()
-		}
+		}, [getAllTweets]
 	);
 
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * This file should live outside of the project and be manually add to the server
+ * This file should live outside of the project and be manually added to the server
  *
  **/
 
