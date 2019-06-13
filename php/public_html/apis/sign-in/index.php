@@ -6,7 +6,7 @@ require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
-use Edu\Cnm\DataDesign\Profile;
+use UssHopper\DataDesign\Profile;
 
 /**
  * api for handling sign-in
@@ -29,8 +29,6 @@ try {
 
 	//determine which HTTP method is being used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
-
-
 
 	//If method is post handle the sign in logic
 	if($method === "POST") {

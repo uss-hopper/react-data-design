@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  php:
+    build: ./php
+    depends_on:
+      - sql
+    env_file:
+      - ./docker-compose-lesson.env
+  app:
+    build: ./app
+    depends_on:
+      - php
+    ports:
+      - 80:80
+  sql:
+    build: ./sql
+    env_file:
+      - ./docker-compose.env

@@ -7,9 +7,8 @@ const HomeComponent = ({getAllTweets, tweets}) => {
 	console.log(tweets);
 
 	useEffect(() => {
-		getAllTweets()
-		},
-		[getAllTweets]
+			getAllTweets()
+		}
 	);
 
 
@@ -25,6 +24,9 @@ const mapStateToProps = ({tweets}) => {
 };
 
 export const Home = connect(mapStateToProps, {getAllTweets})(HomeComponent);
+
+
+
 
 
 
