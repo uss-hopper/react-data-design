@@ -14,7 +14,6 @@ export const Home = () => {
 		dispatch(getAllTweets(test));
 	}, [test]);
 
-
 	return (
 		<>
 			<h3>hello world</h3>
