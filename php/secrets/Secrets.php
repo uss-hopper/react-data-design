@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__DIR__) . "/vendor/autoload.php");
+require_once("/var/www/vendor/autoload.php");
 use phpseclib\Crypt\AES;
 
 

@@ -10,7 +10,7 @@ $api = new stdClass();
 $api->randomKey = "1234567890";
 $api->anotherRandomKey = "abcdefghijklmnopqrstuvwxyz";
 $config["api"] = json_encode($api);
-$hideSecrets = new \Secrets("/var/www/secrets/ddc-twitter.ini");
+$hideSecrets = new \Secrets("/var/www/secrets/ddctwitter.ini");
 $hideSecrets->setSecrets($config);
 
 

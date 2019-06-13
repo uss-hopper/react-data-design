@@ -6,7 +6,7 @@ services:
     depends_on:
       - sql
     env_file:
-      - ./docker-compose-lesson.env
+      - ./docker-compose.env
   app:
     build: ./app
     depends_on:
