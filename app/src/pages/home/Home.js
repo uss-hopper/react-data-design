@@ -1,15 +1,18 @@
 import React, {useEffect} from 'react';
-import {connect} from "react-redux";
-import {getAllTweets} from "../../shared/actions";
+import {useSelector, useDispatch} from "react-redux";
+import {getAllTweets} from "../../shared/actions/tweet";
 
-const HomeComponent = ({getAllTweets, tweets}) => {
+export const Home = () => {
 
+	const tweets = useSelector(state => state.tweets);
+	const dispatch = useDispatch();
+	const test = "testing123";
 	console.log(tweets);
 
-	useEffect(() => {
-			getAllTweets()
-		}, [getAllTweets]
-	);
+
+	useEffect((test) => {
+		dispatch(getAllTweets(test));
+	}, [test]);
 
 
 	return (
@@ -18,15 +21,3 @@ const HomeComponent = ({getAllTweets, tweets}) => {
 		</>
 	)
 };
-
-const mapStateToProps = ({tweets}) => {
-	return {tweets};
-};
-
-export const Home = connect(mapStateToProps, {getAllTweets})(HomeComponent);
-
-
-
-
-
-
