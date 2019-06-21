@@ -14,10 +14,10 @@ import {faDove, faEnvelope, faKey, faPhone, faStroopwafel} from '@fortawesome/fr
 import {Provider} from "react-redux";
 import {applyMiddleware, createStore} from "redux";
 import thunk from "redux-thunk";
-import reducers from "./shared/reducers";
+import {combinedreducers} from "./shared/reducers/reducers";
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
-const store = createStore(reducers,applyMiddleware(thunk));
+const store = createStore(combinedreducers, applyMiddleware(thunk));
 
 library.add(faStroopwafel, faEnvelope, faKey, faDove, faPhone);
 
@@ -36,7 +36,6 @@ const Routing = (store) => (
 		</Provider>
 	</>
 );
-
 
 ReactDOM.render(Routing(store) , document.querySelector("#root"));
 

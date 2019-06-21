@@ -1,8 +1,6 @@
 import {combineReducers} from "redux"
 import tweetReducer from "./tweetReducer";
 
-
-
-export default combineReducers({
+export const combinedreducers = combineReducers({
 	tweets: tweetReducer,
-})
+});
