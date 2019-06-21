@@ -1,8 +1,6 @@
-import {useAxios} from "../hooks/useAxios";
-const axios = useAxios();
+import {httpConfig} from "../utils/http-config";
 
 export const getAllTweets = (test) => async (dispatch) => {
-	const payload =  axios.get("/apis/tweet/");
-	console.log(payload);
-	dispatch({type: "GET_ALL_TWEETS", payload : payload.data });
+	const payload =  await httpConfig.get("/apis/tweet/");
+	dispatch({type: "FETCH_TWEETS",payload : payload.data });
 };
