@@ -10,7 +10,7 @@ $pdo = $secrets->getPdoObject();
 use UssHopper\DataDesign\{Tweet, Profile, Like, Image};
 
 $password = "password";
-$hash = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
+$hash = password_hash($password, 2, ["time_cost" => 384]);
 
 $profile1 = new Profile(generateUuidV4(), null, "bonacciSequence", "https://www.fillmurray.com/128/128", "mbonacci@cnm.edu", $hash, "505-404-5678");
 $profile1->insert($pdo);

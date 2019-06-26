@@ -28,11 +28,12 @@ COPY ./lib /app/lib
 COPY public_html/ /app/public
 
 # configure Secrets for protected information
-
 WORKDIR /etc/apache2
 RUN mkdir capstone-mysql
 COPY ./secrets ./capstone-mysql
 RUN touch ./capstone-mysql/ddctwitter.ini && php ./capstone-mysql/ddctwitter.ini
+
+
 
 
 EXPOSE 80
