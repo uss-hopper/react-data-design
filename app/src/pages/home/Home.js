@@ -17,5 +17,6 @@ export const Home = () => {
 		<>
 			<h3>hello world</h3>
 		</>
+
 	)
 };
