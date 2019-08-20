@@ -9,10 +9,7 @@ require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
-
-use Edu\Cnm\DataDesign\ {
-	Profile
-};
+use UssHopper\DataDesign\Profile;
 
 /**
  * API for Tweet
