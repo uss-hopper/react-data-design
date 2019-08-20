@@ -147,10 +147,6 @@ class Secrets {
 
 		//grab the environment variables from the host.
 		$env = getenv();
-<<<<<<< HEAD
-		var_dump($env);
-=======
->>>>>>> major conflicts fix
 
 		// grab the encrypted mySQL properties file and crete the DSN
 		$dsn = "mysql:host=" . $env["MYSQL_HOST"] . ";dbname=" . $env["MYSQL_DATABASE"];
