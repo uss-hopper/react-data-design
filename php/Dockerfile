@@ -33,7 +33,4 @@ RUN mkdir capstone-mysql
 COPY ./secrets ./capstone-mysql
 RUN touch ./capstone-mysql/ddctwitter.ini && php ./capstone-mysql/ddctwitter.ini
 
-
-
-
 EXPOSE 80
