@@ -12,22 +12,25 @@ RUN composer install \
     --prefer-dist
 
 # main build stage
-FROM webdevops/php-apache
+#FROM webdevops/php-apache:alpine
+
+#Development image for webdevops/php-apache
+FROM webdevops/php-apache-dev
 
 # copy vendor into the project from the prebuild stage
 COPY --from=vendor /app/vendor/ /var/www/vendor/
 
-WORKDIR /var/www
-
-
-COPY ./Classes /app/Classes
-COPY ./lib /app/lib
-COPY public_html/ /app/public
+RUN mkdir /etc/apache2capstone-mysql
+COPY config/secrets /etc/apache2/capstone-mysql
+RUN touch /etc/apache2/capstone-mysql/ddctwitter.ini && php /etc/apache2/capstone-mysql/ddctwitter.ini
 
 # configure Secrets for protected information
-WORKDIR /etc/apache2
-RUN mkdir capstone-mysql
-COPY ./secrets ./capstone-mysql
-RUN touch ./capstone-mysql/ddctwitter.ini && php ./capstone-mysql/ddctwitter.ini
+WORKDIR /var/www
 
 EXPOSE 80
+
+
+
+
+
+

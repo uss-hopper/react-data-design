@@ -1,5 +1,6 @@
 <?php
 namespace UssHopper\DataDesign\Test;
+//fuck you
 
 use UssHopper\DataDesign\{
 	Profile, Tweet, Image, Like

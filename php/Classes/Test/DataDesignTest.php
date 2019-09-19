@@ -80,6 +80,9 @@ abstract class DataDesignTest extends TestCase {
 		return(Factory::DELETE_ALL());
 	}
 
+
+
+
 	/**
 	 * sets up the database connection and provides it to PHPUnit
 	 *
@@ -90,9 +93,8 @@ abstract class DataDesignTest extends TestCase {
 		// if the connection hasn't been established, create it
 		if($this->connection === null) {
 			// connect to mySQL and provide the interface to PHPUnit
-
-
 			$secrets =  new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+
 			$pdo = $secrets->getPdoObject();
 			$this->connection = $this->createDefaultDBConnection($pdo, $secrets->getDatabase());
 		}

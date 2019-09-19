@@ -188,9 +188,9 @@ class Secrets {
 	 */
 
 	public function getDatabase() : string {
-		$databaseName = self::getSecrets();
+		$env = getenv();
 
-		return $databaseName["database"];
+		return $env["MYSQL_DATABASE"];
 
 	}
 
