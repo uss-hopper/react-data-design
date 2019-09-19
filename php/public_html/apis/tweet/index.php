@@ -32,6 +32,8 @@ try {
 	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
 	$pdo = $secrets->getPdoObject();
 
+	var_dump($pdo);
+
 	//determine which HTTP method was used
 	$method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
 
@@ -50,6 +52,18 @@ try {
 	if($method === "GET") {
 		//set XSRF cookie
 		setXsrfCookie();
+
+
+		$hash = password_hash("password", PASSWORD_ARGON2I, ["time_cost" => 384]);
+
+		$profileActivationToken = bin2hex(random_bytes(16));
+
+		//create the profile object and prepare to insert into the database
+		$profile = new Profile(generateUuidV4(), $profileActivationToken, "My name is who", "null", "test@example.com", $hash, "505-709-8165");
+		//insert the profile into the database
+		$profile->insert($pdo);
+
+		$reply->message = "success";
 
 		//get a specific tweet or all tweets and update reply
 		if(empty($id) === false) {

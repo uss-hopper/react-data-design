@@ -7,12 +7,16 @@ services:
       - sql
     env_file:
       - ./docker-compose.env
+    ports:
+      - 8081:80
+    volumes:
+      - ./php:/var/www/
   app:
     build: ./app
     depends_on:
       - php
     ports:
-      - 80:80
+      - 8080:80
   sql:
     build: ./sql
     env_file:

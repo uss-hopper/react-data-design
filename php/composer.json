@@ -1,10 +1,11 @@
 {
 	"require": {
+		"fzaninotto/faker": "@stable",
 		"phpunit/dbunit": "@stable",
 		"phpunit/phpunit": "@stable",
+		"phpseclib/phpseclib": "2.0.11",
 		"swiftmailer/swiftmailer": "@stable",
 		"lcobucci/jwt": "3.2",
-		"fzaninotto/faker": "@stable",
 		"ramsey/uuid": "@stable"
 	},
 	"scripts":{

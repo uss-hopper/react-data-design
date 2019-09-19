@@ -12,16 +12,13 @@ RUN composer install \
     --prefer-dist
 
 # main build stage
-
-
-FROM gkephart/alpine-php-apache
+FROM webdevops/php-apache
 
 # copy vendor into the project from the prebuild stage
-COPY --from=vendor /app/vendor/ /app/vendor
+COPY --from=vendor /app/vendor/ /var/www/vendor/
 
 WORKDIR /var/www
 
-RUN ln -s /app/vendor
 
 COPY ./Classes /app/Classes
 COPY ./lib /app/lib

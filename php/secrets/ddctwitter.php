@@ -4,13 +4,13 @@
  *
  **/
 
-require_once("/var/www/secrets/Secrets.php");
+require_once("Secrets.php");
 $config = [];
 $api = new stdClass();
 $api->randomKey = "1234567890";
 $api->anotherRandomKey = "abcdefghijklmnopqrstuvwxyz";
 $config["api"] = json_encode($api);
-$hideSecrets = new \Secrets("/var/www/secrets/ddctwitter.ini");
+$hideSecrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
 $hideSecrets->setSecrets($config);
 
 
