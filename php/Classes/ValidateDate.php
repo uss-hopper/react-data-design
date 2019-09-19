@@ -1,5 +1,5 @@
 <?php
-namespace UssHopper\DataDesign;
+namespace Edu\Cnm\DataDesign;
 /**
  * Trait to Validate a mySQL Date
  *
@@ -44,7 +44,6 @@ trait ValidateDate {
 		$newDate = \DateTime::createFromFormat("Y-m-d H:i:s", $newDate . " 00:00:00");
 		return($newDate);
 	}
-
 	/**
 	 * custom filter for mySQL style dates
 	 *
