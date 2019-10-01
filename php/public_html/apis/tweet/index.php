@@ -58,10 +58,6 @@ try {
 
 		$profileActivationToken = bin2hex(random_bytes(16));
 
-		//create the profile object and prepare to insert into the database
-		$profile = new Profile(generateUuidV4(), $profileActivationToken, "My name is bohoo", "null", "test+3@example.com", $hash, "505-709-8165");
-		$profile->insert($pdo);
-		//insert the profile into the database
 
 		//get a specific tweet or all tweets and update reply
 		if(empty($id) === false) {
@@ -74,8 +70,6 @@ try {
 		} else {
 			$reply->data = Tweet::getAllTweets($pdo)->toArray();
 		}
-
-		$reply->data = Profile::getProfileByProfileId($pdo, $profile->getProfileId());
 	} else if($method === "PUT" || $method === "POST") {
 		// enforce the user has a XSRF token
 		verifyXsrf();
