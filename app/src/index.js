@@ -25,7 +25,6 @@ const Routing = (store) => (
 	<>
 		<Provider store={store}>
 		<BrowserRouter>
-			<MainNav/>
 			<Switch>
 				<Route exact path="/profile/:profileHandle" component={Profile}/>
 				<Route exact path="/image" component={Image}/>

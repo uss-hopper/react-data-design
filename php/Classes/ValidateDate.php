@@ -1,5 +1,6 @@
 <?php
-namespace Edu\Cnm\DataDesign;
+
+namespace UssHopper\DataDesign;
 /**
  * Trait to Validate a mySQL Date
  *
@@ -103,7 +104,6 @@ trait ValidateDate {
 		// put a placeholder for microseconds if they do not exist
 		$microseconds = $matches[4] ?? "0";
 		$newTime = "$hour:$minute:$second.$microseconds";
-
 		// if we got here, the date is clean
 		return($newTime);
 	}

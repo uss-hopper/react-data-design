@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  php:
+    build: ./php
+    depends_on:
+      - sql
+    env_file:
+      - ./docker-compose.env
+    ports:
+      - 8081:80
+    volumes:
+      - ./php/Classes:/var/www/Classes
+      - ./php/public_html:/var/www/public_html
+      - ./php/lib:/var/www/lib
+  app:
+    build: ./app
+    depends_on:
+      - php
+    ports:
+      - 8080:80
+  sql:
+    build: ./sql
+    volumes:
+    - ddc-twitter-sql:/var/lib/mysql
+    env_file:
+    - ./docker-compose.env
+volumes:
+  ddc-twitter-sql:

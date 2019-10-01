@@ -107,7 +107,7 @@ export const SignUpFormContent = (props) => {
 							className="form-control"
 							id="profileHandle"
 							type="text"
-							value={values.profileHandle}
+							value={values.profileAtHandle}
 							placeholder="@Handle"
 							onChange={handleChange}
 							onBlur={handleBlur}
@@ -115,9 +115,9 @@ export const SignUpFormContent = (props) => {
 						/>
 					</div>
 					{
-						errors.profileHandle && touched.profileHandle && (
+						errors.profileAtHandle && touched.profileAtHandle && (
 							<div className="alert alert-danger">
-								{errors.profileHandle}
+								{errors.profileAtHandle}
 							</div>
 						)
 					}

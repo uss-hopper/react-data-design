@@ -8,9 +8,7 @@ require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 
 
-use Edu\Cnm\DataDesign\{
-	Like
-};
+use UssHopper\DataDesign\Like;
 
 /**
  * Api for the Like class
@@ -117,7 +115,7 @@ try {
 			}
 
 			//enforce the user is signed in and only trying to edit their own like
-			if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId() !== $like->getLikeProfileId()) {
+			if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $like->getLikeProfileId()->toString()) {
 				throw(new \InvalidArgumentException("You are not allowed to delete this tweet", 403));
 			}
 

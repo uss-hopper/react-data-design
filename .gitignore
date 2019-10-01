@@ -2,7 +2,7 @@
 /.sync-config.cson
 /.idea
 /node_modules
-/vendor
+*/vendor
 /src/**/*.js
 /src/**/*.js.map
 /public_html/dist

@@ -6,17 +6,22 @@ export const Home = () => {
 
 	const tweets = useSelector(state => state.tweets);
 	const dispatch = useDispatch();
-	const test = "testing123";
-	console.log(tweets);
 
-	useEffect((test) => {
-		dispatch(getAllTweets(test));
-	}, [test]);
+	const effects = () => {
+		dispatch(getAllTweets());
+	};
+
+	const inputs = undefined;
+
+	useEffect(effects,undefined);
 
 	return (
 		<>
 			<h3>hello world</h3>
 		</>
 
+
 	)
 };
+
+

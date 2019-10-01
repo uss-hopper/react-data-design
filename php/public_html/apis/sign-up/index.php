@@ -6,7 +6,7 @@ require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
-use Edu\Cnm\DataDesign\Profile;
+use UssHopper\DataDesign\Profile;
 
 /**
  * api for signing up too DDC Twitter
@@ -86,7 +86,7 @@ try {
 		$basePath = dirname($_SERVER["SCRIPT_NAME"], 3);
 
 		//create the path
-		$urlglue = $basePath . "/api/activation/?activation=" . $profileActivationToken;
+		$urlglue = $basePath . "/apis/activation/?activation=" . $profileActivationToken;
 
 		//create the redirect link
 		$confirmLink = "https://" . $_SERVER["SERVER_NAME"] . $urlglue;
