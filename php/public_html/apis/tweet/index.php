@@ -65,10 +65,25 @@ try {
 		} else if(empty($tweetProfileId) === false) {
 			// if the user is logged in grab all the tweets by that user based  on who is logged in
 			$reply->data = Tweet::getTweetByTweetProfileId($pdo, $tweetProfileId);
+
 		} else if(empty($tweetContent) === false) {
 			$reply->data = Tweet::getTweetByTweetContent($pdo, $tweetContent)->toArray();
+
 		} else {
-			$reply->data = Tweet::getAllTweets($pdo)->toArray();
+			$tweets = Tweet::getAllTweets($pdo)->toArray();
+			$tweetProfiles = [];
+			foreach($tweets as $tweet){
+				$profile = 	Profile::getProfileByProfileId($pdo, $tweet->getTweetProfileId());
+				$tweetProfiles[] = (object)[
+					"tweetId"=>$tweet->getTweetId(),
+					"tweetProfileId"=>$tweet->getTweetProfileId(),
+					"tweetContent"=>$tweet->getTweetContent(),
+					"tweetDate"=>$tweet->getTweetDate()->format("U.u") * 1000,
+					"profileAtHandle"=>$profile->getProfileAtHandle(),
+					"profileAvatarUrl"=>$profile->getProfileAvatarUrl(),
+				];
+			}
+			$reply->data = $tweetProfiles;
 		}
 	} else if($method === "PUT" || $method === "POST") {
 		// enforce the user has a XSRF token

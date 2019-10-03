@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {useSelector, useDispatch} from "react-redux";
 import {getAllTweets} from "../../shared/actions/tweet";
+import Card from "react-bootstrap/Card";
 
 export const Home = () => {
 
@@ -11,13 +12,25 @@ export const Home = () => {
 		dispatch(getAllTweets());
 	};
 
-	const inputs = undefined;
+	const inputs = [];
 
-	useEffect(effects,undefined);
+	useEffect(effects,inputs);
 
 	return (
 		<>
-			<h3>hello world</h3>
+			{tweets.map(tweet => {
+				return(
+				<Card style={{ width: '18rem' }} key={tweet.tweetId}>
+				<Card.Img variant="top" src={tweet.profileAvatarUrl} />
+				<Card.Body>
+					<Card.Text>{tweet.profileAtHandle}</Card.Text>
+					<Card.Text>{new Date(tweet.tweetDate).toDateString()}</Card.Text>
+					<Card.Text>
+						{tweet.tweetContent}
+					</Card.Text>
+				</Card.Body>
+			</Card>)
+			})}
 		</>
 
 

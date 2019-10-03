@@ -15,7 +15,7 @@ import {Provider} from "react-redux";
 import {applyMiddleware, createStore} from "redux";
 import thunk from "redux-thunk";
 import {combinedReducers} from "./shared/reducers/reducers";
-import 'bootstrap/dist/js/bootstrap.bundle.min';
+// import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 const store = createStore(combinedReducers, applyMiddleware(thunk));
 
@@ -25,6 +25,7 @@ const Routing = (store) => (
 	<>
 		<Provider store={store}>
 		<BrowserRouter>
+			<MainNav/>
 			<Switch>
 				<Route exact path="/profile/:profileHandle" component={Profile}/>
 				<Route exact path="/image" component={Image}/>
