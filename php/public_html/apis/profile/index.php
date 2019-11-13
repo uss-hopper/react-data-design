@@ -30,7 +30,7 @@ $reply->data = null;
 try {
 	//grab the mySQL connection
 
-	$secrets = new \Secrets("     /etc/apache2/capstone-mysql/ddctwitter.ini");
+	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
 	$pdo = $secrets->getPdoObject();
 
 

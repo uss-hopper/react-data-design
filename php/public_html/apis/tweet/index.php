@@ -53,12 +53,6 @@ try {
 		//set XSRF cookie
 		setXsrfCookie();
 
-
-		$hash = password_hash("password", PASSWORD_ARGON2I, ["time_cost" => 384]);
-
-		$profileActivationToken = bin2hex(random_bytes(16));
-
-
 		//get a specific tweet or all tweets and update reply
 		if(empty($id) === false) {
 			$reply->data = Tweet::getTweetByTweetId($pdo, $id);
