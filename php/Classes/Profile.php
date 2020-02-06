@@ -287,7 +287,7 @@ class Profile implements \JsonSerializable {
 		}
 
 		//enforce that the hash is exactly 97 characters.
-		if(strlen($newProfileHash) !== 97) {
+		if(strlen($newProfileHash) < 97) {
 			throw(new \RangeException("profile hash must be 97 characters"));
 		}
 

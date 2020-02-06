@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection ALL */
+
 namespace UssHopper\DataDesign;
 
 require_once("autoload.php");
@@ -323,6 +324,51 @@ class Tweet implements \JsonSerializable {
 			}
 		}
 		return($tweets);
+	}
+
+	/**
+	 * gets the Tweet by profile id
+	 * @param \PDO $pdo PDO connection object
+	 * @param string $tweetProfileId profile id to search by
+	 * @return \SplFixedArray SplFixedArray of Tweets found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public static function getTweetProfilesByTweetProfileId(\PDO $pdo, string  $tweetProfileId) : \SPLFixedArray {
+
+		try {
+			$tweetProfileId = self::validateUuid($tweetProfileId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		// create query template
+		$query = "SELECT tweet.tweetId, tweet.tweetProfileId, tweet.tweetContent, tweet.tweetDate, profile.profileAtHandle FROM tweet INNER JOIN profile ON tweet.tweetProfileId =  profile.profileId WHERE tweetProfileId = :tweetProfileId";
+		$statement = $pdo->prepare($query);
+		// bind the tweet profile id to the place holder in the template
+		$parameters = ["tweetProfileId" => $tweetProfileId->getBytes()];
+		$statement->execute($parameters);
+		// build an array of tweets
+		$tweetArray = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+
+				$object = (object)[
+					"tweetId" => $row["tweetId"],
+					"tweetProfile" => $row["tweetProfileId"],
+					"tweetContent" => $row["tweetContent"],
+					"tweetDate" => $row["tweetDate"],
+					"profileAtHandle" => $row["profileAtHandle"]
+				];
+				$tweetArray[$tweetArray->key()] = $object;
+				$tweetArray->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($tweetArray);
 	}
 
 	/**

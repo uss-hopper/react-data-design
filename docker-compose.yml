@@ -13,6 +13,7 @@ services:
       - ./php/Classes:/var/www/Classes
       - ./php/public_html:/var/www/public_html
       - ./php/lib:/var/www/lib
+      - ./php/composer.json /var/www
   app:
     build: ./app
     depends_on:
