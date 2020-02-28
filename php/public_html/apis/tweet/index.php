@@ -2,13 +2,12 @@
 
 require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
-require_once("/etc/apache2/capstone-mysql/Secrets.php");
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
-use UssHopper\DataDesign\{Like, Profile, Tweet};
+use UssHopper\DataDesign\{ Profile, Tweet};
 
 
 /**
@@ -28,7 +27,6 @@ $reply->status = 200;
 $reply->data = null;
 try {
 
-
 	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
 	$pdo = $secrets->getPdoObject();
 
@@ -38,8 +36,10 @@ try {
 	$method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
 
 	//sanitize input
+
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
-	$tweetProfileId = filter_input(INPUT_GET, "tweetProfileId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
+	$tweetProfileId = filter_input(INPUT_GET, "tweetProf", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
+	var_dump($tweetProfileId);
 	$tweetContent = filter_input(INPUT_GET, "tweetContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 	//make sure the id is valid for methods that require it
@@ -58,7 +58,7 @@ try {
 			$reply->data = Tweet::getTweetByTweetId($pdo, $id);
 		} else if(empty($tweetProfileId) === false) {
 			// if the user is logged in grab all the tweets by that user based  on who is logged in
-			$reply->data = Tweet::getTweetByTweetProfileId($pdo, $tweetProfileId);
+			$reply->data = Tweet::getTweetByTweetProfileId($pdo, $tweetProfileId)->toArray();
 
 		} else if(empty($tweetContent) === false) {
 			$reply->data = Tweet::getTweetByTweetContent($pdo, $tweetContent)->toArray();
@@ -89,14 +89,17 @@ try {
 		}
 
 		$requestContent = file_get_contents("php://input");
+
+
 		// Retrieves the JSON package that the front end sent, and stores it in $requestContent. Here we are using file_get_contents("php://input") to get the request from the front end. file_get_contents() is a PHP function that reads a file into a string. The argument for the function, here, is "php://input". This is a read only stream that allows raw data to be read from the front end request which is, in this case, a JSON package.
 		$requestObject = json_decode($requestContent);
+
 		// This Line Then decodes the JSON package and stores that result in $requestObject
 		//make sure tweet content is available (required field)
 		if(empty($requestObject->tweetContent) === true) {
 			throw(new \InvalidArgumentException ("No content for Tweet.", 405));
 		}
-
+		$requestObject->foo; //value:bar
 		// make sure tweet date is accurate (optional field)
 		if(empty($requestObject->tweetDate) === true) {
 			$requestObject->tweetDate = null;
