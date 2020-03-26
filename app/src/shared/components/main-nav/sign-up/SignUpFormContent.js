@@ -168,7 +168,7 @@ export const SignUpFormContent = (props) => {
 				submitStatus
 			)}
 			{
-			status && (<div className={submitStatus.type}>{submitStatus.message}</div>)
+			status && (<div className={status.type}>{status.message}</div>)
 			}
 		</>
 
