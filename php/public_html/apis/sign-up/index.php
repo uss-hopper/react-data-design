@@ -70,7 +70,7 @@ try {
 			throw(new \InvalidArgumentException("passwords do not match"));
 
 		}
-		$hash = password_hash($requestObject->profilePassword, PASSWORD_ARGON2I, ["time_cost" => 32]);
+		$hash = password_hash($requestObject->profilePassword, PASSWORD_ARGON2ID, ["time_cost" => 9]);
 
 		$profileActivationToken = bin2hex(random_bytes(16));
 
@@ -93,7 +93,7 @@ try {
 		//create the redirect link
 		$confirmLink = "https://" . $_SERVER["SERVER_NAME"] . $urlglue;
 
-//		//compose message to send with email
+		//compose message to send with email
 		$message = <<< EOF
 <h2>Welcome to DDCTwitter.</h2>
 <p>In order to start posting tweets of cats you must confirm your account </p>

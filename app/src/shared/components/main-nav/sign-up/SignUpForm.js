@@ -33,14 +33,15 @@ export const SignUpForm = () => {
 			.max(10, "phone Number is to long")
 	});
 
-	const submitSignUp = (values, {resetForm}) => {
+	const submitSignUp = (values, {resetForm, setStatus}) => {
 		httpConfig.post("/apis/sign-up/", values)
 			.then(reply => {
 					let {message, type} = reply;
-					setStatus({message, type});
+					
 					if(reply.status === 200) {
 						resetForm();
 					}
+					setStatus({message, type});
 				}
 			);
 	};
