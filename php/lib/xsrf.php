@@ -5,19 +5,19 @@
  * (e.g., non Apache web servers, Apache web servers with apache_request_headers() disabled)
  *
  * @see http://php.net/manual/en/function.apache-request-headers.php apache_request_headers()
- **/
-if(function_exists("apache_request_headers") === false) {
-    /**
-     * clones apache_request_headers()'s behavior
-     *
-     * @return array all HTTP request headers
-     **/
-    function apache_request_headers() {
-        $headers = array();
-        foreach($_SERVER as $header => $value) {
-            // divide the header name by the underbar
-            $headerNameArray = explode("_" , $header);
-            // request headers always are prefixed by HTTP_
+			  **/
+			  if(function_exists("apache_request_headers") === false) {
+				  /**
+					* clones apache_request_headers()'s behavior
+					*
+					* @return array all HTTP request headers
+					**/
+				  function apache_request_headers() {
+					  $headers = array();
+					  foreach($_SERVER as $header => $value) {
+						  // divide the header name by the underbar
+						  $headerNameArray = explode("_" , $header);
+						  // request headers always are prefixed by HTTP_
             if(array_shift($headerNameArray) === "HTTP") {
                 // convert HTTP_FOO_HEADER to Foo-Header
                 array_walk($headerNameArray, function(&$headerName) {

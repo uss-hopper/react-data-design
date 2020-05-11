@@ -70,7 +70,7 @@ try {
 			throw(new \InvalidArgumentException("passwords do not match"));
 
 		}
-		$hash = password_hash($requestObject->profilePassword, PASSWORD_ARGON2ID, ["time_cost" => 9]);
+		$hash = password_hash($requestObject->profilePassword, PASSWORD_ARGON2I, ["time_cost" => 9]);
 
 		$profileActivationToken = bin2hex(random_bytes(16));
 
